@@ -22,6 +22,8 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 	this->rowIndex = 1;
 	this->tokenType = 0;
 	this->lexemLength = 0;
+	this->currentChar = ' ';
+	this->forceState = 0;
 
 	int i = 0;
 	while (i < 512) {
@@ -39,9 +41,9 @@ Scanner::~Scanner() {
 void Scanner::buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType) {
 	this->lexemLength++;
 	this->currentChar = this->buffer->getChar();
-	this->internBuffer[this->scannerIndex] = currentChar;
+	this->internBuffer[this->scannerIndex] = this->currentChar;
 	this->scannerIndex++;
-	if (this->setCurrentState(currentChar) != state) {
+	if (this->setCurrentState(this->currentChar) != state) {
 		// Durch das weitere manuelle Auslesen von Chars wird der
 		// Folgezustand mit falschem Wert überschrieben, sofern
 		// der normale Programmablauf durchgeführt wird.
@@ -72,7 +74,7 @@ void Scanner::throwSpecialToken(uint16_t tokenType) {
 	// =:+
 	this->currentChar = this->buffer->getChar();
 	this->clearInternBuffer();
-	this->internBuffer[0] = currentChar;
+	this->internBuffer[0] = this->currentChar;
 	this->tokenType = tokenType;
 	this->scannerIndex = 1;
 	this->generateToken(this->tokenType);
@@ -82,23 +84,21 @@ void Scanner::getNextToken() {
     //End of File Schaltvariable
     bool eof = false;
 
-    currentChar = ' ';
-
-    int forceState = 0;
+    this->currentChar = ' ';
 
     //Hauptschleife solange das Ende der Datei nicht erreicht ist
 	while(eof == false){
-		if(currentChar == '\0'){
+		if(this->currentChar == '\0'){
 			eof = true;
 
 			this->generateToken(this->tokenType);
 		} else {
-			//cout << " -----> C:" << currentChar << " S:" << this->currentState << endl;
+			//cout << " -----> C:" << this->currentChar << " S:" << this->currentState << endl;
 
 			switch (this->currentState) {
 			case Automat::INIT:
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 				forceState = 0;
 				break;
@@ -156,19 +156,19 @@ void Scanner::getNextToken() {
 				//@todo!!!
 				this->lexemLength = 1;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 				break;
 
 			case Automat::IF:
 				this->lexemLength = 2;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) < Automat::INTEGER) {
+				if (this->setCurrentState(this->currentChar) < Automat::INTEGER) {
 					this->forceTokenGeneration(Automat::TOKEN, Token::TT_IF);
 				}
 				break;
@@ -176,11 +176,11 @@ void Scanner::getNextToken() {
 			case Automat::WHILE_1:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) == Automat::WHILE_2) {
+				if (this->setCurrentState(this->currentChar) == Automat::WHILE_2) {
 					forceState = 1;
 					this->currentState = Automat::WHILE_2;
 				} else {
@@ -192,11 +192,11 @@ void Scanner::getNextToken() {
 			case Automat::WHILE_2:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) == Automat::WHILE_3) {
+				if (this->setCurrentState(this->currentChar) == Automat::WHILE_3) {
 					forceState = 1;
 					this->currentState = Automat::WHILE_3;
 				} else {
@@ -208,11 +208,11 @@ void Scanner::getNextToken() {
 			case Automat::WHILE_3:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) == Automat::WHILE_4) {
+				if (this->setCurrentState(this->currentChar) == Automat::WHILE_4) {
 					forceState = 1;
 					this->currentState = Automat::WHILE_4;
 				} else {
@@ -224,11 +224,11 @@ void Scanner::getNextToken() {
 			case Automat::WHILE_4:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) == Automat::WHILE) {
+				if (this->setCurrentState(this->currentChar) == Automat::WHILE) {
 					forceState = 1;
 					this->currentState = Automat::WHILE;
 				} else {
@@ -240,23 +240,23 @@ void Scanner::getNextToken() {
 			case Automat::WHILE:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if ((this->setCurrentState(currentChar) >= Automat::BLANK &&
-						this->setCurrentState(currentChar) <= Automat::TAB) ||
-						this->setCurrentState(currentChar) == Automat::TOKEN ||
-						this->setCurrentState(currentChar) == Automat::SIGN ||
-						this->setCurrentState(currentChar) == Automat::COLON ||
-						this->setCurrentState(currentChar) == Automat::EQUAL ||
-						this->setCurrentState(currentChar) == Automat::AND_1 ||
-						this->setCurrentState(currentChar) == Automat::AND ||
-						this->setCurrentState(currentChar) == Automat::COMMENT_1 ||
-						this->setCurrentState(currentChar) == Automat::COMMENT_2 ||
-						this->setCurrentState(currentChar) == Automat::COLON_EQUAL ||
-						this->setCurrentState(currentChar) == Automat::COMPLEX_1 ||
-						this->setCurrentState(currentChar) == Automat::CHECK) {
+				if ((this->setCurrentState(this->currentChar) >= Automat::BLANK &&
+						this->setCurrentState(this->currentChar) <= Automat::TAB) ||
+						this->setCurrentState(this->currentChar) == Automat::TOKEN ||
+						this->setCurrentState(this->currentChar) == Automat::SIGN ||
+						this->setCurrentState(this->currentChar) == Automat::COLON ||
+						this->setCurrentState(this->currentChar) == Automat::EQUAL ||
+						this->setCurrentState(this->currentChar) == Automat::AND_1 ||
+						this->setCurrentState(this->currentChar) == Automat::AND ||
+						this->setCurrentState(this->currentChar) == Automat::COMMENT_1 ||
+						this->setCurrentState(this->currentChar) == Automat::COMMENT_2 ||
+						this->setCurrentState(this->currentChar) == Automat::COLON_EQUAL ||
+						this->setCurrentState(this->currentChar) == Automat::COMPLEX_1 ||
+						this->setCurrentState(this->currentChar) == Automat::CHECK) {
 					this->forceTokenGeneration(Automat::TOKEN, Token::TT_WHILE);
 				} else {
 					this->forceTokenGeneration(Automat::IDENTIFIER, Token::TT_WHILE);
@@ -275,17 +275,17 @@ void Scanner::getNextToken() {
 
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) == Automat::COMMENT_1) {
+				if (this->setCurrentState(this->currentChar) == Automat::COMMENT_1) {
 					forceState = 1;
 					this->clearInternBuffer();
 					this->scannerIndex = 0;
 					this->currentState = Automat::COMMENT_1;
-				} else if (currentChar == '=') {
-				//} else if (this->setCurrentState(currentChar) == Automat::COLON_EQUAL) {
+				} else if (this->currentChar == '=') {
+				//} else if (this->setCurrentState(this->currentChar) == Automat::COLON_EQUAL) {
 					// @todo: If-Bedingung überdenken / fixen
 					forceState = 1;
 					this->currentState = Automat::COLON_EQUAL;
@@ -306,11 +306,11 @@ void Scanner::getNextToken() {
 				this->tokenType = Token::TT_EQUAL;
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) == Automat::COMPLEX_1) {
+				if (this->setCurrentState(this->currentChar) == Automat::COMPLEX_1) {
 					forceState = 1;
 					this->currentState = Automat::COMPLEX_1;
 				} else {
@@ -322,11 +322,11 @@ void Scanner::getNextToken() {
 			case Automat::AND_1:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				if (this->setCurrentState(currentChar) == Automat::AND) {
+				if (this->setCurrentState(this->currentChar) == Automat::AND) {
 					forceState = 1;
 					this->currentState = Automat::TOKEN;
 					this->tokenType = Token::TT_AND;
@@ -343,13 +343,13 @@ void Scanner::getNextToken() {
 			case Automat::COMMENT_1:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
+				this->currentChar = this->buffer->getChar();
 				//@todo Löschen
-//				this->internBuffer[this->scannerIndex] = currentChar;
+//				this->internBuffer[this->scannerIndex] = this->currentChar;
 //				this->scannerIndex++;
 				//@todo Löschen ENDE
 
-				if (this->setCurrentState(currentChar) == Automat::COMMENT_2) {
+				if (this->setCurrentState(this->currentChar) == Automat::COMMENT_2) {
 					forceState = 1;
 					this->currentState = Automat::COMMENT_2;
 					this->tokenType = Token::TT_DUMMY;
@@ -359,13 +359,13 @@ void Scanner::getNextToken() {
 			case Automat::COMMENT_2:
 				this->lexemLength++;
 
-				currentChar = this->buffer->getChar();
+				this->currentChar = this->buffer->getChar();
 				//@todo Löschen
-//				this->internBuffer[this->scannerIndex] = currentChar;
+//				this->internBuffer[this->scannerIndex] = this->currentChar;
 //				this->scannerIndex++;
 				//@todo Löschen ENDE
 
-				if (this->setCurrentState(currentChar) == Automat::TOKEN) {
+				if (this->setCurrentState(this->currentChar) == Automat::TOKEN) {
 					forceState = 1;
 					this->clearInternBuffer();
 					this->scannerIndex = 0;
@@ -390,12 +390,12 @@ void Scanner::getNextToken() {
 			case Automat::COMPLEX_1:
 				this->lexemLength = 3;
 
-				currentChar = this->buffer->getChar();
-				this->internBuffer[this->scannerIndex] = currentChar;
+				this->currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = this->currentChar;
 				this->scannerIndex++;
 
-				//if (this->setCurrentState(currentChar) == Automat::EQUAL) {
-				if (currentChar == '=') {
+				//if (this->setCurrentState(this->currentChar) == Automat::EQUAL) {
+				if (this->currentChar == '=') {
 					forceState = 1;
 					this->currentState = Automat::TOKEN;
 					this->tokenType = Token::TT_MORE_COLON_MORE;
@@ -416,7 +416,7 @@ void Scanner::getNextToken() {
 		} // END IF
 
 		if (forceState == 0) {
-			this->currentState = this->setCurrentState(currentChar);
+			this->currentState = this->setCurrentState(this->currentChar);
 		}
 	} // END WHILE
 } // END METHODE
