@@ -1,0 +1,16 @@
+Beginne ...
+3 as 
+11 as 
+Token: COLUMN: 1 ROW: 1 TYPE: Identifier:   w wh
+11 as 
+Token: COLUMN: 4 ROW: 1 TYPE: Identifier:   whi
+11 as 
+Token: COLUMN: 8 ROW: 1 TYPE: Identifier:   whil
+11 as 
+Token: COLUMN: 13 ROW: 1 TYPE: Identifier:   while
+11 as 
+Token: COLUMN: 19 ROW: 1 TYPE: Identifier:   whilee
+11 as 
+Token: COLUMN: 26 ROW: 1 TYPE: Identifier:   whiile
+Token: COLUMN: 0 ROW: 2 TYPE: Identifier:   
+
