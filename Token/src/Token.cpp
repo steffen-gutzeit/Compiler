@@ -68,7 +68,7 @@ const char *Token::getTokenType(){
     switch (this->tokenType){
 
     case TT_DUMMY: return "Dummy\t"; break;
-    case TT_SIGN: return "Sign\t"; break;
+    case TT_SIGN: return "Sign\t\t"; break;
     case TT_INTEGER: return "Integer\t"; break;
     case TT_IDENTIFIER: return "Identifier"; break;
     case TT_IF: return "IF\t\t"; break;
@@ -85,7 +85,7 @@ const char *Token::getTokenType(){
     case TT_EXCLAMATION_MARK: return "Excla_Mark"; break;
     //case 16: return "Quest_Mark"; break;
     case TT_AND: return "And\t\t"; break;
-    case TT_SEMICOLON: return "Semicolon"; break;
+    case TT_SEMICOLON: return "Semicolon\t"; break;
     case TT_BRACKET_UPON: return "Brack_Open"; break;
     case TT_BRACKET_CLOSE: return "Brack_Close"; break;
     case TT_BRACE_UPON: return "Brace_Open"; break;

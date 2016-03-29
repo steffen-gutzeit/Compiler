@@ -1,0 +1,7 @@
+TEST// test //SIMPLE
+a# # 
+=:+ ==
+=: ==
+
+:* Wenn Identifier > 512 ==> abschneiden und neuen machen oder Fehler werfen? *:
+:* Können tabs mit colIndex + 1 gerechnet werden? *:

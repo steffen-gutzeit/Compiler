@@ -77,7 +77,12 @@ void Scanner::throwSpecialToken(uint16_t tokenType) {
 	this->internBuffer[0] = this->currentChar;
 	this->tokenType = tokenType;
 	this->scannerIndex = 1;
-	this->generateToken(this->tokenType);
+
+	if (this->currentChar != ' ') {
+		this->generateToken(this->tokenType);
+	} else {
+		this->clearInternBuffer();
+	}
 }
 
 void Scanner::getNextChar() {
@@ -105,6 +110,7 @@ void Scanner::getNextToken() {
 			case Automat::INIT:
 				this->getNextChar();
 				forceState = 0;
+				this->lexemLength = 0;
 				break;
 
 			case Automat::TOKEN:
@@ -113,7 +119,7 @@ void Scanner::getNextToken() {
 				this->clearInternBuffer();
 
 				this->colIndex += this->lexemLength;
-				this->lexemLength = 1;
+				this->lexemLength = 0;
 
 				forceState = 0;
 				break;
@@ -121,7 +127,7 @@ void Scanner::getNextToken() {
 			case Automat::ERROR:
 				//@todo
 				// Fehlerfall einfaches &
-
+				cout << this->currentChar << endl;
 				forceState = 1;
 				this->currentState = Automat::TOKEN;
 				this->scannerIndex--;
@@ -132,6 +138,7 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::BLANK:
+				//this->lexemLength++;
 				this->tokenType = Token::TT_BLANK;
 				this->currentState = Automat::INIT;
 				break;
@@ -157,18 +164,40 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::IF_1:
-				//@todo!!!
+				this->getNextChar();
 				this->lexemLength = 1;
 
-				this->getNextChar();
+				if (this->setCurrentState(this->currentChar) == Automat::IF) {
+					forceState = 1;
+					this->currentState = Automat::IF;
+				} else {
+					forceState = 1;
+					this->currentState = Automat::IDENTIFIER;
+					this->scannerIndex--;
+					this->buffer->dekrementBufferPointer();
+				}
 				break;
 
 			case Automat::IF:
-				this->lexemLength = 2;
 				this->getNextChar();
 
-				if (this->setCurrentState(this->currentChar) < Automat::INTEGER) {
+				if ((this->setCurrentState(this->currentChar) >= Automat::BLANK &&
+						this->setCurrentState(this->currentChar) <= Automat::TAB) ||
+						this->setCurrentState(this->currentChar) == Automat::TOKEN ||
+						this->setCurrentState(this->currentChar) == Automat::SIGN ||
+						this->setCurrentState(this->currentChar) == Automat::COLON ||
+						this->setCurrentState(this->currentChar) == Automat::EQUAL ||
+						this->setCurrentState(this->currentChar) == Automat::AND_1 ||
+						this->setCurrentState(this->currentChar) == Automat::AND ||
+						this->setCurrentState(this->currentChar) == Automat::COMMENT_1 ||
+						this->setCurrentState(this->currentChar) == Automat::COMMENT_2 ||
+						this->setCurrentState(this->currentChar) == Automat::COLON_EQUAL ||
+						this->setCurrentState(this->currentChar) == Automat::COMPLEX_1 ||
+						this->setCurrentState(this->currentChar) == Automat::CHECK) {
 					this->forceTokenGeneration(Automat::TOKEN, Token::TT_IF);
+					this->lexemLength = 2;
+				} else {
+					this->forceTokenGeneration(Automat::IDENTIFIER, Token::TT_IF);
 				}
 				break;
 
@@ -182,6 +211,8 @@ void Scanner::getNextToken() {
 				} else {
 					forceState = 1;
 					this->currentState = Automat::IDENTIFIER;
+					this->scannerIndex--;
+					this->buffer->dekrementBufferPointer();
 				}
 				break;
 
@@ -195,6 +226,8 @@ void Scanner::getNextToken() {
 				} else {
 					forceState = 1;
 					this->currentState = Automat::IDENTIFIER;
+					this->scannerIndex--;
+					this->buffer->dekrementBufferPointer();
 				}
 				break;
 
@@ -208,6 +241,8 @@ void Scanner::getNextToken() {
 				} else {
 					forceState = 1;
 					this->currentState = Automat::IDENTIFIER;
+					this->scannerIndex--;
+					this->buffer->dekrementBufferPointer();
 				}
 				break;
 
@@ -221,6 +256,8 @@ void Scanner::getNextToken() {
 				} else {
 					forceState = 1;
 					this->currentState = Automat::IDENTIFIER;
+					this->scannerIndex--;
+					this->buffer->dekrementBufferPointer();
 				}
 				break;
 
@@ -248,7 +285,6 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::SIGN:
-				this->colIndex++;
 				this->lexemLength = 1;
 				this->tokenType = Token::TT_SIGN;
 				break;
@@ -269,6 +305,7 @@ void Scanner::getNextToken() {
 					// @todo: If-Bedingung überdenken / fixen
 					forceState = 1;
 					this->currentState = Automat::COLON_EQUAL;
+				// @todo: If-Bedingung überdenken / fixen
 				} else {
 					this->forceTokenGeneration(Automat::TOKEN, Token::TT_COLON);
 				}
@@ -280,9 +317,6 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::EQUAL:
-				/*this->lexemLength = 1;
-				this->tokenType = Token::TT_EQUAL;*/
-
 				this->tokenType = Token::TT_EQUAL;
 				this->lexemLength++;
 
@@ -347,11 +381,10 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::COLON_EQUAL:
-				this->lexemLength = 2;
+				this->lexemLength = 3;
 				forceState = 1;
 				this->currentState = Automat::TOKEN;
 
-				this->buffer->dekrementBufferPointer();
 				this->tokenType = Token::TT_COLON_EQUAL;
 				break;
 
@@ -374,6 +407,7 @@ void Scanner::getNextToken() {
 				// =:+
 				this->throwSpecialToken(Token::TT_EQUAL);
 				this->throwSpecialToken(Token::TT_COLON);
+
 				//@todo: TokenType anpassen
 				this->throwSpecialToken(Token::TT_DUMMY);
 				break;

@@ -51,6 +51,7 @@ private:
 	void forceTokenGeneration(uint16_t state, uint16_t tokenType);
 	void throwSpecialToken(uint16_t tokenType);
 	void readNextChar();
+	void getNextChar();
 };
 #endif /* SCANNER_SRC_SCANNER_H_ */
 
