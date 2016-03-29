@@ -230,7 +230,7 @@ void Buffer::loadSecondBuffer(){
     }
 
     //Anzeichen f�r Ende des Buffers2
-    secondBuffer[512] = '\0';
+    secondBuffer[511] = '\0';
 }
 
 //####################### Ausgabe #####################################
