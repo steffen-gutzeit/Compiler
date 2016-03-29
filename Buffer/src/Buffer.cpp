@@ -214,7 +214,7 @@ void Buffer::loadFirstBuffer(){
     }
 
     //Anzeichen f�r Ende des Buffers1
-    firstBuffer[512] = '\0';
+    firstBuffer[511] = '\0';
 }
 
 void Buffer::loadSecondBuffer(){
