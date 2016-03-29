@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <iostream>
+
 
 #define BUF_SIZE (512)
 
@@ -61,8 +63,12 @@ Buffer::Buffer(char *inPath, char *outPath) {
     //Input Buffer
     //Allokiere Speicher, muss ein Vielfaches der Blocksize sein
     //512 ist die Blocksize, BUF_SIZE muss ein vielfaches von der Blocksize sein
-    posix_memalign((void**)&firstBuffer, 512, BUF_SIZE);
-    posix_memalign((void**)&secondBuffer, 512, BUF_SIZE);
+    int test1 = posix_memalign((void**)&firstBuffer, 512, BUF_SIZE);
+    int test2 = posix_memalign((void**)&secondBuffer, 512, BUF_SIZE);
+
+    //0 bedeutet keinen Fehler beim Allokieren
+    /*cout << test1;
+    cout << test2;*/
 
     //Output Buffer
     //Allokiere Speicher, muss ein Vielfaches der Blocksize sein
@@ -83,10 +89,11 @@ char Buffer::getChar() {
 
         if(currentBuffer == 1){
            //Aktionen Buffer 1
-           if((this->firstBuffer[this->currentIndex] == '\0') & (this->currentIndex == 512)){
+           if((this->firstBuffer[this->currentIndex] == '\0') & (this->currentIndex == 511)){
                //Wechsle Buffer und setze Index herab
                currentBuffer = 2;
                currentIndex = 0;
+
                //Lade Buffer
                loadSecondBuffer();
                //Ermitlle Wert
@@ -105,10 +112,11 @@ char Buffer::getChar() {
 
         } else {
             //Aktionen Buffer 2
-            if((this->secondBuffer[this->currentIndex] == '\0') & (this->currentIndex == 512)){
+            if((this->secondBuffer[this->currentIndex] == '\0') & (this->currentIndex == 511)){
                //Wechsle Buffer und setze Index herab
                currentBuffer = 1;
                currentIndex = 0;
+
                //Lade Buffer
                loadFirstBuffer();
                //Ermitlle Wert
@@ -197,6 +205,12 @@ void Buffer::dekrementBufferPointer(unsigned int i){
 
 //Schliest die Input Datei
 void Buffer::closeFile(){
+	//gebe Buffer frei
+	free((void**)firstBuffer);
+	free((void**)secondBuffer);
+	free((void**)firstBufferOut);
+	free((void**)secondBufferOut);
+
     close(file_descriptor);
 }
 
