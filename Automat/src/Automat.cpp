@@ -468,22 +468,22 @@ void Automat::initTransitionTable() {
 
 	// AND_1
 	i = 19;
-	transitionTable[i][0]  = TOKEN;
-	transitionTable[i][1]  = TOKEN;
-	transitionTable[i][2]  = TOKEN;
-	transitionTable[i][3]  = TOKEN;
-	transitionTable[i][4]  = TOKEN;
-	transitionTable[i][5]  = TOKEN;
-	transitionTable[i][6]  = TOKEN;
-	transitionTable[i][7]  = TOKEN;
-	transitionTable[i][8]  = TOKEN;
-	transitionTable[i][9]  = TOKEN;
-	transitionTable[i][10] = TOKEN;
-	transitionTable[i][11] = TOKEN;
+	transitionTable[i][0]  = ERROR;
+	transitionTable[i][1]  = ERROR;
+	transitionTable[i][2]  = ERROR;
+	transitionTable[i][3]  = ERROR;
+	transitionTable[i][4]  = ERROR;
+	transitionTable[i][5]  = ERROR;
+	transitionTable[i][6]  = ERROR;
+	transitionTable[i][7]  = ERROR;
+	transitionTable[i][8]  = ERROR;
+	transitionTable[i][9]  = ERROR;
+	transitionTable[i][10] = ERROR;
+	transitionTable[i][11] = ERROR;
 	transitionTable[i][12] = AND;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
+	transitionTable[i][13] = ERROR;
+	transitionTable[i][14] = ERROR;
+	transitionTable[i][15] = ERROR;
 	transitionTable[i][16] = ERROR;
 
 	// AND
@@ -568,21 +568,42 @@ void Automat::initTransitionTable() {
 
 	// COMPLEX_1
 	i = 24;
-	transitionTable[i][0]  = ERROR;
-	transitionTable[i][1]  = ERROR;
-	transitionTable[i][2]  = ERROR;
-	transitionTable[i][3]  = ERROR;
-	transitionTable[i][4]  = ERROR;
-	transitionTable[i][5]  = ERROR;
-	transitionTable[i][6]  = ERROR;
-	transitionTable[i][7]  = ERROR;
-	transitionTable[i][8]  = ERROR;
-	transitionTable[i][9]  = ERROR;
-	transitionTable[i][10] = ERROR;
+	transitionTable[i][0]  = CHECK;
+	transitionTable[i][1]  = CHECK;
+	transitionTable[i][2]  = CHECK;
+	transitionTable[i][3]  = CHECK;
+	transitionTable[i][4]  = CHECK;
+	transitionTable[i][5]  = CHECK;
+	transitionTable[i][6]  = CHECK;
+	transitionTable[i][7]  = CHECK;
+	transitionTable[i][8]  = CHECK;
+	transitionTable[i][9]  = CHECK;
+	transitionTable[i][10] = CHECK;
 	transitionTable[i][11] = TOKEN;
-	transitionTable[i][12] = ERROR;
-	transitionTable[i][13] = ERROR;
-	transitionTable[i][14] = ERROR;
-	transitionTable[i][15] = ERROR;
+	transitionTable[i][12] = CHECK;
+	transitionTable[i][13] = CHECK;
+	transitionTable[i][14] = CHECK;
+	transitionTable[i][15] = CHECK;
+	transitionTable[i][16] = ERROR;
+
+
+	// COMPLEX_1
+	i = 25;
+	transitionTable[i][0]  = INIT;
+	transitionTable[i][1]  = INIT;
+	transitionTable[i][2]  = INIT;
+	transitionTable[i][3]  = INIT;
+	transitionTable[i][4]  = INIT;
+	transitionTable[i][5]  = INIT;
+	transitionTable[i][6]  = INIT;
+	transitionTable[i][7]  = INIT;
+	transitionTable[i][8]  = INIT;
+	transitionTable[i][9]  = INIT;
+	transitionTable[i][10] = INIT;
+	transitionTable[i][11] = TOKEN;
+	transitionTable[i][12] = INIT;
+	transitionTable[i][13] = INIT;
+	transitionTable[i][14] = INIT;
+	transitionTable[i][15] = INIT;
 	transitionTable[i][16] = ERROR;
 }
