@@ -22,13 +22,13 @@ uint16_t Automat::testChar(char currentChar) {
 
 	this->currentState = transitionTable[this->currentState][this->getCharacterType(currentChar)];
 
-
-		/*cout
+/*
+		cout
 			<< " State: " << currentState << " "
 			<< " Char: " << this->getCharacterType(currentChar) << endl
 			<< endl;
-*/
 
+*/
 	/*
 	cout
 		<< " Matrix-Col:" << this->currentState << endl
@@ -44,13 +44,13 @@ uint16_t Automat::getCharacterType(char currentChar) {
 	if (currentChar >= '0' && currentChar <= '9') {
 		return CT_DIGIT;
 	} else if ( ((currentChar >= 'A') && (currentChar <= 'D')) ||
-				((currentChar >= 'G') && (currentChar <= 'H')) ||
+				(currentChar == 'G') ||
 				((currentChar >= 'J') && (currentChar <= 'K')) ||
 				((currentChar >= 'M') && (currentChar <= 'V')) ||
 				((currentChar >= 'X') && (currentChar <= 'Z')) ||
 
 				((currentChar >= 'a') && (currentChar <= 'd')) ||
-				((currentChar >= 'g') && (currentChar <= 'h')) ||
+				(currentChar == 'g') ||
 				((currentChar >= 'j') && (currentChar <= 'k')) ||
 				((currentChar >= 'm') && (currentChar <= 'v')) ||
 				((currentChar >= 'x') && (currentChar <= 'z'))) {
