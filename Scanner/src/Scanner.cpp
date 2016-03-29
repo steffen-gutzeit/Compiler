@@ -40,11 +40,12 @@ void Scanner::getNextToken() {
     //End of File Schaltvariable
     bool eof = false;
 
-    this->currentState = 0;
+    //this->currentState = 0;
     char currentChar = ' ';
 
     //@todo entfernen
     int i = 0;
+    int forceState = 0;
 
     //Hauptschleife solange das Ende der Datei nicht erreicht ist
 	while(eof == false){
@@ -53,7 +54,8 @@ void Scanner::getNextToken() {
 
 		if(currentChar == '\0'){
 			eof = true;
-			break;
+
+			this->generateToken(this->tokenType);
 		} else {
 			//cout << " -----> C:" << currentChar << " S:" << this->currentState << endl;
 
@@ -61,6 +63,8 @@ void Scanner::getNextToken() {
 			case Automat::INIT:
 				currentChar = this->buffer->getChar();
 				this->internBuffer[this->scannerIndex] = currentChar;
+
+				forceState = 0;
 
 				//Immer bei neuem Zeichen Col Count erhöhen
 				//this->incrementColCount();
@@ -76,15 +80,14 @@ void Scanner::getNextToken() {
 
 				this->colIndex += this->lexemLength;
 				this->lexemLength = 1;
+
+				forceState = 0;
 				break;
 
 			case Automat::ERROR:
 				break;
 
 			case Automat::BLANK:
-				this->scannerIndex--;
-				this->internBuffer[scannerIndex] = '\0';
-
 				this->tokenType = Token::TT_BLANK;
 
 				this->currentState = Automat::INIT;
@@ -93,6 +96,10 @@ void Scanner::getNextToken() {
 			case Automat::LINE_BREAK:
 				this->colIndex = 0;
 				this->rowIndex++;
+
+				this->tokenType = Token::TT_BLANK;
+
+				this->currentState = Automat::INIT;
 				break;
 
 			case Automat::TAB:
@@ -107,9 +114,16 @@ void Scanner::getNextToken() {
 				this->scannerIndex++;
 
 				if (this->setCurrentState(currentChar) != Automat::INTEGER) {
-					this->currentState = 1;
-					this->buffer->dekrementBufferPointer();
+					// Durch das weitere manuelle Auslesen von Chars wird der
+					// Folgezustand mit falschem Wert überschrieben, sofern
+					// der normale Programmablauf durchgeführt wird.
+					// Um dies zu verhindern, wird forceState=1 gesetzt.
+					forceState = 1;
+					this->currentState = Automat::TOKEN;
 					this->scannerIndex--;
+					this->internBuffer[this->scannerIndex] = '\0';
+
+					this->buffer->dekrementBufferPointer();
 					this->tokenType = Token::TT_INTEGER;
 				}
 				break;
@@ -122,9 +136,16 @@ void Scanner::getNextToken() {
 				this->scannerIndex++;
 
 				if (this->setCurrentState(currentChar) != Automat::IDENTIFIER) {
+					// Durch das weitere manuelle Auslesen von Chars wird der
+					// Folgezustand mit falschem Wert überschrieben, sofern
+					// der normale Programmablauf durchgeführt wird.
+					// Um dies zu verhindern, wird forceState=1 gesetzt.
+					forceState = 1;
 					this->currentState = Automat::TOKEN;
-					this->buffer->dekrementBufferPointer();
 					this->scannerIndex--;
+					this->internBuffer[this->scannerIndex] = '\0';
+
+					this->buffer->dekrementBufferPointer();
 					this->tokenType = Token::TT_IDENTIFIER;
 				}
 				break;
@@ -279,7 +300,9 @@ void Scanner::getNextToken() {
 			} // END SELECT
 		} // END IF
 
-		this->currentState = this->setCurrentState(currentChar);
+		if (forceState == 0) {
+			this->currentState = this->setCurrentState(currentChar);
+		}
 
 		//if (i == 10) break;
 	} // END WHILE
@@ -296,7 +319,7 @@ uint16_t Scanner::setCurrentState(char currentChar) {
 
 
 void Scanner::generateToken(uint16_t typ) {
-	token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+	this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 
 	printToken();
 	//writeOutput();

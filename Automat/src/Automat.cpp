@@ -20,8 +20,16 @@ Automat::~Automat() {
 
 uint16_t Automat::testChar(char currentChar) {
 
-	this->currentState = transitionTable[(this->currentState)][this->getCharacterType(currentChar)];
-/*
+	this->currentState = transitionTable[this->currentState][this->getCharacterType(currentChar)];
+
+
+		/*cout
+			<< " State: " << currentState << " "
+			<< " Char: " << this->getCharacterType(currentChar) << endl
+			<< endl;
+*/
+
+	/*
 	cout
 		<< " Matrix-Col:" << this->currentState << endl
 		<< " Matrix-Row:" << this->getCharacterType(currentChar) << endl
@@ -35,17 +43,17 @@ uint16_t Automat::testChar(char currentChar) {
 uint16_t Automat::getCharacterType(char currentChar) {
 	if (currentChar >= '0' && currentChar <= '9') {
 		return CT_DIGIT;
-	} else if ( ((currentChar >= 'A') && (currentChar <= 'D') &&
-				(currentChar >= 'G') && (currentChar <= 'H') &&
-				(currentChar >= 'J') && (currentChar <= 'K') &&
-				(currentChar >= 'M') && (currentChar <= 'V') &&
-				(currentChar >= 'X') && (currentChar <= 'Z')) ||
+	} else if ( ((currentChar >= 'A') && (currentChar <= 'D')) ||
+				((currentChar >= 'G') && (currentChar <= 'H')) ||
+				((currentChar >= 'J') && (currentChar <= 'K')) ||
+				((currentChar >= 'M') && (currentChar <= 'V')) ||
+				((currentChar >= 'X') && (currentChar <= 'Z')) ||
 
-				((currentChar >= 'a') && (currentChar <= 'd') &&
-				(currentChar >= 'g') && (currentChar <= 'h') &&
-				(currentChar >= 'j') && (currentChar <= 'k') &&
-				(currentChar >= 'm') && (currentChar <= 'v') &&
-				(currentChar >= 'x') && (currentChar <= 'z'))) {
+				((currentChar >= 'a') && (currentChar <= 'd')) ||
+				((currentChar >= 'g') && (currentChar <= 'h')) ||
+				((currentChar >= 'j') && (currentChar <= 'k')) ||
+				((currentChar >= 'm') && (currentChar <= 'v')) ||
+				((currentChar >= 'x') && (currentChar <= 'z'))) {
 		return CT_LETTER;
 	} else if ( currentChar == 'i' || currentChar == 'I') {
 		return CT_I;
