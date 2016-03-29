@@ -79,6 +79,16 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::ERROR:
+				//@todo
+				// Fehlerfall einfaches &
+				//forceState = 1 schadet nicht!
+//				forceState = 1;
+				this->currentState = Automat::TOKEN;
+				this->scannerIndex--;
+				this->internBuffer[this->scannerIndex] = '\0';
+
+				this->buffer->dekrementBufferPointer();
+				this->tokenType = Token::TT_ERROR;
 				break;
 
 			case Automat::BLANK:
@@ -287,6 +297,32 @@ void Scanner::getNextToken() {
 			case Automat::COLON:
 				this->lexemLength = 1;
 				this->tokenType = Token::TT_COLON;
+
+				this->lexemLength++;
+
+				currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = currentChar;
+				this->scannerIndex++;
+
+				if (this->setCurrentState(currentChar) == Automat::COMMENT_1) {
+					forceState = 1;
+					this->clearInternBuffer();
+					this->scannerIndex = 0;
+					this->currentState = Automat::COMMENT_1;
+				} else if (currentChar == '=') {
+				//} else if (this->setCurrentState(currentChar) == Automat::COLON_EQUAL) {
+					// @todo: If-Bedingung überdenken / fixen
+					forceState = 1;
+					this->currentState = Automat::COLON_EQUAL;
+				} else {
+					forceState = 1;
+					this->currentState = Automat::TOKEN;
+					this->scannerIndex--;
+					this->internBuffer[this->scannerIndex] = '\0';
+
+					this->buffer->dekrementBufferPointer();
+					this->tokenType = Token::TT_COLON;
+				}
 				break;
 
 			case Automat::STAR:
@@ -295,33 +331,142 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::EQUAL:
-				this->lexemLength = 1;
+				/*this->lexemLength = 1;
+				this->tokenType = Token::TT_EQUAL;*/
+
 				this->tokenType = Token::TT_EQUAL;
+				this->lexemLength++;
+
+				currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = currentChar;
+				this->scannerIndex++;
+
+				if (this->setCurrentState(currentChar) == Automat::COMPLEX_1) {
+					forceState = 1;
+					this->currentState = Automat::COMPLEX_1;
+				} else {
+					forceState = 1;
+					this->currentState = Automat::TOKEN;
+					this->scannerIndex--;
+					this->internBuffer[this->scannerIndex] = '\0';
+
+					this->buffer->dekrementBufferPointer();
+					this->tokenType = Token::TT_EQUAL;
+				}
+
 				break;
 
 			case Automat::AND_1:
-				this->lexemLength = 1;
+				this->lexemLength++;
+
+				currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = currentChar;
+				this->scannerIndex++;
+
+				if (this->setCurrentState(currentChar) == Automat::AND) {
+					forceState = 1;
+					this->currentState = Automat::TOKEN;
+					this->tokenType = Token::TT_AND;
+				} else {
+					forceState = 1;
+					this->currentState = Automat::ERROR;
+				}
 				break;
 
 			case Automat::AND:
-				this->lexemLength = 2;
+				this->tokenType = Token::TT_AND;
 				break;
 
 			case Automat::COMMENT_1:
 				this->lexemLength++;
+
+				currentChar = this->buffer->getChar();
+				//@todo Löschen
+//				this->internBuffer[this->scannerIndex] = currentChar;
+//				this->scannerIndex++;
+				//@todo Löschen ENDE
+
+				if (this->setCurrentState(currentChar) == Automat::COMMENT_2) {
+					forceState = 1;
+					this->currentState = Automat::COMMENT_2;
+					this->tokenType = Token::TT_DUMMY;
+				}
 				break;
 
 			case Automat::COMMENT_2:
 				this->lexemLength++;
-				this->lexemLength++;
+
+				currentChar = this->buffer->getChar();
+				//@todo Löschen
+//				this->internBuffer[this->scannerIndex] = currentChar;
+//				this->scannerIndex++;
+				//@todo Löschen ENDE
+
+				if (this->setCurrentState(currentChar) == Automat::TOKEN) {
+					forceState = 1;
+					this->clearInternBuffer();
+					this->scannerIndex = 0;
+
+					this->currentState = Automat::TOKEN;
+					this->tokenType = Token::TT_DUMMY;
+				} else {
+					forceState = 1;
+					this->currentState = Automat::COMMENT_1;
+				}
 				break;
 
 			case Automat::COLON_EQUAL:
 				this->lexemLength = 2;
+				forceState = 1;
+				this->currentState = Automat::TOKEN;
+
+				this->buffer->dekrementBufferPointer();
+				this->tokenType = Token::TT_COLON_EQUAL;
 				break;
 
 			case Automat::COMPLEX_1:
 				this->lexemLength = 3;
+
+				currentChar = this->buffer->getChar();
+				this->internBuffer[this->scannerIndex] = currentChar;
+				this->scannerIndex++;
+
+				//if (this->setCurrentState(currentChar) == Automat::EQUAL) {
+				if (currentChar == '=') {
+					forceState = 1;
+					this->currentState = Automat::TOKEN;
+					this->tokenType = Token::TT_MORE_COLON_MORE;
+				} else {
+					this->buffer->dekrementBufferPointer(3);
+					forceState = 0;
+				}
+				break;
+
+			case Automat::CHECK:
+				// =:+
+				currentChar = this->buffer->getChar();
+				this->clearInternBuffer();
+				this->internBuffer[0] = currentChar;
+				this->tokenType = Token::TT_EQUAL;
+				this->scannerIndex = 1;
+				this->generateToken(this->tokenType);
+
+				currentChar = this->buffer->getChar();
+				this->clearInternBuffer();
+				this->internBuffer[0] = currentChar;
+				this->tokenType = Token::TT_COLON;
+				this->scannerIndex = 1;
+				this->generateToken(this->tokenType);
+
+				currentChar = this->buffer->getChar();
+				this->clearInternBuffer();
+				this->internBuffer[0] = currentChar;
+				//@todo: TokenType anpassen
+				this->tokenType = Token::TT_DUMMY;
+				this->scannerIndex = 1;
+				this->generateToken(this->tokenType);
+
+
 				break;
 			} // END SELECT
 		} // END IF

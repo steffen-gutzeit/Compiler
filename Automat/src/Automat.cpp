@@ -529,10 +529,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = COMMENT_2;
 	transitionTable[i][11] = COMMENT_1;
 	transitionTable[i][12] = COMMENT_1;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = COMMENT_1;
+	transitionTable[i][14] = COMMENT_1;
+	transitionTable[i][15] = COMMENT_1;
+	transitionTable[i][16] = COMMENT_1;
 
 	// COMMENT_2
 	i = 22;
@@ -549,10 +549,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = COMMENT_1;
 	transitionTable[i][11] = COMMENT_1;
 	transitionTable[i][12] = COMMENT_1;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = COMMENT_1;
+	transitionTable[i][14] = COMMENT_1;
+	transitionTable[i][15] = COMMENT_1;
+	transitionTable[i][16] = COMMENT_1;
 
 	// COLON_EQUAL
 	i = 23;
@@ -595,7 +595,7 @@ void Automat::initTransitionTable() {
 	transitionTable[i][16] = ERROR;
 
 
-	// COMPLEX_1
+	// CHECK
 	i = 25;
 	transitionTable[i][0]  = INIT;
 	transitionTable[i][1]  = INIT;
