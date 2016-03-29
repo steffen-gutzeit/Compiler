@@ -29,6 +29,7 @@ private:
 
 
 	char internBuffer[512];
+	char currentChar;
 	char *outputPath;
 	uint16_t scannerIndex;
 	uint32_t currentState;
@@ -37,7 +38,7 @@ private:
 	uint32_t rowIndex;
 
 	uint8_t tokenType;
-
+	uint8_t forceState;
 	uint8_t lexemLength;
 
 	uint16_t setCurrentState(char currentChar);
@@ -45,6 +46,11 @@ private:
 	void incrementColCount();
 	void generateToken(uint16_t typ);
 	void clearInternBuffer();
+
+	void buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType);
+	void forceTokenGeneration(uint16_t state, uint16_t tokenType);
+	void throwSpecialToken(uint16_t tokenType);
+	void readNextChar();
 };
 #endif /* SCANNER_SRC_SCANNER_H_ */
 
