@@ -18,6 +18,7 @@ public:
 	virtual ~Automat();
 
 	void initTransitionTable();
+	uint16_t getStateByChar(char currentChar);
 	uint16_t getCharacterType(char currentChar);
 	uint16_t testChar(char currentChar);
 

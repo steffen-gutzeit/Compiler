@@ -38,20 +38,27 @@ private:
 	uint32_t rowIndex;
 
 	uint8_t tokenType;
-	uint8_t forceState;
-	uint8_t lexemLength;
+	int16_t lexemLength;
 
 	uint16_t setCurrentState(char currentChar);
+	uint16_t getCurrentState(char currentChar);
 	void printToken();
 	void incrementColCount();
 	void generateToken(uint16_t typ);
 	void clearInternBuffer();
 
 	void buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType);
-	void forceTokenGeneration(uint16_t state, uint16_t tokenType);
+	void forceTokenGeneration(uint16_t tokenType);
 	void throwSpecialToken(uint16_t tokenType);
 	void readNextChar();
 	void getNextChar();
+	void initBuffer();
+
+	void decrementScannerAndBuffer();
+	void decrementLexemLength();
+	bool isIdentifierOrIntegerState();
+	void doWhileCascade(uint16_t state);
+	void setLexemData(int16_t lexemLength, uint16_t tokenType);
 };
 #endif /* SCANNER_SRC_SCANNER_H_ */
 
