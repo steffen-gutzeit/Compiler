@@ -39,13 +39,13 @@ void Scanner::buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType) {
 	this->currentChar = this->buffer->getChar();
 	this->internBuffer[this->scannerIndex] = this->currentChar;
 	this->scannerIndex++;
+
 	if (this->getCurrentState(this->currentChar) != state) {
-		this->forceTokenGeneration(tokenType);
+		this->initForTokenGeneration(tokenType);
 	}
 }
 
-//@todo Rename
-void Scanner::forceTokenGeneration(uint16_t tokenType) {
+void Scanner::initForTokenGeneration(uint16_t tokenType) {
 	this->decrementScannerAndBuffer();
 	this->internBuffer[this->scannerIndex] = '\0';
 	this->tokenType = tokenType;
@@ -76,42 +76,13 @@ void Scanner::decrementScannerAndBuffer() {
 	this->buffer->dekrementBufferPointer();
 }
 
-void Scanner::decrementLexemLength() {
-	if (!(currentChar >= 'a' && currentChar <= 'z')
-			|| (currentChar >= 'A' && currentChar <= 'Z')
-			|| (currentChar >= '0' && currentChar <= '9')) {
-		this->lexemLength--;
-	}
-}
-
-bool Scanner::isIdentifierOrIntegerState() {
-	return !(this->setCurrentState(this->currentChar) >= Automat::BLANK
-			&& this->setCurrentState(this->currentChar) <= Automat::TAB)
-			|| this->setCurrentState(this->currentChar) == Automat::TOKEN
-			|| this->setCurrentState(this->currentChar) == Automat::SIGN
-			|| this->setCurrentState(this->currentChar) == Automat::COLON
-			|| this->setCurrentState(this->currentChar) == Automat::EQUAL
-			|| this->setCurrentState(this->currentChar) == Automat::AND_1
-			|| this->setCurrentState(this->currentChar) == Automat::AND
-			|| this->setCurrentState(this->currentChar) == Automat::COMMENT_1
-			|| this->setCurrentState(this->currentChar) == Automat::COMMENT_2
-			|| this->setCurrentState(this->currentChar) == Automat::COLON_EQUAL
-			|| this->setCurrentState(this->currentChar) == Automat::COMPLEX_1
-			|| this->setCurrentState(this->currentChar) == Automat::CHECK;
-}
-
-void Scanner::doWhileCascade(uint16_t state) {
-	/*this->lexemLength++;
-	this->getNextChar();
-	if (this->getCurrentState(this->currentChar) != state) {
-		this->decrementScannerAndBuffer();
-	}*/
+void Scanner::whileIfCascade(uint16_t state) {
 	this->getNextChar();
 
 	if (this->getCurrentState(this->currentChar) == state) {
 		this->lexemLength++;
 	} else {
-		this->forceTokenGeneration(Token::TT_IDENTIFIER);
+		this->initForTokenGeneration(Token::TT_IDENTIFIER);
 		this->lexemLength++;
 	}
 
@@ -133,7 +104,7 @@ void Scanner::getNextToken() {
 
 			this->generateToken(this->tokenType);
 		} else {
-			//cout << currentState << " " << this->rowIndex << ":" << this->colIndex << endl;
+			//cout << this->getCurrentState(this->currentChar) << " " << currentState << " " << this->rowIndex << ":" << this->colIndex << endl;
 			switch (this->currentState) {
 			case Automat::INIT:
 				this->lexemLength = 0;
@@ -148,7 +119,12 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::ERROR:
-				this->forceTokenGeneration(Token::TT_ERROR);
+				this->setLexemData(1, Token::TT_ERROR);
+				/*this->scannerIndex--;
+				this->buffer->dekrementBufferPointer();
+				this->internBuffer[this->scannerIndex] = '\0';
+				this->tokenType = tokenType;*/
+				//this->initForTokenGeneration(Token::TT_ERROR);
 				break;
 
 			case Automat::BLANK:
@@ -164,7 +140,7 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::TAB:
-				setLexemData(4, Token::TT_BLANK);
+				this->setLexemData(4, Token::TT_BLANK);
 				break;
 
 			case Automat::INTEGER:
@@ -176,17 +152,7 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::IF_1:
-				/*this->getNextChar();
-
-				if (this->getCurrentState(this->currentChar) != Automat::IF) {
-					if (this->getCurrentState(this->currentChar) == Automat::IDENTIFIER) {
-						this->lexemLength++;
-					} else {
-						this->forceTokenGeneration(Token::TT_IDENTIFIER);
-						this->lexemLength++;
-					}
-				}*/
-				doWhileCascade(Automat::IF);
+				this->whileIfCascade(Automat::IF);
 				break;
 
 
@@ -195,24 +161,24 @@ void Scanner::getNextToken() {
 
 				if (this->getCurrentState(this->currentChar) != Automat::IDENTIFIER) {
 					this->lexemLength = 2;
-					this->forceTokenGeneration(Token::TT_IF);
+					this->initForTokenGeneration(Token::TT_IF);
 				}
 				break;
 
 			case Automat::WHILE_1:
-				doWhileCascade(Automat::WHILE_2);
+				this->whileIfCascade(Automat::WHILE_2);
 				break;
 
 			case Automat::WHILE_2:
-				doWhileCascade(Automat::WHILE_3);
+				this->whileIfCascade(Automat::WHILE_3);
 				break;
 
 			case Automat::WHILE_3:
-				doWhileCascade(Automat::WHILE_4);
+				this->whileIfCascade(Automat::WHILE_4);
 				break;
 
 			case Automat::WHILE_4:
-				doWhileCascade(Automat::WHILE);
+				this->whileIfCascade(Automat::WHILE);
 				break;
 
 			case Automat::WHILE:
@@ -220,14 +186,14 @@ void Scanner::getNextToken() {
 
 				if (this->getCurrentState(this->currentChar) != Automat::IDENTIFIER) {
 					this->lexemLength = 5;
-					this->forceTokenGeneration(Token::TT_WHILE);
+					this->initForTokenGeneration(Token::TT_WHILE);
 				} else {
 					this->lexemLength++;
 				}
 				break;
 
 			case Automat::SIGN:
-				setLexemData(1, Token::TT_SIGN);
+				this->setLexemData(1, Token::TT_SIGN);
 				break;
 
 			case Automat::COLON:
@@ -237,12 +203,12 @@ void Scanner::getNextToken() {
 				if (this->getCurrentState(this->currentChar) == Automat::COMMENT_1) {
 					this->clearInternBuffer();
 				} else if (!(this->getCurrentState(this->currentChar) == Automat::COLON_EQUAL)) {
-					this->forceTokenGeneration(Token::TT_COLON);
+					this->initForTokenGeneration(Token::TT_COLON);
 				}
 				break;
 
 			case Automat::STAR:
-				setLexemData(1, Token::TT_STAR);
+				this->setLexemData(1, Token::TT_STAR);
 				break;
 
 			case Automat::EQUAL:
@@ -250,7 +216,7 @@ void Scanner::getNextToken() {
 				this->getNextChar();
 
 				if (this->getCurrentState(this->currentChar) != Automat::COMPLEX_1) {
-					this->forceTokenGeneration(Token::TT_EQUAL);
+					this->initForTokenGeneration(Token::TT_EQUAL);
 				}
 				break;
 
@@ -264,7 +230,7 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::AND:
-				setLexemData(2, Token::TT_AND);
+				this->setLexemData(2, Token::TT_AND);
 				break;
 
 			case Automat::COMMENT_1:
@@ -294,7 +260,7 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::COLON_EQUAL:
-				setLexemData(2, Token::TT_COLON_EQUAL);
+				this->setLexemData(2, Token::TT_COLON_EQUAL);
 				break;
 
 			case Automat::COMPLEX_1:

@@ -22,7 +22,7 @@ public:
 	uint16_t getCharacterType(char currentChar);
 	uint16_t testChar(char currentChar);
 
-	uint16_t transitionTable[25][16];
+	uint16_t transitionTable[26][17];
 	uint16_t currentState;
 
 	enum StateName {

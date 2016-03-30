@@ -48,7 +48,7 @@ private:
 	void clearInternBuffer();
 
 	void buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType);
-	void forceTokenGeneration(uint16_t tokenType);
+	void initForTokenGeneration(uint16_t tokenType);
 	void throwSpecialToken(uint16_t tokenType);
 	void readNextChar();
 	void getNextChar();
@@ -57,7 +57,7 @@ private:
 	void decrementScannerAndBuffer();
 	void decrementLexemLength();
 	bool isIdentifierOrIntegerState();
-	void doWhileCascade(uint16_t state);
+	void whileIfCascade(uint16_t state);
 	void setLexemData(int16_t lexemLength, uint16_t tokenType);
 };
 #endif /* SCANNER_SRC_SCANNER_H_ */
