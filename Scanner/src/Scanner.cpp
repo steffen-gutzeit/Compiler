@@ -18,7 +18,7 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 
 	this->currentState = 0;
 	this->scannerIndex = 0;
-	this->colIndex = 1;
+	this->colIndex = 0;
 	this->rowIndex = 1;
 	this->tokenType = 0;
 	this->lexemLength = 0;
@@ -99,6 +99,9 @@ void Scanner::getNextToken() {
 
     //Hauptschleife solange das Ende der Datei nicht erreicht ist
 	while(eof == false){
+		/*cout << "State:\t" << this->currentState << "\tColIndex:" << this->colIndex
+				<< "\tlexLen:" << this->lexemLength << "\tPosition:" << (this->lexemLength + this->colIndex) << endl;
+*/
 		if(this->currentChar == '\0'){
 			eof = true;
 
@@ -139,6 +142,7 @@ void Scanner::getNextToken() {
 
 			case Automat::BLANK:
 				//this->lexemLength++;
+				this->colIndex++;
 				this->tokenType = Token::TT_BLANK;
 				this->currentState = Automat::INIT;
 				break;
@@ -164,14 +168,25 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::IF_1:
+				//this->lexemLength++;
 				this->getNextChar();
-				this->lexemLength = 1;
+
+				if (!
+						(currentChar >= 'a' && currentChar <= 'z') ||
+						(currentChar >= 'A' && currentChar <= 'Z') ||
+						(currentChar >= '0' && currentChar <= '9')
+						){
+					this->lexemLength--;
+				}
+
+				//this->lexemLength--;
 
 				if (this->setCurrentState(this->currentChar) == Automat::IF) {
 					forceState = 1;
 					this->currentState = Automat::IF;
 				} else {
 					forceState = 1;
+					//this->lexemLength--;
 					this->currentState = Automat::IDENTIFIER;
 					this->scannerIndex--;
 					this->buffer->dekrementBufferPointer();
@@ -202,17 +217,29 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::WHILE_1:
-				this->lexemLength++;
 				this->getNextChar();
 
 				if (this->setCurrentState(this->currentChar) == Automat::WHILE_2) {
 					forceState = 1;
 					this->currentState = Automat::WHILE_2;
+					this->lexemLength++;
 				} else {
 					forceState = 1;
 					this->currentState = Automat::IDENTIFIER;
 					this->scannerIndex--;
 					this->buffer->dekrementBufferPointer();
+
+					if (!
+							(currentChar >= 'a' && currentChar <= 'z') ||
+							(currentChar >= 'A' && currentChar <= 'Z') ||
+							(currentChar >= '0' && currentChar <= '9')
+							){
+						this->lexemLength--;
+					}
+
+					if (currentChar == ' ') {
+						this->lexemLength++;
+					}
 				}
 				break;
 
@@ -340,6 +367,7 @@ void Scanner::getNextToken() {
 					forceState = 1;
 					this->currentState = Automat::TOKEN;
 					this->tokenType = Token::TT_AND;
+					this->lexemLength++;
 				} else {
 					forceState = 1;
 					this->currentState = Automat::ERROR;
@@ -347,6 +375,8 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::AND:
+
+				this->lexemLength++;
 				this->tokenType = Token::TT_AND;
 				break;
 
@@ -354,6 +384,10 @@ void Scanner::getNextToken() {
 				this->lexemLength++;
 
 				this->currentChar = this->buffer->getChar();
+
+				if (currentChar == '\n') {
+					this->rowIndex++;
+				}
 
 				if (this->setCurrentState(this->currentChar) == Automat::COMMENT_2) {
 					forceState = 1;
@@ -371,6 +405,7 @@ void Scanner::getNextToken() {
 					forceState = 1;
 					this->clearInternBuffer();
 					this->scannerIndex = 0;
+					this->lexemLength++;
 
 					this->currentState = Automat::TOKEN;
 					this->tokenType = Token::TT_DUMMY;
@@ -381,7 +416,7 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::COLON_EQUAL:
-				this->lexemLength = 3;
+				this->lexemLength = 2;
 				forceState = 1;
 				this->currentState = Automat::TOKEN;
 
@@ -406,10 +441,14 @@ void Scanner::getNextToken() {
 			case Automat::CHECK:
 				// =:+
 				this->throwSpecialToken(Token::TT_EQUAL);
-				this->throwSpecialToken(Token::TT_COLON);
 
+				this->colIndex++;
+				this->throwSpecialToken(Token::TT_COLON);
+				this->colIndex++;
+				this->colIndex++;
 				//@todo: TokenType anpassen
 				this->throwSpecialToken(Token::TT_DUMMY);
+
 				break;
 			} // END SELECT
 		} // END IF
@@ -449,8 +488,7 @@ void Scanner::generateToken(uint16_t typ) {
 
 void Scanner::printToken() {
 	if (this->tokenType != Token::TT_BLANK) {
-		cout << "Token: ";
-		cout << "COLUMN: " << this->token->getCol() << " ROW: " << this->token->getRow() << " TYPE: " << this->token->getTokenType() << ":   ";
+		cout << this->token->getRow() << ":" << (this->token->getCol() + 1) << " \t TYPE: " << this->token->getTokenType() << ":   ";
 		for(int i = 0; i < this->scannerIndex; i++){
 			cout << this->internBuffer[i];
 		}
