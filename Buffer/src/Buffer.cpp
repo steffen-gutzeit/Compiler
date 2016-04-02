@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <malloc.h>
 
 #include <iostream>
 
@@ -21,116 +22,160 @@
 using namespace std;
 
 Buffer::Buffer(char *inPath, char *outPath) {
+
+	//Buffer In
 	currentIndex = 0;
 	currentBuffer = 1;
 
-	this->currentIndexOut = 0;
-	this->currentBufferOut = 1;
-
-	//Initialisieren der privaten Variablen
 	retValue = ' ';
 	byte_count = 0;
 
-	this->retValueOut = ' ';
-	this->byte_count_out = 0;
+	//Buffer Out
+	currentIndexOut = 0;
+	currentBufferOut = 1;
+
+	retValueOut = ' ';
+	byte_count_out = 0;
+
+	//Initialisiere Variablen
+	pmError = 0;
+	eof = '\0';
+	freeSpace = 0;
 
 	//Zaehler wie viele Blocksizes vollstaendig geschrieben wurden
-	this->blockCount = 0;
+	blockCount = 0;
 
-	//Dateipfad �bergeben
+	//File Discriptors
+	file_descriptor = 0;
+	file_descriptor_out = 0;
+
+	//Dateipfad uebergeben
 	inputPath = inPath;
-	this->outputPath = outPath;
+	outputPath = outPath;
 
-    //�ffnet die �bergebene Datei
-    //O_DIRECT sorgt daf�r, dass keine automatische Bufferverwaltung �bernommen wird
-    //Daher muss mittels posix_Memalign der Bufferspeicher allokiert werden
-    file_descriptor = open(inputPath, O_DIRECT);
+	//File Descriptor init
+	initDescriptors();
 
-    file_descriptor_out = open(outputPath, O_CREAT | O_TRUNC | O_WRONLY | O_DIRECT, S_IRWXU);
+    //Buffer init
+    initBuffer();
 
-    //Pr�ft auf Fehler beim �ffnen der Input Datei
-    if (file_descriptor == -1){
-       perror ("Fehler beim Oeffnen der Input Datei\n");
-       exit( errno);
-    }
-
-    //Pr�ft auf Fehler beim �ffnen der Output Datei
-    if (file_descriptor_out == -1){
-       perror ("Fehler beim Oeffnen der Output Datei\n");
-       exit( errno);
-    }
-
-    //Input Buffer
-    //Allokiere Speicher, muss ein Vielfaches der Blocksize sein
-    //512 ist die Blocksize, BUF_SIZE muss ein vielfaches von der Blocksize sein
-    int test1 = posix_memalign((void**)&firstBuffer, 512, BUF_SIZE);
-    int test2 = posix_memalign((void**)&secondBuffer, 512, BUF_SIZE);
-
-    //0 bedeutet keinen Fehler beim Allokieren
-    /*cout << test1;
-    cout << test2;*/
-
-    //Output Buffer
-    //Allokiere Speicher, muss ein Vielfaches der Blocksize sein
-    //512 ist die Blocksize, BUF_SIZE muss ein vielfaches von der Blocksize sein
-    posix_memalign((void**)&firstBufferOut, 512, BUF_SIZE);
-    posix_memalign((void**)&secondBufferOut, 512, BUF_SIZE);
-
-    //F�llt Inputbuffer 1
-    this->loadFirstBuffer();
+    //Fuellt Inputbuffer 1
+    loadFirstBuffer();
 
 }
 
 Buffer::~Buffer() {
-	// TODO Auto-generated destructor stub
+	// Schliese descriptor und OutBuffer
+	closeFileOut();
 }
+
+void Buffer::initDescriptors(){
+	//oeffnet die uebergebene Datei
+	//O_DIRECT sorgt dafuer, dass keine automatische Bufferverwaltung uebernommen wird
+	//Daher muss mittels posix_Memalign der Bufferspeicher allokiert werden
+
+	file_descriptor = open(inputPath, O_DIRECT);
+
+	file_descriptor_out = open(outputPath, O_CREAT | O_TRUNC | O_WRONLY | O_DIRECT, S_IRWXU);
+
+	//Prueft auf Fehler beim oeffnen der Input Datei
+	if (file_descriptor == -1){
+	   perror ("Fehler beim Oeffnen der Input Datei\n");
+	   exit( errno);
+	}
+
+	//Prueft auf Fehler beim oeffnen der Output Datei
+	if (file_descriptor_out == -1){
+	   perror ("Fehler beim Oeffnen der Output Datei\n");
+	   exit( errno);
+	}
+}
+
+void Buffer::initBuffer(){
+	//Allokiere Speicher, muss ein Vielfaches der Blocksize sein
+	//512 ist die Blocksize, BUF_SIZE muss ein vielfaches von der Blocksize sein
+	//Gibt 0 zurueck wenn keine Fehler auftraten
+
+	//Erster In Buffer
+	pmError = posix_memalign((void**)&firstBuffer, 512, BUF_SIZE);
+
+	if (pmError != 0) {
+		perror("posix_memalign");
+		exit(EXIT_FAILURE);
+	}
+
+	//Zweiter In Buffer
+	pmError = posix_memalign((void**)&secondBuffer, 512, BUF_SIZE);
+
+	if (pmError != 0) {
+		perror("posix_memalign");
+		exit(EXIT_FAILURE);
+	}
+
+	//Erster Out Buffer
+	pmError = posix_memalign((void**)&firstBufferOut, 512, BUF_SIZE);
+
+	if (pmError != 0) {
+		perror("posix_memalign");
+		exit(EXIT_FAILURE);
+	}
+}
+
+//####################### Eingabe #####################################
 
 char Buffer::getChar() {
 
         if(currentBuffer == 1){
+
            //Aktionen Buffer 1
-           if((this->firstBuffer[this->currentIndex] == '\0') & (this->currentIndex == 511)){
+        	if((currentIndex == byte_count) && (currentIndex == 512)){
                //Wechsle Buffer und setze Index herab
                currentBuffer = 2;
                currentIndex = 0;
 
                //Lade Buffer
                loadSecondBuffer();
+
                //Ermitlle Wert
-               retValue = this->secondBuffer[this->currentIndex++];
+               retValue = secondBuffer[currentIndex++];
+
            } else
-           if ((this->firstBuffer[this->currentIndex] == '\0') & (this->currentIndex < 512)){
+           if((currentIndex == byte_count - 1) && (currentIndex < 512) && (currentIndex != 511)){
                //EOF ist erreicht
                retValue = '\0';
+
                //Schliese Datei
-               this->closeFile();
+               closeFile();
 
            }else{
-               //Normale R�ckgabe
-               retValue = this->firstBuffer[this->currentIndex++];
+               //Normale Rueckgabe
+               retValue = firstBuffer[currentIndex++];
+
            }
 
         } else {
             //Aktionen Buffer 2
-            if((this->secondBuffer[this->currentIndex] == '\0') & (this->currentIndex == 511)){
+        	if((currentIndex == byte_count) && (currentIndex == 512)){
                //Wechsle Buffer und setze Index herab
                currentBuffer = 1;
                currentIndex = 0;
 
                //Lade Buffer
                loadFirstBuffer();
+
                //Ermitlle Wert
-               retValue = this->firstBuffer[this->currentIndex++];
+               retValue = firstBuffer[currentIndex++];
+
            } else
-           if ((this->secondBuffer[this->currentIndex] == '\0') & (this->currentIndex < 512)){
+           if((currentIndex == byte_count - 1) && (currentIndex < 512) && (currentIndex != 511)){
                //EOF ist erreicht
                retValue = '\0';
                //Schliese Datei
                this->closeFile();
 
            }else{
-               //Normale R�ckgabe
-               retValue = this->secondBuffer[this->currentIndex];
+               //Normale Rueckgabe
+               retValue = secondBuffer[currentIndex++];
            }
 
         }
@@ -139,35 +184,166 @@ char Buffer::getChar() {
 }
 
 
+void Buffer::loadFirstBuffer(){
+    //read setzt den Zeiger innerhalb der Datei automatisch hoch
+    //Es werden nur so viele Zeichen gelesen wie angegeben (512)
+    //Sollten weniger Bytes eingelesen werden, wird der Rest automatisch mit NULL aufgefuellt
+    byte_count = read(file_descriptor, firstBuffer, BUF_SIZE);
 
-
-
-
-
-  /*  //Pr�fen ob n�chstes Element noch im Buffer ist
-    if(((this->firstBuffer[this->currentIndex]) != '\0') & (this->currentBuffer == 1){
-
-        retValue = this->firstBuffer[this->currentIndex++];
-
-    } else
-    if (((this->firstBuffer[this->currentIndex]) == '\0') & (this->currentBuffer == 1){
-        //Buffer ist am Ende
-        this->currentIndex = 0;
-        this->currentBuffer = 2;
+    //Pruefe auf Fehler beim einlesen
+    if (byte_count == -1){
+       perror ("Fehler beim Lesen der Datei\n");
+       exit( errno);
     }
-	//Inkrement wird erst nach Zugriff erhoeht
-    return retValue;
-}*/
+
+}
+
+void Buffer::loadSecondBuffer(){
+    //read setzt den Zeiger innerhalb der Datei automatisch hoch
+    //Es werden nur so viele Zeichen gelesen wie angegeben (512)
+    //Sollten weniger Bytes eingelesen werden, wird der Rest automatisch mit NULL aufgefuellt
+    byte_count = read(file_descriptor, secondBuffer, BUF_SIZE);
+
+    //Pruefe auf Fehler beim einlesen
+    if (byte_count == -1){
+       perror ("Fehler beim Lesen der Datei\n");
+       exit( errno);
+    }
+
+
+
+}
+
+//Schliest die Input Datei
+void Buffer::closeFile(){
+	//gebe Buffer frei
+	free((void**)firstBuffer);
+	free((void**)secondBuffer);
+
+    close(file_descriptor);
+
+    //Valgrind error messages, nur zum debuggen auskommentieren!
+    fclose( stdin );
+    fclose( stdout );
+    fclose( stderr );
+}
+
+
+//####################### Ausgabe #####################################
+
+void Buffer::addCharsToOutBuffer(char* text){
+	//Uebergebene Strings oder Zeichen müssen mit '/0' terminiert werden!
+
+	//Pruefe ob Ende erreicht
+	//Um Ende der auszugebenden Datei zu signalisieren eine '\0' an erster Stelle übergeben
+	if(text[0] == '\0'){
+
+		//Fuelle restlichen Buffer bis 512 auf
+		for(int i=currentIndexOut; i<512;i++){
+			firstBufferOut[i] = '\0';
+		}
+
+		//Schreibe Buffer
+		writeBufferToFile();
+
+		//Rest der Datei abschneiden mit ftruncate, ansonsten ist der Rest der Datei mit Nullen gefuellt
+		ftruncate(file_descriptor_out, ((blockCount - 1) * BUF_SIZE) + currentIndexOut);
+
+		//BufferOut und File Descriptor werden über den Dekonstruktor beendet
+
+	}else{
+
+		//Länge Text bestimmen
+		int sizeOfText = 0;
+		while(text[sizeOfText] != '\0'){
+			sizeOfText++;
+		}
+
+		//Genug freie Kapazitaet im Buffer
+		if((currentIndexOut + sizeOfText) <= BUF_SIZE){
+			//Fülle Buffer
+			for(int i = 0; i < sizeOfText; i++){
+				firstBufferOut[currentIndexOut] = text[i];
+				currentIndexOut++;
+			}
+
+			//Buffer schreiben falls voll
+			if(currentIndexOut == 512){
+				writeBufferToFile();
+				currentIndexOut = 0;
+			}
+
+
+		//Nicht genug freie Kapazitaet im Buffer vorhanden
+		}else{
+			//Ermittle freien Platz im Buffer
+			freeSpace = BUF_SIZE - currentIndexOut;
+
+			//Fuelle Buffer bis voll
+			for(int i = 0; i < freeSpace; i++){
+				firstBufferOut[currentIndexOut] = text[i];
+				currentIndexOut++;
+			}
+
+			//Schreibe Buffer
+			writeBufferToFile();
+
+			//Resette Buffer
+			currentIndexOut = 0;
+
+			//Schreibe Rest in Buffer
+			for(int i = freeSpace; i < sizeOfText; i++){
+				firstBufferOut[currentIndexOut] = text[i];
+				currentIndexOut++;
+			}
+
+
+		}
+	}
+
+}
+
+
+void Buffer::writeBufferToFile(){
+
+	byte_count_out = write(file_descriptor_out, firstBufferOut, BUF_SIZE);
+
+	//Pruefe auf Fehler beim schreiben
+	 if (byte_count_out == -1){
+		perror ("Fehler beim Schreiben der Datei\n");
+		exit( errno);
+	 }
+
+	 //BlockCount erhoehen
+	 blockCount++;
+
+
+}
+
+//Schliest die Output Datei
+void Buffer::closeFileOut(){
+
+    //gebe Buffer frei
+    free((void**)firstBufferOut);
+
+	//Schliese Datei
+    close(file_descriptor_out);
+}
+
+
+//####################### Dekrementierungen #####################################
+
 
 void Buffer::setBufferPointer(int x) {
+	//Fehlerfaelle abfangen!
 	currentIndex += x;
 }
 
 
-//ToDo Falls im ersten Buffer mehr zur�ckgegangen wird als da ist
+//ToDo Falls im ersten Buffer mehr zurueckgegangen wird als da ist
 //und der zweite noch gar nicht initialisiert wurde --> Fehler ausgeben
 void Buffer::dekrementBufferPointer(){
-    //Pr�fen auf Bufferwechsel
+    //Pruefen auf Bufferwechsel
     if(currentIndex > 0){
         currentIndex--;
     } else {
@@ -184,7 +360,7 @@ void Buffer::dekrementBufferPointer(){
 
 }
 
-void Buffer::dekrementBufferPointer(unsigned int i){
+void Buffer::dekrementBufferPointer(int i){
     //Pr�fen auf Bufferwechsel
     if(currentIndex > i ){
         currentIndex -= i;
@@ -202,138 +378,4 @@ void Buffer::dekrementBufferPointer(unsigned int i){
     }
 
 }
-
-//Schliest die Input Datei
-void Buffer::closeFile(){
-	//gebe Buffer frei
-	free((void**)firstBuffer);
-	free((void**)secondBuffer);
-	free((void**)firstBufferOut);
-	free((void**)secondBufferOut);
-
-    close(file_descriptor);
-}
-
-
-void Buffer::loadFirstBuffer(){
-    //read setzt den Zeiger innerhalb der Datei automatisch hoch
-    //Es werden nur so viele Zeichen gelesen wie angegeben (512)
-    //Sollten weniger Bytes eingelesen werden, wird der Rest automatisch mit NULL aufgef�llt
-    byte_count = read(file_descriptor, firstBuffer, BUF_SIZE);
-
-    //Pr�fe auf Fehler beim einlesen
-    if (byte_count == -1){
-       perror ("Fehler beim Lesen der Datei\n");
-       exit( errno);
-    }
-
-    //Anzeichen f�r Ende des Buffers1
-    firstBuffer[511] = '\0';
-}
-
-void Buffer::loadSecondBuffer(){
-    //read setzt den Zeiger innerhalb der Datei automatisch hoch
-    //Es werden nur so viele Zeichen gelesen wie angegeben (512)
-    //Sollten weniger Bytes eingelesen werden, wird der Rest automatisch mit NULL aufgef�llt
-    byte_count = read(file_descriptor, secondBuffer, BUF_SIZE);
-
-    //Pr�fe auf Fehler beim einlesen
-    if (byte_count == -1){
-       perror ("Fehler beim Lesen der Datei\n");
-       exit( errno);
-    }
-
-    //Anzeichen f�r Ende des Buffers2
-    secondBuffer[511] = '\0';
-}
-
-//####################### Ausgabe #####################################
-
-void Buffer::addCharsToOutBuffer(char* text){
-
-	//Länge Text bestimmen
-	int sizeOfText = 0;
-    while(text[sizeOfText] != '\0'){
-    	sizeOfText++;
-    }
-    //printf("String mit LAenge: %d", sizeOfText);
-
-
-    //Prüfe freie Kapazität
-    if((this->currentIndexOut + sizeOfText) <= BUF_SIZE){
-    	//Fülle Buffer
-    	for(int i = 0; i < sizeOfText; i++){
-    		this->firstBufferOut[this->currentIndexOut] = text[i];
-    		this->currentIndexOut++;
-    	}
-
-
-    	    //close(file_descriptor_out);
-    }else{
-        //Buffer füllen bis Limit
-    	int tempIndex = 0;
-
-    	//Buffer füllen bis BUF_SIZE erreicht
-    	for(int i = 0; this->currentIndexOut <= BUF_SIZE; i++){
-    		this->firstBufferOut[this->currentIndexOut] = text[i];
-    		this->currentIndexOut++;
-    		tempIndex = i;
-    	}
-
-    	//Buffer schreiben
-    	this->byte_count_out = write(this->file_descriptor_out, firstBufferOut, BUF_SIZE);
-
-    	//Pr�fe auf Fehler beim schreiben
-    	 if (byte_count == -1){
-    	    perror ("Fehler beim Schreiben der Datei\n");
-    	    exit( errno);
-    	 }
-
-    	//Buffer löschen
-        for(int i = 0; i < BUF_SIZE; i++){
-        	this->firstBufferOut[i] = '\0';
-        }
-
-        //Bufferzeiger zurücksetzen
-        this->currentIndexOut = 0;
-
-        //BlockCount erhoehen
-        this->blockCount++;
-
-
-    	//Rest in Buffer laden
-    	for(int i = tempIndex; i < sizeOfText; i++){
-    	   this->firstBufferOut[this->currentIndexOut] = text[i];
-    	   this->currentIndexOut++;
-    	}
-    }
-
-
-}
-
-//Schliest die Output Datei
-void Buffer::closeFileOut(){
-	//Prüfe auf Rest im Buffer
-    if(this->currentIndexOut > 0){
-
-    	//Buffer schreiben
-    	this->byte_count_out = write(this->file_descriptor_out, firstBufferOut, BUF_SIZE);
-
-    	//Pruefe auf Fehler beim schreiben
-    	if (byte_count == -1){
-    	   perror ("Fehler beim Schreiben der Datei\n");
-    	   exit( errno);
-    	   }
-    }
-
-    //Rest der Datei abschneiden mit ftruncate, ansonsten ist der Rest der Datei mit Nullen gefuellt
-    ftruncate(this->file_descriptor_out, (this->blockCount * BUF_SIZE) + this->currentIndexOut);
-
-	//Schliese Datei
-    close(this->file_descriptor_out);
-}
-
-
-
-
 
