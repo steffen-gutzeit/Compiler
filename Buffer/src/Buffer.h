@@ -15,11 +15,6 @@ using namespace std;
 
 class Buffer {
 
-//@todo
-	//iostream ersetzen
-	//eof ermitteln und an Scanner schicken
-	//2. Buffer benutzen und übergänge möglich machen
-
 public:
 	Buffer(char *inPath, char *outPath);
 	virtual ~Buffer();
@@ -27,45 +22,56 @@ public:
 	char getChar();
 	void setBufferPointer(int x);
 	void dekrementBufferPointer();
-	void dekrementBufferPointer(unsigned int i);
+	void dekrementBufferPointer(int i);
 
 	void addCharsToOutBuffer(char* text);
 
-	void closeFileOut();
-
-
 private:
+	//Buffer
 	char *firstBuffer;
 	char *secondBuffer;
 
 	char *firstBufferOut;
-	char *secondBufferOut;
 
-	unsigned int currentIndex;
-	unsigned int currentBuffer;
+	int currentIndex;
+	int currentBuffer;
 
-	unsigned int currentIndexOut;
-	unsigned int currentBufferOut;
+	int currentIndexOut;
+	int currentBufferOut;
 
+	//Pfade
 	char *inputPath;
 	char *outputPath;
 
+	//File Descriptoren
 	int file_descriptor;
 	int file_descriptor_out;
 
+
     int byte_count;
 	int byte_count_out;
+
 
     char retValue;
     char retValueOut;
 
     int blockCount;
 
+    int pmError;
+    char eof;
+    int freeSpace;
+
+
+    void initBuffer();
+    void initDescriptors();
 
     void closeFile();
+    void closeFileOut();
 
     void loadFirstBuffer();
     void loadSecondBuffer();
+
+    void writeBufferToFile();
 };
 
 #endif /* BUFFER_H_ */
