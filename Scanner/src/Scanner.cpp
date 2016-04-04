@@ -13,7 +13,7 @@ using namespace std;
 Scanner::Scanner(char *inputFile, char *outputFile) {
     buffer = new Buffer(inputFile, outputFile);
 	automat = new Automat();
-	token = NULL;
+	//token = NULL;
 
 	this->currentState = 0;
 	this->scannerIndex = 0;
@@ -31,7 +31,7 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 Scanner::~Scanner() {
 	delete buffer;
 	delete automat;
-	delete token;
+	//delete token;
 }
 
 void Scanner::buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType) {
@@ -323,6 +323,8 @@ void Scanner::generateToken(uint16_t typ) {
 	        //cout << this->internBuffer[i];// << this->automat->getCols() << " - " << this->automat->getRows();
 	    }
 	}*/
+
+	delete(this->token);
 }
 
 
