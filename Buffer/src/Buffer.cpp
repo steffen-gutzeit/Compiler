@@ -65,6 +65,12 @@ Buffer::Buffer(char *inPath, char *outPath) {
 }
 
 Buffer::~Buffer() {
+	//Schreibe den restlichen Buffer
+	char temp[1];
+	temp[0] = '\0';
+
+	addCharsToOutBuffer(temp);
+
 	// Schliese descriptor und OutBuffer
 	closeFileOut();
 }
