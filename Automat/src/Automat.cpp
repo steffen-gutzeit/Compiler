@@ -18,25 +18,13 @@ Automat::~Automat() {
 	// TODO Auto-generated destructor stub
 }
 
-uint16_t Automat::testChar(char currentChar) {
+uint16_t Automat::getStateByChar(char currentChar) {
+	return transitionTable[this->currentState][this->getCharacterType(currentChar)];
+}
 
+uint16_t Automat::testChar(char currentChar) {
 	this->currentState = transitionTable[this->currentState][this->getCharacterType(currentChar)];
 
-
-		/*cout
-			<< " State: " << currentState << " "
-			<< " Char: " << this->getCharacterType(currentChar) << endl
-			<< endl;
-*/
-
-	/*
-	cout
-		<< " Matrix-Col:" << this->currentState << endl
-		<< " Matrix-Row:" << this->getCharacterType(currentChar) << endl
-		<< " State: " << currentState << endl
-		<< " Char: " << currentChar << endl
-		<< endl;
-*/
 	return this->currentState;
 }
 
@@ -44,13 +32,13 @@ uint16_t Automat::getCharacterType(char currentChar) {
 	if (currentChar >= '0' && currentChar <= '9') {
 		return CT_DIGIT;
 	} else if ( ((currentChar >= 'A') && (currentChar <= 'D')) ||
-				((currentChar >= 'G') && (currentChar <= 'H')) ||
+				(currentChar == 'G') ||
 				((currentChar >= 'J') && (currentChar <= 'K')) ||
 				((currentChar >= 'M') && (currentChar <= 'V')) ||
 				((currentChar >= 'X') && (currentChar <= 'Z')) ||
 
 				((currentChar >= 'a') && (currentChar <= 'd')) ||
-				((currentChar >= 'g') && (currentChar <= 'h')) ||
+				(currentChar == 'g') ||
 				((currentChar >= 'j') && (currentChar <= 'k')) ||
 				((currentChar >= 'm') && (currentChar <= 'v')) ||
 				((currentChar >= 'x') && (currentChar <= 'z'))) {
@@ -136,26 +124,6 @@ void Automat::initTransitionTable() {
 
 	// ERROR
 	i = 2;
-	transitionTable[i][0]  = INIT;
-	transitionTable[i][1]  = INIT;
-	transitionTable[i][2]  = INIT;
-	transitionTable[i][3]  = INIT;
-	transitionTable[i][4]  = INIT;
-	transitionTable[i][5]  = INIT;
-	transitionTable[i][6]  = INIT;
-	transitionTable[i][7]  = INIT;
-	transitionTable[i][8]  = INIT;
-	transitionTable[i][9]  = INIT;
-	transitionTable[i][10] = INIT;
-	transitionTable[i][11] = INIT;
-	transitionTable[i][12] = INIT;
-	transitionTable[i][13] = INIT;
-	transitionTable[i][14] = INIT;
-	transitionTable[i][15] = INIT;
-	transitionTable[i][16] = INIT;
-
-	// BLANK
-	i = 3;
 	transitionTable[i][0]  = TOKEN;
 	transitionTable[i][1]  = TOKEN;
 	transitionTable[i][2]  = TOKEN;
@@ -173,6 +141,26 @@ void Automat::initTransitionTable() {
 	transitionTable[i][14] = TOKEN;
 	transitionTable[i][15] = TOKEN;
 	transitionTable[i][16] = TOKEN;
+
+	// BLANK
+	i = 3;
+	transitionTable[i][0]  = INIT;
+	transitionTable[i][1]  = INIT;
+	transitionTable[i][2]  = INIT;
+	transitionTable[i][3]  = INIT;
+	transitionTable[i][4]  = INIT;
+	transitionTable[i][5]  = INIT;
+	transitionTable[i][6]  = INIT;
+	transitionTable[i][7]  = INIT;
+	transitionTable[i][8]  = INIT;
+	transitionTable[i][9]  = INIT;
+	transitionTable[i][10] = INIT;
+	transitionTable[i][11] = INIT;
+	transitionTable[i][12] = INIT;
+	transitionTable[i][13] = INIT;
+	transitionTable[i][14] = INIT;
+	transitionTable[i][15] = INIT;
+	transitionTable[i][16] = INIT;
 
 	// LINE_BREAK
 	i = 4;
@@ -229,10 +217,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// IDENTIFIER
 	i = 7;
@@ -249,10 +237,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// IF_1
 	i = 8;
@@ -269,10 +257,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// IF
 	i = 9;
@@ -289,10 +277,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// WHILE_1
 	i = 10;
@@ -309,10 +297,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// WHILE_2
 	i = 11;
@@ -329,10 +317,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// WHILE_3
 	i = 12;
@@ -349,10 +337,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// WHILE_4
 	i = 13;
@@ -369,10 +357,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// WHILE
 	i = 14;
@@ -389,10 +377,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// SIGN
 	i = 15;
@@ -429,10 +417,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = COMMENT_1;
 	transitionTable[i][11] = COLON_EQUAL;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
+	transitionTable[i][13] = TOKEN;
 	transitionTable[i][14] = LINE_BREAK;
 	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][16] = TOKEN;
 
 	// STAR
 	i = 17;
@@ -469,7 +457,7 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
-	transitionTable[i][13] = BLANK;
+	transitionTable[i][13] = TOKEN;
 	transitionTable[i][14] = LINE_BREAK;
 	transitionTable[i][15] = TAB;
 	transitionTable[i][16] = ERROR;
@@ -529,10 +517,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = COMMENT_2;
 	transitionTable[i][11] = COMMENT_1;
 	transitionTable[i][12] = COMMENT_1;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = COMMENT_1;
+	transitionTable[i][14] = COMMENT_1;
+	transitionTable[i][15] = COMMENT_1;
+	transitionTable[i][16] = COMMENT_1;
 
 	// COMMENT_2
 	i = 22;
@@ -549,10 +537,10 @@ void Automat::initTransitionTable() {
 	transitionTable[i][10] = COMMENT_1;
 	transitionTable[i][11] = COMMENT_1;
 	transitionTable[i][12] = COMMENT_1;
-	transitionTable[i][13] = BLANK;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][13] = COMMENT_1;
+	transitionTable[i][14] = COMMENT_1;
+	transitionTable[i][15] = COMMENT_1;
+	transitionTable[i][16] = COMMENT_1;
 
 	// COLON_EQUAL
 	i = 23;
@@ -568,8 +556,8 @@ void Automat::initTransitionTable() {
 	transitionTable[i][9]  = TOKEN;
 	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
-	transitionTable[i][12] = AND;
-	transitionTable[i][13] = BLANK;
+	transitionTable[i][12] = TOKEN;
+	transitionTable[i][13] = TOKEN;
 	transitionTable[i][14] = LINE_BREAK;
 	transitionTable[i][15] = TAB;
 	transitionTable[i][16] = ERROR;
@@ -595,7 +583,7 @@ void Automat::initTransitionTable() {
 	transitionTable[i][16] = ERROR;
 
 
-	// COMPLEX_1
+	// CHECK
 	i = 25;
 	transitionTable[i][0]  = INIT;
 	transitionTable[i][1]  = INIT;
@@ -613,5 +601,5 @@ void Automat::initTransitionTable() {
 	transitionTable[i][13] = INIT;
 	transitionTable[i][14] = INIT;
 	transitionTable[i][15] = INIT;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][16] = 100;
 }

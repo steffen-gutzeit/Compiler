@@ -64,19 +64,18 @@ uint16_t Token::matchStateToType(uint16_t stateType) {
 	return TT_DUMMY;
 }
 
-
 const char *Token::getTokenType(){
     switch (this->tokenType){
 
     case TT_DUMMY: return "Dummy\t"; break;
-    case TT_SIGN: return "Sign\t"; break;
+    case TT_SIGN: return "Sign\t\t"; break;
     case TT_INTEGER: return "Integer\t"; break;
     case TT_IDENTIFIER: return "Identifier"; break;
     case TT_IF: return "IF\t\t"; break;
     case TT_WHILE: return "WHILE\t"; break;
     case TT_PLUS: return "Plus\t"; break;
     case TT_MINUS: return "Minus\t"; break;
-    case TT_COLON: return "Colon"; break;
+    case TT_COLON: return "Colon\t"; break;
     case TT_STAR: return "Star\t"; break;
     case TT_LESS: return "Less\t"; break;
     case TT_MORE: return "More\t"; break;
@@ -86,14 +85,15 @@ const char *Token::getTokenType(){
     case TT_EXCLAMATION_MARK: return "Excla_Mark"; break;
     //case 16: return "Quest_Mark"; break;
     case TT_AND: return "And\t\t"; break;
-    case TT_SEMICOLON: return "Semicolon"; break;
+    case TT_SEMICOLON: return "Semicolon\t"; break;
     case TT_BRACKET_UPON: return "Brack_Open"; break;
     case TT_BRACKET_CLOSE: return "Brack_Close"; break;
     case TT_BRACE_UPON: return "Brace_Open"; break;
     case TT_BRACE_CLOSE: return "Brace_Close"; break;
     case TT_SQUARE_BRACKET_UPON: return "SqrBra_Open"; break;
     case TT_SQUARE_BRACKET_CLOSE: return "SqrBra_Close"; break;
-    case TT_BLANK: return "Blank"; break;
+    case TT_BLANK: return "Blank\t"; break;
+    case TT_ERROR: return "Error\t"; break;
 
     }
     //Sollte nie erreicht werden :)

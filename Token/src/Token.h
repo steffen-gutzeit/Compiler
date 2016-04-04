@@ -21,6 +21,7 @@ public:
 	uint32_t getRow();
 	uint16_t matchStateToType(uint16_t stateType);
 	const char *getTokenType();
+	const char *getTokenType(uint32_t &tokenType);
 
 	enum tokenType {
 		TT_DUMMY				=  0,
@@ -50,7 +51,8 @@ public:
 		TT_SQUARE_BRACKET_UPON  = 23,
 		TT_SQUARE_BRACKET_CLOSE = 24,
 
-		TT_BLANK				= 25
+		TT_BLANK				= 25,
+		TT_ERROR				= 26
 	};
 
 private:
@@ -61,4 +63,3 @@ private:
 	char *lexem;
 };
 #endif /* TOKEN_SRC_TOKEN_H_ */
-
