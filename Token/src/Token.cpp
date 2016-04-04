@@ -33,6 +33,10 @@ uint32_t Token::getRow() {
 	return this->row;
 }
 
+char *Token::getLexem(){
+	return this->lexem;
+}
+
 uint16_t Token::matchStateToType(uint16_t stateType) {
 	switch (stateType) {
 	case Automat::INTEGER:
@@ -70,9 +74,9 @@ const char *Token::getTokenType(){
     case TT_DUMMY: return "Dummy\t"; break;
     case TT_SIGN: return "Sign\t\t"; break;
     case TT_INTEGER: return "Integer\t"; break;
-    case TT_IDENTIFIER: return "Identifier"; break;
+    case TT_IDENTIFIER: return "Identifier\t"; break;
     case TT_IF: return "IF\t\t"; break;
-    case TT_WHILE: return "WHILE\t"; break;
+    case TT_WHILE: return "WHILE\t\t"; break;
     case TT_PLUS: return "Plus\t"; break;
     case TT_MINUS: return "Minus\t"; break;
     case TT_COLON: return "Colon\t"; break;
