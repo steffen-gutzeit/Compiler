@@ -63,4 +63,3 @@ private:
 	char *lexem;
 };
 #endif /* TOKEN_SRC_TOKEN_H_ */
-

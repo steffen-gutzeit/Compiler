@@ -61,4 +61,3 @@ private:
 	void setLexemData(int16_t lexemLength, uint16_t tokenType);
 };
 #endif /* SCANNER_SRC_SCANNER_H_ */
-

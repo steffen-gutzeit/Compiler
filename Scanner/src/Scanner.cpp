@@ -307,8 +307,6 @@ uint16_t Scanner::getCurrentState(char currentChar) {
 	return this->automat->getStateByChar(currentChar);
 }
 
-
-
 void Scanner::generateToken(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
 		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
@@ -319,7 +317,6 @@ void Scanner::generateToken(uint16_t typ) {
 
 	/*if (typ == Token::TT_IDENTIFIER) {
 		symTable->insert(this->internBuffer, typ);
-
  		for(int i = 0; i < this->scannerIndex; i++){
 	        //cout << this->internBuffer[i];// << this->automat->getCols() << " - " << this->automat->getRows();
 	    }

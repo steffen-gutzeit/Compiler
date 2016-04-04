@@ -77,4 +77,3 @@ public:
 	};
 };
 #endif /* AUTOMAT_SRC_AUTOMAT_H_ */
-
