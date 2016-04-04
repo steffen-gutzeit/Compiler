@@ -380,6 +380,11 @@ void Scanner::printToken() {
 		//Setze Tab
 		buffer->addCharsToOutBuffer(textTab);
 
+		if(size == 1){
+			//Setze zweiten Tab (Schönheitskorrektur bei Zeilen 1 - 9)
+			buffer->addCharsToOutBuffer(textTab);
+		}
+
 
 
 		//Column
