@@ -7,13 +7,14 @@
 
 #include "Scanner.h"
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
 Scanner::Scanner(char *inputFile, char *outputFile) {
     buffer = new Buffer(inputFile, outputFile);
 	automat = new Automat();
-	//token = NULL;
+	token = NULL;
 
 	this->currentState = 0;
 	this->scannerIndex = 0;
@@ -313,6 +314,11 @@ void Scanner::generateToken(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
 		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 		printToken();
+
+		//Temporaerer Fix für den Memory Leak durch die erstellten Token Objekte
+		if(this->token){
+			delete(this->token);
+		}
 	}
 	this->clearInternBuffer();
 	//writeOutput();
@@ -324,19 +330,145 @@ void Scanner::generateToken(uint16_t typ) {
 	    }
 	}*/
 
-	delete(this->token);
+
+
+
 }
 
 
 void Scanner::printToken() {
 	if (this->tokenType != Token::TT_BLANK) {
-		cout << this->token->getRow() << ":" << (this->token->getCol() + 1) << " \t TYPE: " << this->token->getTokenType() << ":   ";
-		for(int i = 0; i < this->scannerIndex; i++){
-			cout << this->internBuffer[i];
+
+		int size = 0;
+
+		char textNewLine[] = "\n";
+		char textTab[] = "\t";
+		char textValue[] = "Value: ";
+		char textLexem[] = "Lexem: ";
+
+
+
+		//Token Bezichner
+		char textToken[] = "Token: ";
+		buffer->addCharsToOutBuffer(textToken);
+
+		//TokenType
+		const char *textTokenTypeTemp = this->token->getTokenType();
+		char textTokenType[2];
+		textTokenType[1] = '\0';
+
+		int i = 0;
+		while(textTokenTypeTemp[i] != '\0'){
+			textTokenType[0] = textTokenTypeTemp[i];
+			buffer->addCharsToOutBuffer(textTokenType);
+			i++;
 		}
 
-		cout << endl;
+
+
+		//Line
+		char textLine[] = "Line: ";
+		buffer->addCharsToOutBuffer(textLine);
+
+		//Ermittle Stellenanzahl
+		size = sizeOfNumber(token->getRow());
+		char resultLine[size + 1];
+
+		//Konvertiere int zu einem chararray
+		buffer->addCharsToOutBuffer(intToChar(token->getRow(), size, resultLine));
+
+		//Setze Tab
+		buffer->addCharsToOutBuffer(textTab);
+
+
+
+		//Column
+		char textColumn[] = "Column: ";
+		buffer->addCharsToOutBuffer(textColumn);
+
+		//Ermittle Stellenanzahl
+		size = sizeOfNumber(token->getCol() + 1);
+		char resultColumn[size + 1];
+
+		//Konvertiere int zu einem chararray
+		buffer->addCharsToOutBuffer(intToChar(token->getCol() + 1, size, resultColumn));
+
+
+		//Ausgabe von Integer Value
+		if(this->tokenType == Token::TT_INTEGER){
+			//Setze Tab
+			buffer->addCharsToOutBuffer(textTab);
+
+			//Label ausgeben
+			buffer->addCharsToOutBuffer(textValue);
+
+			//Hole Integer Value
+			buffer->addCharsToOutBuffer(token->getLexem());
+
+		}
+
+		//Ausgabe von Lexem
+		if(this->tokenType == Token::TT_IDENTIFIER){
+			//Setze Tab
+			buffer->addCharsToOutBuffer(textTab);
+
+			//Label ausgeben
+			buffer->addCharsToOutBuffer(textLexem);
+
+			//Hole Lexem
+			buffer->addCharsToOutBuffer(token->getLexem());
+
+
+		}
+
+
+		//Zeilenumbruch
+		buffer->addCharsToOutBuffer(textNewLine);
+
+
+
+
+		//cout << this->token->getRow() << ":" << (this->token->getCol() + 1) << " \t TYPE: " << this->token->getTokenType() << ":   ";
+
+		//cout << output << endl;
+
+		//for(int i = 0; i < this->scannerIndex; i++){
+			//cout << this->internBuffer[i];
+		//}
+
+		//cout << endl;
+
+
 	}
+}
+
+int Scanner::sizeOfNumber(uint32_t digit){
+
+	int count = 0;
+
+	//Bestimme Stellenanzahl
+	while(digit != 0){
+		digit = digit / 10;
+		count++;
+	}
+
+	return count;
+}
+
+char *Scanner::intToChar(uint32_t digit, int size, char result[]){
+
+	//Modulo Rechnung zur Umwandlung
+	for(int i = 0; i < size; i++){
+		result[(size - 1) - i] = digit % 10 + '0';
+		//cout << result[(size - 1) - i] << endl;
+		digit = digit / 10;
+	}
+
+	result[size] = '\0';
+
+	return result;
+
+
 }
 
 void Scanner::clearInternBuffer() {

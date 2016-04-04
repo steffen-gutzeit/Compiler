@@ -27,6 +27,8 @@ private:
 	Buffer *buffer;
 	Token *token;
 
+	char *result;
+
 
 	char internBuffer[512];
 	char currentChar;
@@ -43,6 +45,8 @@ private:
 	uint16_t setCurrentState(char currentChar);
 	uint16_t getCurrentState(char currentChar);
 	void printToken();
+	char *intToChar(uint32_t digit, int size, char result[]);
+	int sizeOfNumber(uint32_t digit);
 	void incrementColCount();
 	void generateToken(uint16_t typ);
 	void clearInternBuffer();
