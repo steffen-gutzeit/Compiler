@@ -65,6 +65,12 @@ Buffer::Buffer(char *inPath, char *outPath) {
 }
 
 Buffer::~Buffer() {
+	//Schreibe den restlichen Buffer
+	char temp[1];
+	temp[0] = '\0';
+
+	addCharsToOutBuffer(temp);
+
 	// Schliese descriptor und OutBuffer
 	closeFileOut();
 }
@@ -223,9 +229,9 @@ void Buffer::closeFile(){
     close(file_descriptor);
 
     //Valgrind error messages, nur zum debuggen auskommentieren!
-    fclose( stdin );
-    fclose( stdout );
-    fclose( stderr );
+    //fclose( stdin );
+    //fclose( stdout );
+    //fclose( stderr );
 }
 
 

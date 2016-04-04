@@ -1,10 +1,22 @@
 #include "Scanner.h"
 #include <iostream>
 #include <stdint.h>
+#include <time.h>
 
 //argv[0] beinhaltet den Namen des Programms, der Rest sind die Parameter
 int main(int argc, char **argv) {
+
+	//Zeitberechnung Anfang
+	double timeProcess=0.0, tstart; ; //Definierung der Variablen
+	tstart = clock(); //CPU-Zeit zu Beginn des Programmes
+
+	time_t start = time(0);
+
+
+
+
 	Scanner* scanner;
+
 
 	if(argc == 3){
 		printf("Beginne ...\n");
@@ -16,8 +28,12 @@ int main(int argc, char **argv) {
 
 			scanner->getNextToken();
 
+			printf("Vorgang Beendet.\n");
+
+
+
 			delete scanner;
-		printf("Vorgang Beendet.\n");
+
 	}else{
 		printf("Nicht genügend Parameter übergeben. \nEs werden 2 benötigt. Übergeben wurden nur %d Parameter.\n", argc - 1);
 	}
@@ -28,6 +44,17 @@ int main(int argc, char **argv) {
 	}*/
 
 	//std::cout << scanner->getTokenType("abc") << std::endl;
+
+
+	//Zeitberechnung Ende
+	timeProcess += clock() - tstart;     // end
+	timeProcess = timeProcess/CLOCKS_PER_SEC;  // rescale to seconds
+
+	time_t end = time(0);
+	double timeReal = difftime(end, start);
+
+	cout << "Prozesslaufzeit: \t\t" << timeProcess << " Sekunden." << endl;
+	cout << "Wirklich benoetigte Zeit: \t" << timeReal << " Sekunden." << endl;
 
 
 }

@@ -20,6 +20,7 @@ public:
 	uint32_t getCol();
 	uint32_t getRow();
 	uint16_t matchStateToType(uint16_t stateType);
+	char *getLexem();
 	const char *getTokenType();
 	const char *getTokenType(uint32_t &tokenType);
 
