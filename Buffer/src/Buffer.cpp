@@ -229,9 +229,9 @@ void Buffer::closeFile(){
     close(file_descriptor);
 
     //Valgrind error messages, nur zum debuggen auskommentieren!
-    fclose( stdin );
-    fclose( stdout );
-    fclose( stderr );
+    //fclose( stdin );
+    //fclose( stdout );
+    //fclose( stderr );
 }
 
 
