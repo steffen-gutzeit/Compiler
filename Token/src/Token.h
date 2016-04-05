@@ -62,5 +62,7 @@ private:
 	uint32_t column;
 	uint8_t tokenType;
 	char *lexem;
+
+	void setTokenTypeSign(char lexem);
 };
 #endif /* TOKEN_SRC_TOKEN_H_ */
