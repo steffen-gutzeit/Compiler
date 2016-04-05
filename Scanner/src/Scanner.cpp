@@ -346,6 +346,7 @@ void Scanner::printToken() {
 		char textTab[] = "\t";
 		char textValue[] = "Value: ";
 		char textLexem[] = "Lexem: ";
+		char textOverflow[] = "Overflow";
 
 
 
@@ -408,8 +409,21 @@ void Scanner::printToken() {
 			//Label ausgeben
 			buffer->addCharsToOutBuffer(textValue);
 
-			//Hole Integer Value
-			buffer->addCharsToOutBuffer(token->getLexem());
+			//Hole Integer Value und pruefe auf Bereichsueberschreitung (uint32 -> 10 Dezimalstellen)
+			int i= 0;
+			char *numberTemp = token->getLexem();
+
+			while(numberTemp[i] != '\0'){
+				i++;
+			}
+
+			if(i < 11){
+				buffer->addCharsToOutBuffer(token->getLexem());
+			}else{
+				fprintf(stderr, "Overflow Int  Line: %u \tColumn: %u\n", this->rowIndex, (this->colIndex + 1));
+				buffer->addCharsToOutBuffer(textOverflow);
+			}
+
 
 		}
 
