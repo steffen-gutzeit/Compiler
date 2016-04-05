@@ -126,6 +126,7 @@ void Scanner::getNextToken() {
 				this->internBuffer[this->scannerIndex] = '\0';
 				this->tokenType = tokenType;*/
 				//this->initForTokenGeneration(Token::TT_ERROR);
+				printErrorToken();
 				break;
 
 			case Automat::BLANK:
@@ -335,7 +336,7 @@ void Scanner::generateToken(uint16_t typ) {
 
 
 void Scanner::printToken() {
-	if (this->tokenType != Token::TT_BLANK) {
+	if ((this->tokenType != Token::TT_BLANK) && (this->tokenType != Token::TT_ERROR)) {
 
 		int size = 0;
 
@@ -443,6 +444,11 @@ void Scanner::printToken() {
 
 
 	}
+}
+
+void Scanner::printErrorToken(){
+	fprintf(stderr, "unknown Token Line: %u \tColumn: %u \tSymbol: %s \n", this->rowIndex, (this->colIndex + 1), this->internBuffer);
+
 }
 
 int Scanner::sizeOfNumber(uint32_t digit){

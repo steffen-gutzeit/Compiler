@@ -45,6 +45,7 @@ private:
 	uint16_t setCurrentState(char currentChar);
 	uint16_t getCurrentState(char currentChar);
 	void printToken();
+	void printErrorToken();
 	char *intToChar(uint32_t digit, int size, char result[]);
 	int sizeOfNumber(uint32_t digit);
 	void incrementColCount();
