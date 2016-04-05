@@ -65,7 +65,8 @@ uint16_t Automat::getCharacterType(char currentChar) {
 		return CT_SIGN_AND;
 	} else if ( currentChar == ' ') {
 		return CT_BLANK;
-	} else if ( currentChar == '\n' || currentChar == '\0') {
+		//Unter Windows kommt eine CR UND LF. Unter Linux nur LF
+	} else if ( currentChar == '\n' || currentChar == '\r' ||currentChar == '\0') {
 		return CT_LINE_BREAK;
 	} else if ( currentChar == '\t') {
 		return CT_TAB;
