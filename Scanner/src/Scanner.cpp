@@ -338,7 +338,7 @@ void Scanner::generateToken(uint16_t typ) {
 
 
 void Scanner::printToken() {
-	if ((this->tokenType != Token::TT_BLANK) && (this->tokenType != Token::TT_ERROR)) {
+	if ((this->tokenType != Token::TT_BLANK)) {
 
 		int size = 0;
 
