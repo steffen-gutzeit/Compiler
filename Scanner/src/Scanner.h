@@ -48,6 +48,7 @@ private:
 	void printErrorToken();
 	char *intToChar(uint32_t digit, int size, char result[]);
 	int sizeOfNumber(uint32_t digit);
+	void checkInteger();
 	void incrementColCount();
 	void generateToken(uint16_t typ);
 	void clearInternBuffer();
