@@ -8,6 +8,8 @@
 #include "Scanner.h"
 #include <iostream>
 #include <string.h>
+#include <errno.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -311,7 +313,13 @@ uint16_t Scanner::getCurrentState(char currentChar) {
 
 void Scanner::generateToken(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
-		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+
+		if(typ == token->TT_INTEGER){
+			checkInteger();
+		}else{
+			this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+		}
+
 		printToken();
 
 		//Temporaerer Fix für den Memory Leak durch die erstellten Token Objekte
@@ -334,18 +342,38 @@ void Scanner::generateToken(uint16_t typ) {
 
 }
 
+void Scanner::checkInteger(){
+	char *numberTemp = this->internBuffer;
+	char *end;
+	errno = 0;
+	char textOverflowInt[] = "Overflow";
+
+	strtol(numberTemp,&end,10);
+
+	if (errno == ERANGE) {
+		//Integer Overflow
+	  	this->token = new Token(this->rowIndex, this->colIndex, token->TT_ERROR, textOverflowInt);
+
+	  	fprintf(stderr, "Overflow Int  Line: %u \tColumn: %u\n", this->rowIndex, (this->colIndex + 1));
+
+	} else {
+		//regulaeres Integer
+		this->token = new Token(this->rowIndex, this->colIndex, token->TT_INTEGER, this->internBuffer);
+	}
+
+}
+
 
 void Scanner::printToken() {
-	if ((this->tokenType != Token::TT_BLANK) && (this->tokenType != Token::TT_ERROR)) {
+	if ((this->tokenType != Token::TT_BLANK)) {
 
 		int size = 0;
 
 		char textNewLine[] = "\n";
 		char textTab[] = "\t";
-		char textValue[] = "Value: ";
-		char textLexem[] = "Lexem: ";
-		char textOverflow[] = "Overflow";
-
+		char textValue[] = "Value:  ";
+		char textLexem[] = "Lexem:  ";
+		char textError[] = "Symbol: ";
 
 
 		//Token Bezichner
@@ -408,7 +436,7 @@ void Scanner::printToken() {
 			buffer->addCharsToOutBuffer(textValue);
 
 			//Hole Integer Value und pruefe auf Bereichsueberschreitung (uint32 -> 10 Dezimalstellen)
-			int i= 0;
+			/*int i= 0;
 			char *numberTemp = token->getLexem();
 
 			while(numberTemp[i] != '\0'){
@@ -420,9 +448,9 @@ void Scanner::printToken() {
 			}else{
 				fprintf(stderr, "Overflow Int  Line: %u \tColumn: %u\n", this->rowIndex, (this->colIndex + 1));
 				buffer->addCharsToOutBuffer(textOverflow);
-			}
+			}*/
 
-
+			buffer->addCharsToOutBuffer(token->getLexem());
 		}
 
 		//Ausgabe von Lexem
@@ -432,6 +460,20 @@ void Scanner::printToken() {
 
 			//Label ausgeben
 			buffer->addCharsToOutBuffer(textLexem);
+
+			//Hole Lexem
+			buffer->addCharsToOutBuffer(token->getLexem());
+
+
+		}
+
+		//Ausgabe von Error Symbol
+		if(this->tokenType == Token::TT_ERROR){
+			//Setze Tab
+			buffer->addCharsToOutBuffer(textTab);
+
+			//Label ausgeben
+			buffer->addCharsToOutBuffer(textError);
 
 			//Hole Lexem
 			buffer->addCharsToOutBuffer(token->getLexem());

@@ -125,7 +125,7 @@ const char *Token::getTokenType(){
     case TT_SQUARE_BRACKET_UPON: return "SqrBra_Open\t"; break;
     case TT_SQUARE_BRACKET_CLOSE: return "SqrBra_Close\t"; break;
     case TT_BLANK: return "Blank\t"; break;
-    case TT_ERROR: return "Error\t"; break;
+    case TT_ERROR: return "Error\t\t"; break;
 
     }
     //Sollte nie erreicht werden :)
