@@ -50,6 +50,7 @@ private:
 	int sizeOfNumber(uint32_t digit);
 	void checkInteger();
 	void incrementColCount();
+	void decrementColCount();
 	void generateToken(uint16_t typ);
 	void clearInternBuffer();
 
