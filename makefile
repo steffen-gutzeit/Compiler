@@ -18,7 +18,7 @@
 #	g++ -g  Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o LinkedList/debug/LinkedList.o -o Compiler
  
 makeCompiler: AutomatTarget BufferTarget HashMapTarget LinkedListTarget ScannerTarget SymTableTarget TokenTarget TestScannerTarget 
-	g++ -g  Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Scanner/debug/TestScanner.o -o Compiler
+	g++ -g -Ofast Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Scanner/debug/TestScanner.o -o Compiler
 	
 
 # compilieren des Files Automat.cpp zu Automat.o, 
@@ -28,28 +28,28 @@ makeCompiler: AutomatTarget BufferTarget HashMapTarget LinkedListTarget ScannerT
 # -Wall --> alle meldungen erzeugen
 
 AutomatTarget :  Automat/src/Automat.cpp Automat/src/Automat.h 
-	g++ -g  -c -Wall Automat/src/Automat.cpp -o Automat/debug/Automat.o  
+	g++ -g -Ofast -c -Wall Automat/src/Automat.cpp -o Automat/debug/Automat.o  
 	
 ScannerTarget :  Scanner/src/Scanner.cpp Scanner/src/Scanner.h 
-	g++ -g  -c -Wall Scanner/src/Scanner.cpp -o Scanner/debug/Scanner.o  
+	g++ -g -Ofast -c -Wall Scanner/src/Scanner.cpp -o Scanner/debug/Scanner.o  
 	
 BufferTarget :  Buffer/src/Buffer.cpp Buffer/src/Buffer.h 
-	g++ -g  -c -Wall Buffer/src/Buffer.cpp -o Buffer/debug/Buffer.o  
+	g++ -g -Ofast -c -Wall Buffer/src/Buffer.cpp -o Buffer/debug/Buffer.o  
 	
 SymTableTarget :  Symtable/src/Symtable.cpp Symtable/src/Symtable.h 
-	g++ -g  -c -Wall Symtable/src/Symtable.cpp -o Symtable/debug/Symtable.o 
+	g++ -g -Ofast -c -Wall Symtable/src/Symtable.cpp -o Symtable/debug/Symtable.o 
 	
 TokenTarget :  Token/src/Token.cpp Token/src/Token.h 
-	g++ -g  -c -Wall Token/src/Token.cpp -o Token/debug/Token.o 
+	g++ -g -Ofast -c -Wall Token/src/Token.cpp -o Token/debug/Token.o 
 
 HashMapTarget : HashMap/src/HashMap.cpp HashMap/src/HashMap.h
-	g++ -g  -c -Wall HashMap/src/HashMap.cpp -o HashMap/debug/HashMap.o 
+	g++ -g -Ofast -c -Wall HashMap/src/HashMap.cpp -o HashMap/debug/HashMap.o 
 
 LinkedListTarget : LinkedList/src/LinkedList.cpp LinkedList/src/LinkedList.h
-	g++ -g  -c -Wall LinkedList/src/LinkedList.cpp -o LinkedList/debug/LinkedList.o 
+	g++ -g -Ofast -c -Wall LinkedList/src/LinkedList.cpp -o LinkedList/debug/LinkedList.o 
 
 TestScannerTarget :  Scanner/src/TestScanner.cpp
-	g++ -g  -c -Wall Scanner/src/TestScanner.cpp -o Scanner/debug/TestScanner.o  	
+	g++ -g -Ofast -c -Wall Scanner/src/TestScanner.cpp -o Scanner/debug/TestScanner.o  	
 
 #TestHashMapTarget :  HashMap/src/HashMap_test.cpp
 #	g++ -g  -c -Wall HashMap/src/HashMap_test.cpp -o HashMap/debug/HashMap_test.o  	
