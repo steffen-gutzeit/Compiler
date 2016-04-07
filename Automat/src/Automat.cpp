@@ -581,7 +581,7 @@ void Automat::initTransitionTable() {
 	transitionTable[i][13] = CHECK;
 	transitionTable[i][14] = CHECK;
 	transitionTable[i][15] = CHECK;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][16] = CHECK; // war vorher ERROR
 
 
 	// CHECK
@@ -602,5 +602,5 @@ void Automat::initTransitionTable() {
 	transitionTable[i][13] = INIT;
 	transitionTable[i][14] = INIT;
 	transitionTable[i][15] = INIT;
-	transitionTable[i][16] = 100;
+	transitionTable[i][16] = INIT; //war vorher 100
 }
