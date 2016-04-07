@@ -63,10 +63,10 @@ uint16_t Automat::getCharacterType(char currentChar) {
 		return CT_SIGN_EQUAL;
 	} else if ( currentChar == '&') {
 		return CT_SIGN_AND;
-	} else if ( currentChar == ' ') {
+	} else if ( currentChar == ' ' || currentChar == '\r' ) {
 		return CT_BLANK;
 		//Unter Windows kommt eine CR UND LF. Unter Linux nur LF
-	} else if ( currentChar == '\n' || currentChar == '\r' ||currentChar == '\0') {
+	} else if ( currentChar == '\n' ||currentChar == '\0') {
 		return CT_LINE_BREAK;
 	} else if ( currentChar == '\t') {
 		return CT_TAB;
@@ -581,7 +581,7 @@ void Automat::initTransitionTable() {
 	transitionTable[i][13] = CHECK;
 	transitionTable[i][14] = CHECK;
 	transitionTable[i][15] = CHECK;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][16] = CHECK; // war vorher ERROR
 
 
 	// CHECK
@@ -602,5 +602,5 @@ void Automat::initTransitionTable() {
 	transitionTable[i][13] = INIT;
 	transitionTable[i][14] = INIT;
 	transitionTable[i][15] = INIT;
-	transitionTable[i][16] = 100;
+	transitionTable[i][16] = INIT; //war vorher 100
 }
