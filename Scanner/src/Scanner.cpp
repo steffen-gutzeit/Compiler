@@ -329,16 +329,17 @@ uint16_t Scanner::getCurrentState(char currentChar) {
 void Scanner::generateToken(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
 
-		//Falls If oder While zu einem  Identifier werden
-		char tmp = this->internBuffer[0];
-		if((typ == token->TT_IDENTIFIER) && ((tmp == 'i') || (tmp == 'I') || (tmp == 'w') || (tmp == 'W'))){
-			decrementColCount();
-		}
 
 		if(typ == token->TT_INTEGER){
 			checkInteger();
 		}else{
 			this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+		}
+
+		//Falls If oder While zu einem  Identifier werden
+		char tmp = this->internBuffer[0];
+		if((typ == token->TT_IDENTIFIER) && ((tmp == 'i') || (tmp == 'I') || (tmp == 'w') || (tmp == 'W'))){
+			decrementColCount();
 		}
 
 
