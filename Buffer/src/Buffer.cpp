@@ -253,7 +253,11 @@ void Buffer::addCharsToOutBuffer(char* text){
 		writeBufferToFile();
 
 		//Rest der Datei abschneiden mit ftruncate, ansonsten ist der Rest der Datei mit Nullen gefuellt
-		ftruncate(file_descriptor_out, ((blockCount - 1) * BUF_SIZE) + currentIndexOut);
+		int er = ftruncate(file_descriptor_out, ((blockCount - 1) * BUF_SIZE) + currentIndexOut);
+
+		if(er > 0){
+			cout << "Error beim Abschneiden der Datei" << endl;
+		}
 
 		//BufferOut und File Descriptor werden über den Dekonstruktor beendet
 
