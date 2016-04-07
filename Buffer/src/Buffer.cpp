@@ -340,10 +340,11 @@ void Buffer::closeFileOut(){
 //####################### Dekrementierungen #####################################
 
 
-void Buffer::setBufferPointer(int x) {
+
+/*void Buffer::setBufferPointer(int x) {
 	//Fehlerfaelle abfangen!
 	currentIndex += x;
-}
+}*/
 
 
 //ToDo Falls im ersten Buffer mehr zurueckgegangen wird als da ist
@@ -371,17 +372,20 @@ void Buffer::dekrementBufferPointer(int i){
     if(currentIndex > i ){
         currentIndex -= i;
     } else {
+
+    	for(int y = 0; i < y; y++){
+    		dekrementBufferPointer();
+    	}
         //Wechsle Buffer
-        if(currentBuffer == 1){
+        /*if(currentBuffer == 1){
             currentBuffer = 2;
             currentIndex = 512 - 1;
         }else {
             currentBuffer = 1;
             currentIndex = 512 + currentIndex;
             currentIndex -=i;
-        }
+        }*/
 
     }
 
 }
-
