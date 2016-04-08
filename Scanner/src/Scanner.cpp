@@ -8,8 +8,10 @@
 #include "Scanner.h"
 #include <iostream>
 #include <string.h>
+#include <error.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <limits.h>
 
 using namespace std;
 
@@ -331,7 +333,7 @@ void Scanner::generateToken(uint16_t typ) {
 
 
 		if(typ == token->TT_INTEGER){
-			checkInteger();
+			checkInteger(typ);
 		}else{
 			this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 		}
@@ -341,8 +343,6 @@ void Scanner::generateToken(uint16_t typ) {
 		if((typ == token->TT_IDENTIFIER) && ((tmp == 'i') || (tmp == 'I') || (tmp == 'w') || (tmp == 'W'))){
 			decrementColCount();
 		}
-
-
 
 		printToken();
 
@@ -366,23 +366,26 @@ void Scanner::generateToken(uint16_t typ) {
 
 }
 
-void Scanner::checkInteger(){
+void Scanner::checkInteger(uint16_t typ){
 	char *numberTemp = this->internBuffer;
 	char *end;
-	errno = 0;
+
 	char textOverflowInt[] = "Overflow";
+	long test;
 
-	strtol(numberTemp,&end,10);
+	errno = 0;
+	test = strtol(numberTemp,&end,10);
 
-	if (errno == ERANGE) {
+
+	if (errno == ERANGE || test < 0 || test > 4294967295) { // ERANGE
 		//Integer Overflow
-	  	this->token = new Token(this->rowIndex, this->colIndex, token->TT_ERROR, textOverflowInt);
-
+		this->tokenType = Token::TT_ERROR;
+	  	this->token = new Token(this->rowIndex, this->colIndex, Token::TT_ERROR, textOverflowInt);
 	  	fprintf(stderr, "Overflow Int  Line: %u \tColumn: %u\n", this->rowIndex, (this->colIndex + 1));
 
 	} else {
 		//regulaeres Integer
-		this->token = new Token(this->rowIndex, this->colIndex, token->TT_INTEGER, this->internBuffer);
+		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 	}
 
 }
@@ -449,7 +452,6 @@ void Scanner::printToken() {
 
 		//Konvertiere int zu einem chararray
 		buffer->addCharsToOutBuffer(intToChar(token->getCol() + 1, size, resultColumn));
-
 
 		//Ausgabe von Integer Value
 		if(this->tokenType == Token::TT_INTEGER){

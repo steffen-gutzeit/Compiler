@@ -7,6 +7,7 @@
 
 #include "Token.h"
 #include <stdint.h>
+#include <iostream>
 
 Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, char *lexem) {
 	this->tokenID = 0;
