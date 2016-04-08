@@ -87,8 +87,13 @@ void Scanner::whileIfCascade(uint16_t state) {
 	if (this->getCurrentState(this->currentChar) == state) {
 		this->lexemLength++;
 	} else {
+		if (this->getCurrentState(this->currentChar) == Automat::TOKEN) {
+			this->lexemLength++;
+			this->lexemLength++;
+		} else {
+			this->lexemLength++;
+		}
 		this->initForTokenGeneration(Token::TT_IDENTIFIER);
-		this->lexemLength++;
 	}
 
 }
@@ -109,7 +114,7 @@ void Scanner::getNextToken() {
 
 			this->generateToken(this->tokenType);
 		} else {
-			//cout << "\t" << (this->currentChar) << endl;
+			//cout << "\t" << (this->currentState) << endl;
 			switch (this->currentState) {
 			case Automat::INIT:
 				this->lexemLength = 0;
