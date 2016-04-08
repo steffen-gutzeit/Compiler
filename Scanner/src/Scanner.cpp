@@ -109,7 +109,7 @@ void Scanner::getNextToken() {
 
 			this->generateToken(this->tokenType);
 		} else {
-			//cout << this->getCurrentState(this->currentChar) << " " << currentState << " " << this->rowIndex << ":" << this->colIndex << endl;
+			//cout << "\t" << (this->currentChar) << endl;
 			switch (this->currentState) {
 			case Automat::INIT:
 				this->lexemLength = 0;
@@ -125,11 +125,6 @@ void Scanner::getNextToken() {
 
 			case Automat::ERROR:
 				this->setLexemData(1, Token::TT_ERROR);
-				/*this->scannerIndex--;
-				this->buffer->dekrementBufferPointer();
-				this->internBuffer[this->scannerIndex] = '\0';
-				this->tokenType = tokenType;*/
-				//this->initForTokenGeneration(Token::TT_ERROR);
 				printErrorToken();
 				break;
 
@@ -284,24 +279,17 @@ void Scanner::getNextToken() {
 
 				if (this->currentChar == '=') {
 					this->tokenType = Token::TT_MORE_COLON_MORE;
-				} else {
-					//this->buffer->dekrementBufferPointer(3);
 				}
 				break;
 
 			case Automat::CHECK:
-				// =:+
-				this->buffer->dekrementBufferPointer(2);
+				// Fix
+				this->internBuffer[0] = ':';
 				this->internBuffer[1] = '\0';
-				this->internBuffer[2] = '\0';
 
-				this->lexemLength++;
+				this->setLexemData(1, Token::TT_EQUAL);
 				this->generateToken(Token::TT_EQUAL);
-
-				this->lexemLength++;
-				this->generateToken(Token::TT_COLON);
-
-				this->clearInternBuffer();
+				this->buffer->dekrementBufferPointer(2);
 				break;
 			} // END SELECT
 		} // END IF

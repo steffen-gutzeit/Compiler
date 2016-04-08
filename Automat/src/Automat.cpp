@@ -559,9 +559,9 @@ void Automat::initTransitionTable() {
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
 	transitionTable[i][13] = TOKEN;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// COMPLEX_1
 	i = 24;
@@ -586,21 +586,21 @@ void Automat::initTransitionTable() {
 
 	// CHECK
 	i = 25;
-	transitionTable[i][0]  = INIT;
-	transitionTable[i][1]  = INIT;
-	transitionTable[i][2]  = INIT;
-	transitionTable[i][3]  = INIT;
-	transitionTable[i][4]  = INIT;
-	transitionTable[i][5]  = INIT;
-	transitionTable[i][6]  = INIT;
-	transitionTable[i][7]  = INIT;
-	transitionTable[i][8]  = INIT;
-	transitionTable[i][9]  = INIT;
-	transitionTable[i][10] = INIT;
+	transitionTable[i][0]  = TOKEN;
+	transitionTable[i][1]  = TOKEN;
+	transitionTable[i][2]  = TOKEN;
+	transitionTable[i][3]  = TOKEN;
+	transitionTable[i][4]  = TOKEN;
+	transitionTable[i][5]  = TOKEN;
+	transitionTable[i][6]  = TOKEN;
+	transitionTable[i][7]  = TOKEN;
+	transitionTable[i][8]  = TOKEN;
+	transitionTable[i][9]  = TOKEN;
+	transitionTable[i][10] = TOKEN;
 	transitionTable[i][11] = TOKEN;
-	transitionTable[i][12] = INIT;
-	transitionTable[i][13] = INIT;
-	transitionTable[i][14] = INIT;
-	transitionTable[i][15] = INIT;
-	transitionTable[i][16] = INIT; //war vorher 100
+	transitionTable[i][12] = TOKEN;
+	transitionTable[i][13] = TOKEN;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN; //war vorher 100
 }
