@@ -75,7 +75,8 @@ uint16_t Automat::getCharacterType(char currentChar) {
 			currentChar == '!' || currentChar == ';' ||
 			currentChar == '(' || currentChar == ')' ||
 			currentChar == '{' || currentChar == '}' ||
-			currentChar == '[' || currentChar == ']') {
+			currentChar == '[' || currentChar == ']' ||
+			currentChar == ';') {
 		return CT_SIGN;
 	} else {
 		return CT_NOT_ALLOWED;
