@@ -285,21 +285,23 @@ void Scanner::getNextToken() {
 				if (this->currentChar == '=') {
 					this->tokenType = Token::TT_MORE_COLON_MORE;
 				} else {
-					this->buffer->dekrementBufferPointer(3);
+					//this->buffer->dekrementBufferPointer(3);
 				}
 				break;
 
 			case Automat::CHECK:
 				// =:+
-				this->throwSpecialToken(Token::TT_EQUAL);
+				this->buffer->dekrementBufferPointer(2);
+				this->internBuffer[1] = '\0';
+				this->internBuffer[2] = '\0';
 
-				this->colIndex++;
-				this->throwSpecialToken(Token::TT_COLON);
-				this->colIndex++;
-				this->colIndex++;
-				//@todo: TokenType anpassen
-				this->throwSpecialToken(Token::TT_DUMMY);
+				this->lexemLength++;
+				this->generateToken(Token::TT_EQUAL);
 
+				this->lexemLength++;
+				this->generateToken(Token::TT_COLON);
+
+				this->clearInternBuffer();
 				break;
 			} // END SELECT
 		} // END IF

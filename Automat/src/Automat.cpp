@@ -419,8 +419,8 @@ void Automat::initTransitionTable() {
 	transitionTable[i][11] = COLON_EQUAL;
 	transitionTable[i][12] = TOKEN;
 	transitionTable[i][13] = TOKEN;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
 	transitionTable[i][16] = TOKEN;
 
 	// STAR
@@ -459,9 +459,9 @@ void Automat::initTransitionTable() {
 	transitionTable[i][11] = TOKEN;
 	transitionTable[i][12] = TOKEN;
 	transitionTable[i][13] = TOKEN;
-	transitionTable[i][14] = LINE_BREAK;
-	transitionTable[i][15] = TAB;
-	transitionTable[i][16] = ERROR;
+	transitionTable[i][14] = TOKEN;
+	transitionTable[i][15] = TOKEN;
+	transitionTable[i][16] = TOKEN;
 
 	// AND_1
 	i = 19;
