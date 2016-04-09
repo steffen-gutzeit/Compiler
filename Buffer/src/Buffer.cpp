@@ -146,7 +146,7 @@ char Buffer::getChar() {
                retValue = secondBuffer[currentIndex++];
 
            } else
-           if((currentIndex == byte_count - 1) && (currentIndex < 512) && (currentIndex != 511)){
+           if((currentIndex == byte_count) && (currentIndex < 512) && (currentIndex != 511)){ //Change wegen Unix / windows dateien
                //EOF ist erreicht
                retValue = '\0';
 
@@ -173,7 +173,7 @@ char Buffer::getChar() {
                retValue = firstBuffer[currentIndex++];
 
            } else
-           if((currentIndex == byte_count - 1) && (currentIndex < 512) && (currentIndex != 511)){
+           if((currentIndex == byte_count) && (currentIndex < 512) && (currentIndex != 511)){ //Change wegen Unix / windows dateien vorher byte_count - 1
                //EOF ist erreicht
                retValue = '\0';
                //Schliese Datei
