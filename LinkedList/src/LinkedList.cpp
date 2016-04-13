@@ -7,77 +7,83 @@
 
 #include "LinkedList.h"
 #include <stdlib.h>
-#include <iostream>
-
-using namespace std;
+#include <stdio.h>
 
 LinkedList::LinkedList() {
-	current = NULL;
-	head = NULL;
 }
 
 LinkedList::~LinkedList() {
 
 }
 
+void LinkedList::printList(list * head) {
+	list *current = head;
 
-struct LinkedList::listNode* LinkedList::createList(char* lexem, int typ) {
-	listNode *listPointer = (struct listNode*) malloc( sizeof (struct listNode) );
-
-	if (listPointer != NULL) {
-		int i = 0;
-				while (lexem[i] != '\0'){
-					listPointer->lexem[i] = lexem[i];
-					i++;
-				}
-		//listPointer->lexem = *lexem;
-		listPointer->typ = typ;
-		listPointer->next = NULL;
-	}
-
-	head = listPointer;
-	current = listPointer;
-	return listPointer;
+	uint16_t i = 0;
+    while (current != NULL) {
+    	i = 0;
+        printf("%d - ", current->index);
+	    while (current->lexem[i] != '\0') {
+	    	printf("%c", current->lexem[i]);
+	    	i++;
+	    }
+	    printf("\n");
+        current = current->next;
+    }
 }
 
-struct LinkedList::listNode* LinkedList::add(char *lexem, int typ) {
-	listNode *listPointer = (struct listNode*) malloc( sizeof (struct listNode) );
+void LinkedList::push(list * head, int val, char *lexem) {
+	uint16_t i = 0;
+	bool createFlag = true;
+	list *current = head;
 
-	if (listPointer != NULL) {
-		int i = 0;
-		while (lexem[i] != '\0'){
-			listPointer->lexem[i] = lexem[i];
+    while (current->next != NULL) {
+    	current = current->next;
+
+        if (this->sameStrings(lexem, current->lexem)) {
+        	createFlag = false;
+        }
+    }
+
+    if (createFlag) {
+		current->next = (LinkedList::list*) malloc(sizeof(LinkedList::list));
+
+		while (lexem[i] != '\0') {
+			current->next->lexem[i] = lexem[i];
 			i++;
 		}
-		//listPointer->lexem = lexem;
-		listPointer->typ = typ;
-		listPointer->next = NULL;
+		current->next->index = val;
+		current->next->next = NULL;
+    }
+}
+
+bool LinkedList::sameStrings(char *value, char *compare) {
+	uint16_t i = 0;
+
+	if (this->strlen(value) < this->strlen(compare)) {
+		while (value[i] != '\0') {
+			if (value[i] != compare[i]) {
+				return false;
+			}
+			i++;
+		}
+	} else {
+		while (compare[i] != '\0') {
+			if (compare[i] != value[i]) {
+				return false;
+			}
+			i++;
+		}
 	}
 
-	current->next = listPointer;
-	current = listPointer;
-
-	//cout << "Symtable " << lexem << endl;
-
-	return listPointer;
+	return true;
 }
 
-void LinkedList::setCurrent (struct listNode* newCurrent) {
-	current = newCurrent;
-}
-
-void LinkedList::setHead (struct listNode* newHead) {
-	head = newHead;
-}
-
-void LinkedList::printListValues() {
-	current = head;
-
-	cout << head->lexem << endl;
-
-	while (current->next != NULL) {
-		current = current->next;
-		cout << current->lexem << endl;
+uint16_t LinkedList::strlen(char *value) {
+	uint16_t stringIndex = 0;
+	while (value[stringIndex] != '\0') {
+		stringIndex++;
 	}
-}
 
+	return stringIndex;
+}

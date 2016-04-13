@@ -8,7 +8,7 @@
 #include "Symtable.h"
 
 Symtable::Symtable() {
-	this->hashTable = new HashMap(512);
+	this->hashTable = new HashMap();
 }
 
 Symtable::~Symtable() {
@@ -16,9 +16,9 @@ Symtable::~Symtable() {
 }
 
 void Symtable::insert(char* lexem, int typ) {
-	this->hashTable->addHashValue(lexem, typ);
+	this->hashTable->addValue(typ, lexem);
 }
 
 int Symtable::lookUp(char* lexem) {
-	return this->hashTable->searchValue(lexem);
+	//return this->hashTable->searchValue(lexem);
 }

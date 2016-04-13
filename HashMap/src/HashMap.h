@@ -3,32 +3,22 @@
 
 #include <stdint.h>
 #include "../../LinkedList/src/LinkedList.h"
-#include "../../Token/src/Token.h"
 
 class HashMap : public LinkedList {
 public:
-	HashMap(uint32_t size);
+	HashMap();
 	virtual ~HashMap();
 
-	void addHashValue(char *lexem, int typ);
-	void flush();
-	int searchValue(char *lexem);
+	uint16_t hashLexem(char *lexem);
+	void addValue(uint8_t type, char *lexem);
 
 private:
 	struct hashTable {
-		int key;
-		LinkedList::listNode linkedList;
+		LinkedList::node list;
 	}hashTable[512];
 
-	uint32_t hash(char *input);
-	bool compareString(char *value, char *compare);
-
-	int32_t hashValue;
-	uint16_t currentFillingLevel;
-
-
-
-
+	uint16_t hashValue;
+	uint16_t size;
 };
 
 #endif /* HASHMAP_H_ */

@@ -12,23 +12,21 @@
 
 class LinkedList {
 public:
-	struct listNode{
+	typedef struct node {
+		uint16_t index;
 		char lexem[512];
-		int typ;
-		struct listNode *next;
-	};
+	    struct node * next;
+	} list;
 
 	LinkedList();
 	virtual ~LinkedList();
-	struct listNode *createList(char* lexem, int typ);
-	struct listNode *add(char *lexem, int typ);
-	void printListValues();
 
-	void setCurrent(listNode* newCurrent);
-	void setHead(listNode* newHead);
+	void printList(list * head);
+	void push(list * head, int val, char *lexem);
+
 private:
-	struct listNode *head;
-	struct listNode *current;
+	uint16_t strlen(char *value);
+	bool sameStrings(char *value, char *compare);
 };
 
 #endif /* LINKEDLIST_H_ */
