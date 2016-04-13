@@ -1,10 +1,12 @@
 #include "../../HashMap/src/HashMap.h"
 #include "../../LinkedList/src/LinkedList.h"
 
+#include <iostream>
+
 using namespace std;
 
 int main() {
-	HashMap *h = new HashMap(512);
+	HashMap *h = new HashMap();
 
 	char test0[16] = "12";
 	h->addValue(1, test0);
@@ -30,5 +32,8 @@ int main() {
 	char test7[16] = "33";
 	h->addValue(100, test7);
 
+
+	cout << "Nicht drin (165165): " << h->inList("165165") << endl;
+	cout << "      drin     (if): " << h->inList("if");
 	return 0;
 }

@@ -20,5 +20,5 @@ void Symtable::insert(char* lexem, int typ) {
 }
 
 int Symtable::lookUp(char* lexem) {
-	//return this->hashTable->searchValue(lexem);
+	return this->hashTable->inList(lexem);
 }

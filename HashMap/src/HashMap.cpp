@@ -3,9 +3,6 @@
 
 #include <stdlib.h>
 
-
-using namespace std;
-
 HashMap::HashMap() {
 	this->size = 512;
 	this->hashValue = 1;
@@ -29,9 +26,20 @@ uint16_t HashMap::hashLexem(char *lexem) {
 }
 
 void HashMap::addValue(uint8_t type, char *lexem) {
+	//LinkedList::list *currentList = (LinkedList::list*) malloc(sizeof(LinkedList::list));
+	this->hashValue = hashLexem(lexem);
+
+	//currentList = &(hashTable[this->hashValue].list);
+	this->push(&(hashTable[this->hashValue].list), type, lexem);
+}
+
+bool HashMap::inList(char *lexem) {
+	bool inList = false;
 	LinkedList::list *currentList = (LinkedList::list*) malloc(sizeof(LinkedList::list));
 	this->hashValue = hashLexem(lexem);
 
 	currentList = &(hashTable[this->hashValue].list);
-	this->push(currentList, type, lexem);
+	inList= this->searchInList(currentList, lexem);
+
+	return inList;
 }

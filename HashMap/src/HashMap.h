@@ -11,6 +11,7 @@ public:
 
 	uint16_t hashLexem(char *lexem);
 	void addValue(uint8_t type, char *lexem);
+	bool inList(char *lexem);
 
 private:
 	struct hashTable {

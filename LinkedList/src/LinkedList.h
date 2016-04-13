@@ -21,12 +21,12 @@ public:
 	LinkedList();
 	virtual ~LinkedList();
 
-	void printList(list * head);
-	void push(list * head, int val, char *lexem);
-
+	void printList(list *head);
+	void push(list *head, int val, char *lexem);
+	bool searchInList(list *currentList, char *lexem);
 private:
-	uint16_t strlen(char *value);
 	bool sameStrings(char *value, char *compare);
+	uint16_t strlen(char *value);
 };
 
 #endif /* LINKEDLIST_H_ */

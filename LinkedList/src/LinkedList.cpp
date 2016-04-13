@@ -57,6 +57,20 @@ void LinkedList::push(list * head, int val, char *lexem) {
     }
 }
 
+bool LinkedList::searchInList(list *currentList, char *lexem) {
+	list *current = currentList;
+
+    while (current->next != NULL) {
+    	current = current->next;
+
+        if (this->sameStrings(lexem, current->lexem)) {
+        	return 1;
+        }
+    }
+
+    return 0;
+}
+
 bool LinkedList::sameStrings(char *value, char *compare) {
 	uint16_t i = 0;
 
