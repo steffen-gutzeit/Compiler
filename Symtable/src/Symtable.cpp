@@ -1,5 +1,5 @@
 /*
- * Symtable.cpp
+e * Symtable.cpp
  *
  *  Created on: 29.10.2014
  *      Author: root0r
@@ -30,11 +30,13 @@ void Symtable::initSymbols(){
 }
 
 void Symtable::insert(char* lexem, int typ) {
-	//Pruefe ob Lexem vorhanden
+	//Uebergebe Lexem an HashTable und bekomme KeyValue zurueck. Dieses wird im Token gespeichert.
 
 	this->hashTable->addHashValue(lexem, typ);
+
 }
 
 int Symtable::lookUp(char* lexem) {
+	//Suche mittels KeyValue nach Lexem und bekomme Informatioen zurück (Bezeichner und TokenTyp)
 	return this->hashTable->searchValue(lexem);
 }
