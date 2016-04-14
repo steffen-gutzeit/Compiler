@@ -10,10 +10,10 @@ e * Symtable.cpp
 #include "string.h";
 
 Symtable::Symtable() {
-	//Initialisier Symboltabelle
-	this->hashTable = new HashMap(512);
 
+	this->hashTable = new HashMap();
 	initSymbols();
+
 }
 
 Symtable::~Symtable() {
@@ -31,12 +31,11 @@ void Symtable::initSymbols(){
 
 void Symtable::insert(char* lexem, int typ) {
 	//Uebergebe Lexem an HashTable und bekomme KeyValue zurueck. Dieses wird im Token gespeichert.
-
-	this->hashTable->addHashValue(lexem, typ);
+	this->hashTable->addValue(typ, lexem);
 
 }
 
+
 int Symtable::lookUp(char* lexem) {
-	//Suche mittels KeyValue nach Lexem und bekomme Informatioen zurück (Bezeichner und TokenTyp)
-	return this->hashTable->searchValue(lexem);
+	return this->hashTable->inList(lexem);
 }
