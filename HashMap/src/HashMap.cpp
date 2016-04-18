@@ -2,6 +2,7 @@
 #include "../../LinkedList/src/LinkedList.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 HashMap::HashMap() {
 	this->size = 512;
@@ -24,13 +25,16 @@ uint16_t HashMap::hashLexem(char *lexem) {
 
 	return (this->hashValue %= this->size);
 }
+char *HashMap::addValue(uint8_t type, char *lexem) {
+	char *key;
 
-void HashMap::addValue(uint8_t type, char *lexem) {
 	//LinkedList::list *currentList = (LinkedList::list*) malloc(sizeof(LinkedList::list));
 	this->hashValue = hashLexem(lexem);
 
 	//currentList = &(hashTable[this->hashValue].list);
-	this->push(&(hashTable[this->hashValue].list), type, lexem);
+	key = this->push(&(hashTable[this->hashValue].list), type, lexem);
+	//printf("Hashmap: %p \n", key);
+	return key;
 }
 
 bool HashMap::inList(char *lexem) {

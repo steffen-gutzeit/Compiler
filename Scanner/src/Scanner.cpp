@@ -333,7 +333,11 @@ void Scanner::generateToken(uint16_t typ) {
 			//Pruefen ob es in die Symboltabelle eingetragen werden muss
 			if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
 
-				symtable->insert(this->internBuffer, typ);
+				//Key Value zurueck bekommen
+				char *key = symtable->insert(this->internBuffer, typ);
+				printf("Scanner: %p \n", key);
+				//Token erstellen mit Verweis auf Symboltabelle
+				cout << "Token: " << key << endl;
 				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 			}else{
 				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);

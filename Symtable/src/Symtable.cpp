@@ -8,6 +8,7 @@ e * Symtable.cpp
 #include "Symtable.h"
 
 #include "string.h"
+#include <stdio.h>
 
 Symtable::Symtable() {
 
@@ -30,10 +31,11 @@ void Symtable::initSymbols(){
 }
 
 char *Symtable::insert(char* lexem, int typ) {
+	char *key;;
 	//Uebergebe Lexem an HashTable und bekomme KeyValue zurueck. Dieses wird im Token gespeichert.
-	this->hashTable->addValue(typ, lexem);
-
-	return lexem;
+	key = this->hashTable->addValue(typ, lexem);
+	//printf("Symbol: %p \n", key);
+	return key;
 
 }
 

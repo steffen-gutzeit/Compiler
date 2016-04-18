@@ -22,7 +22,7 @@ public:
 	virtual ~LinkedList();
 
 	void printList(list *head);
-	void push(list *head, int val, char *lexem);
+	char *push(list *head, int val, char *lexem);
 	bool searchInList(list *currentList, char *lexem);
 private:
 	bool sameStrings(char *value, char *compare);

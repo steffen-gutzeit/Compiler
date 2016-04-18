@@ -8,6 +8,7 @@
 #include "LinkedList.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 
 LinkedList::LinkedList() {
 }
@@ -32,18 +33,24 @@ void LinkedList::printList(list * head) {
     }
 }
 
-void LinkedList::push(list * head, int val, char *lexem) {
+char *LinkedList::push(list * head, int val, char *lexem) {
 	uint16_t i = 0;
 	bool createFlag = true;
 	list *current = head;
+	char *key;
 
     while (current->next != NULL) {
     	current = current->next;
 
         if (this->sameStrings(lexem, current->lexem)) {
         	createFlag = false;
+        	key = &current->lexem[0];
+        	//printf("Liste1: %p \n", &current->lexem[0]);
         }
+
     }
+
+
 
     if (createFlag) {
 		current->next = (LinkedList::list*) malloc(sizeof(LinkedList::list));
@@ -54,7 +61,16 @@ void LinkedList::push(list * head, int val, char *lexem) {
 		}
 		current->next->index = val;
 		current->next->next = NULL;
+
+		key = &current->next->lexem[0];
+		//printf("Liste2: %p \n", &current->next->lexem[0]);
     }
+
+    //cout << "Liste: " << &current->next->lexem[0] << endl;
+
+
+    //Gebe index des Lexem zurueck
+    return key;
 }
 
 bool LinkedList::searchInList(list *currentList, char *lexem) {
