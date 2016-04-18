@@ -18,6 +18,7 @@ using namespace std;
 Scanner::Scanner(char *inputFile, char *outputFile) {
     buffer = new Buffer(inputFile, outputFile);
 	automat = new Automat();
+	symtable = new Symtable();
 	token = NULL;
 
 	this->currentState = 0;
@@ -36,6 +37,7 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 Scanner::~Scanner() {
 	delete buffer;
 	delete automat;
+	delete symtable;
 	//delete token;
 }
 
@@ -328,7 +330,15 @@ void Scanner::generateToken(uint16_t typ) {
 		if(typ == token->TT_INTEGER){
 			checkInteger(typ);
 		}else{
-			this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+			//Pruefen ob es in die Symboltabelle eingetragen werden muss
+			if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
+
+				symtable->insert(this->internBuffer, typ);
+				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+			}else{
+				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+			}
+
 		}
 
 		//Falls If oder While zu einem  Identifier werden

@@ -12,6 +12,7 @@
 #include "../../Buffer/src/Buffer.h"
 #include "../../Automat/src/Automat.h"
 #include "../../Token/src/Token.h"
+#include "../../Symtable/src/Symtable.h"
 #include <stdint.h>
 
 class Scanner {
@@ -26,6 +27,7 @@ private:
 	Automat *automat;
 	Buffer *buffer;
 	Token *token;
+	Symtable *symtable;
 
 	char *result;
 
