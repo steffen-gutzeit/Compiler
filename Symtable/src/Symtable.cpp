@@ -7,7 +7,7 @@ e * Symtable.cpp
 
 #include "Symtable.h"
 
-#include "string.h";
+#include "string.h"
 
 Symtable::Symtable() {
 
@@ -26,12 +26,14 @@ void Symtable::initSymbols(){
 
 	//Fülle Symboltabelle mit Schluesselwörter
 	insert(textWhile, 4); 	//While: TT_WHILE = 4
-	insert(textIf, 3);	//If:	 TT_IF = 3
+	insert(textIf, 3);		//If:	 TT_IF = 3
 }
 
-void Symtable::insert(char* lexem, int typ) {
+char *Symtable::insert(char* lexem, int typ) {
 	//Uebergebe Lexem an HashTable und bekomme KeyValue zurueck. Dieses wird im Token gespeichert.
 	this->hashTable->addValue(typ, lexem);
+
+	return lexem;
 
 }
 

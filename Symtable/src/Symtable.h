@@ -18,7 +18,7 @@ public:
 	Symtable();
 	virtual ~Symtable();
 	void initSymbols();
-	void insert(char* lexem, int typ);
+	char *insert(char* lexem, int typ);
 	int lookUp(char* lexem);
 
 private:
