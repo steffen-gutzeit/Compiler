@@ -335,10 +335,10 @@ void Scanner::generateToken(uint16_t typ) {
 
 				//Key Value zurueck bekommen
 				char *key = symtable->insert(this->internBuffer, typ);
-				printf("Scanner: %p \n", key);
+				//printf("Scanner: %p \n", key);
 				//Token erstellen mit Verweis auf Symboltabelle
-				cout << "Token: " << key << endl;
-				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+				//cout << "Token: " << key << endl;
+				this->token = new Token(this->rowIndex, this->colIndex, typ, key);
 			}else{
 				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 			}
