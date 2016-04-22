@@ -43,18 +43,30 @@ uint16_t Automat::getCharacterType(char currentChar) {
 				((currentChar >= 'm') && (currentChar <= 'v')) ||
 				((currentChar >= 'x') && (currentChar <= 'z'))) {
 		return CT_LETTER;
-	} else if ( currentChar == 'i' || currentChar == 'I') {
-		return CT_I;
-	} else if ( currentChar == 'f' || currentChar == 'F') {
-		return CT_F;
-	} else if ( currentChar == 'w' || currentChar == 'W') {
-		return CT_W;
-	} else if ( currentChar == 'h' || currentChar == 'H') {
-		return CT_H;
-	} else if ( currentChar == 'l' || currentChar == 'L') {
-		return CT_L;
-	} else if ( currentChar == 'e' || currentChar == 'E') {
-		return CT_E;
+	} else if ( currentChar == 'i') {
+		return CT_SMALL_I;
+	} else if ( currentChar == 'f') {
+		return CT_SMALL_F;
+	} else if ( currentChar == 'w') {
+		return CT_SMALL_W;
+	} else if ( currentChar == 'h') {
+		return CT_SMALL_H;
+	} else if ( currentChar == 'l') {
+		return CT_SMALL_L;
+	} else if ( currentChar == 'e') {
+		return CT_SMALL_E;
+	} else if ( currentChar == 'I') {
+		return CT_CAPITAL_I;
+	} else if ( currentChar == 'F') {
+		return CT_CAPITAL_F;
+	} else if ( currentChar == 'W') {
+		return CT_CAPITAL_W;
+	} else if ( currentChar == 'H') {
+		return CT_CAPITAL_H;
+	} else if ( currentChar == 'L') {
+		return CT_CAPITAL_L;
+	} else if ( currentChar == 'E') {
+		return CT_CAPITAL_E;
 	} else if ( currentChar == ':') {
 		return CT_SIGN_COLON;
 	} else if ( currentChar == '*') {
