@@ -7,12 +7,18 @@
 
 #include "Scanner.h"
 #include <iostream>
+#include <string.h>
+#include <error.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <limits.h>
 
 using namespace std;
 
 Scanner::Scanner(char *inputFile, char *outputFile) {
     buffer = new Buffer(inputFile, outputFile);
 	automat = new Automat();
+	symtable = new Symtable();
 	token = NULL;
 
 	this->currentState = 0;
@@ -31,7 +37,8 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 Scanner::~Scanner() {
 	delete buffer;
 	delete automat;
-	delete token;
+	delete symtable;
+	//delete token;
 }
 
 void Scanner::buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType) {
@@ -82,8 +89,13 @@ void Scanner::whileIfCascade(uint16_t state) {
 	if (this->getCurrentState(this->currentChar) == state) {
 		this->lexemLength++;
 	} else {
+		if (this->getCurrentState(this->currentChar) == Automat::TOKEN) {
+			this->lexemLength++;
+			this->lexemLength++;
+		} else {
+			this->lexemLength++;
+		}
 		this->initForTokenGeneration(Token::TT_IDENTIFIER);
-		this->lexemLength++;
 	}
 
 }
@@ -104,7 +116,7 @@ void Scanner::getNextToken() {
 
 			this->generateToken(this->tokenType);
 		} else {
-			//cout << this->getCurrentState(this->currentChar) << " " << currentState << " " << this->rowIndex << ":" << this->colIndex << endl;
+			//cout << "\t" << (this->currentState) << endl;
 			switch (this->currentState) {
 			case Automat::INIT:
 				this->lexemLength = 0;
@@ -120,11 +132,7 @@ void Scanner::getNextToken() {
 
 			case Automat::ERROR:
 				this->setLexemData(1, Token::TT_ERROR);
-				/*this->scannerIndex--;
-				this->buffer->dekrementBufferPointer();
-				this->internBuffer[this->scannerIndex] = '\0';
-				this->tokenType = tokenType;*/
-				//this->initForTokenGeneration(Token::TT_ERROR);
+				printErrorToken();
 				break;
 
 			case Automat::BLANK:
@@ -151,10 +159,13 @@ void Scanner::getNextToken() {
 				this->buildIntegerOrIdentifier(Automat::IDENTIFIER, Token::TT_IDENTIFIER);
 				break;
 
-			case Automat::IF_1:
+			case Automat::IF_SMALL_1:
 				this->whileIfCascade(Automat::IF);
 				break;
 
+			case Automat::IF_CAPITAL_1:
+				this->whileIfCascade(Automat::IF);
+				break;
 
 			case Automat::IF:
 				this->getNextChar();
@@ -165,19 +176,35 @@ void Scanner::getNextToken() {
 				}
 				break;
 
-			case Automat::WHILE_1:
-				this->whileIfCascade(Automat::WHILE_2);
+			case Automat::WHILE_SMALL_1:
+				this->whileIfCascade(Automat::WHILE_SMALL_2);
 				break;
 
-			case Automat::WHILE_2:
-				this->whileIfCascade(Automat::WHILE_3);
+			case Automat::WHILE_SMALL_2:
+				this->whileIfCascade(Automat::WHILE_SMALL_3);
 				break;
 
-			case Automat::WHILE_3:
-				this->whileIfCascade(Automat::WHILE_4);
+			case Automat::WHILE_SMALL_3:
+				this->whileIfCascade(Automat::WHILE_SMALL_4);
 				break;
 
-			case Automat::WHILE_4:
+			case Automat::WHILE_SMALL_4:
+				this->whileIfCascade(Automat::WHILE);
+				break;
+
+			case Automat::WHILE_CAPITAL_1:
+				this->whileIfCascade(Automat::WHILE_CAPITAL_2);
+				break;
+
+			case Automat::WHILE_CAPITAL_2:
+				this->whileIfCascade(Automat::WHILE_CAPITAL_3);
+				break;
+
+			case Automat::WHILE_CAPITAL_3:
+				this->whileIfCascade(Automat::WHILE_CAPITAL_4);
+				break;
+
+			case Automat::WHILE_CAPITAL_4:
 				this->whileIfCascade(Automat::WHILE);
 				break;
 
@@ -226,7 +253,16 @@ void Scanner::getNextToken() {
 
 				if (this->getCurrentState(this->currentChar) == Automat::AND) {
 					this->tokenType = Token::TT_AND;
+				}else{
+					//Bugfix
+					this->colIndex++;
+					this->clearInternBuffer();
+					decrementColCount();
+					this->buffer->dekrementBufferPointer();
+					this->internBuffer[0] = '&';
+					this->tokenType = Token::TT_ERROR;
 				}
+
 				break;
 
 			case Automat::AND:
@@ -269,22 +305,17 @@ void Scanner::getNextToken() {
 
 				if (this->currentChar == '=') {
 					this->tokenType = Token::TT_MORE_COLON_MORE;
-				} else {
-					this->buffer->dekrementBufferPointer(3);
 				}
 				break;
 
 			case Automat::CHECK:
-				// =:+
-				this->throwSpecialToken(Token::TT_EQUAL);
+				// Fix
+				this->internBuffer[0] = ':';
+				this->internBuffer[1] = '\0';
 
-				this->colIndex++;
-				this->throwSpecialToken(Token::TT_COLON);
-				this->colIndex++;
-				this->colIndex++;
-				//@todo: TokenType anpassen
-				this->throwSpecialToken(Token::TT_DUMMY);
-
+				this->setLexemData(1, Token::TT_EQUAL);
+				this->generateToken(Token::TT_EQUAL);
+				this->buffer->dekrementBufferPointer(2);
 				break;
 			} // END SELECT
 		} // END IF
@@ -297,6 +328,10 @@ void Scanner::incrementColCount() {
 	this->colIndex++;
 }
 
+void Scanner::decrementColCount() {
+	this->colIndex--;
+}
+
 uint16_t Scanner::setCurrentState(char currentChar) {
 	// gebe Zeichen an Automat und erhalte aktuellen Status
 	return this->automat->testChar(currentChar);
@@ -307,35 +342,248 @@ uint16_t Scanner::getCurrentState(char currentChar) {
 	return this->automat->getStateByChar(currentChar);
 }
 
-
-
 void Scanner::generateToken(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
-		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+
+
+		if(typ == token->TT_INTEGER){
+			checkInteger(typ);
+		}else{
+			//Pruefen ob es in die Symboltabelle eingetragen werden muss
+			if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
+
+				//Key Value zurueck bekommen
+				char *key = symtable->insert(this->internBuffer, typ);
+				//printf("Scanner: %p \n", key);
+				//Token erstellen mit Verweis auf Symboltabelle
+				//cout << "Token: " << key << endl;
+				this->token = new Token(this->rowIndex, this->colIndex, typ, key);
+			}else{
+				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+			}
+
+		}
+
+		//Falls If oder While zu einem  Identifier werden
+		char tmp = this->internBuffer[0];
+		if((typ == token->TT_IDENTIFIER) && ((tmp == 'i') || (tmp == 'I') || (tmp == 'w') || (tmp == 'W'))){
+			decrementColCount();
+		}
+
 		printToken();
+
+		//Temporaerer Fix für den Memory Leak durch die erstellten Token Objekte
+		if(this->token){
+			delete(this->token);
+		}
 	}
 	this->clearInternBuffer();
 	//writeOutput();
 
 	/*if (typ == Token::TT_IDENTIFIER) {
 		symTable->insert(this->internBuffer, typ);
-
  		for(int i = 0; i < this->scannerIndex; i++){
 	        //cout << this->internBuffer[i];// << this->automat->getCols() << " - " << this->automat->getRows();
 	    }
 	}*/
+
+
+
+
+}
+
+void Scanner::checkInteger(uint16_t typ){
+	char *numberTemp = this->internBuffer;
+	char *end;
+
+	char textOverflowInt[] = "Overflow";
+	long test;
+
+	errno = 0;
+	test = strtol(numberTemp,&end,10);
+
+
+	if (errno == ERANGE || test < 0 || test > 4294967295) { // ERANGE
+		//Integer Overflow
+		this->tokenType = Token::TT_ERROR;
+	  	this->token = new Token(this->rowIndex, this->colIndex, Token::TT_ERROR, textOverflowInt);
+	  	fprintf(stderr, "Overflow Int  Line: %u \tColumn: %u\n", this->rowIndex, (this->colIndex + 1));
+
+	} else {
+		//regulaeres Integer
+		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+	}
+
 }
 
 
 void Scanner::printToken() {
-	if (this->tokenType != Token::TT_BLANK) {
-		cout << this->token->getRow() << ":" << (this->token->getCol() + 1) << " \t TYPE: " << this->token->getTokenType() << ":   ";
-		for(int i = 0; i < this->scannerIndex; i++){
-			cout << this->internBuffer[i];
+	if ((this->tokenType != Token::TT_BLANK)) {
+
+		int size = 0;
+
+		char textNewLine[] = "\n";
+		char textTab[] = "\t";
+		char textValue[] = "Value:  ";
+		char textLexem[] = "Lexem:  ";
+		char textError[] = "Symbol: ";
+
+
+		//Token Bezichner
+		char textToken[] = "Token: ";
+		buffer->addCharsToOutBuffer(textToken);
+
+		//TokenType
+		const char *textTokenTypeTemp = this->token->getTokenType();
+		char textTokenType[2];
+		textTokenType[1] = '\0';
+
+		int i = 0;
+		while(textTokenTypeTemp[i] != '\0'){
+			textTokenType[0] = textTokenTypeTemp[i];
+			buffer->addCharsToOutBuffer(textTokenType);
+			i++;
 		}
 
-		cout << endl;
+
+
+		//Line
+		char textLine[] = "Line: ";
+		buffer->addCharsToOutBuffer(textLine);
+
+		//Ermittle Stellenanzahl
+		size = sizeOfNumber(token->getRow());
+		char resultLine[size + 1];
+
+		//Konvertiere int zu einem chararray
+		buffer->addCharsToOutBuffer(intToChar(token->getRow(), size, resultLine));
+
+		//Setze Tab
+		buffer->addCharsToOutBuffer(textTab);
+
+		if(size == 1){
+			//Setze zweiten Tab (Schönheitskorrektur bei Zeilen 1 - 9)
+			buffer->addCharsToOutBuffer(textTab);
+		}
+
+
+
+		//Column
+		char textColumn[] = "Column: ";
+		buffer->addCharsToOutBuffer(textColumn);
+
+		//Ermittle Stellenanzahl
+		size = sizeOfNumber(token->getCol() + 1);
+		char resultColumn[size + 1];
+
+		//Konvertiere int zu einem chararray
+		buffer->addCharsToOutBuffer(intToChar(token->getCol() + 1, size, resultColumn));
+
+		//Ausgabe von Integer Value
+		if(this->tokenType == Token::TT_INTEGER){
+			//Setze Tab
+			buffer->addCharsToOutBuffer(textTab);
+
+			//Label ausgeben
+			buffer->addCharsToOutBuffer(textValue);
+
+			//Hole Integer Value und pruefe auf Bereichsueberschreitung (uint32 -> 10 Dezimalstellen)
+			/*int i= 0;
+			char *numberTemp = token->getLexem();
+			while(numberTemp[i] != '\0'){
+				i++;
+			}
+			if(i < 11){
+				buffer->addCharsToOutBuffer(token->getLexem());
+			}else{
+				fprintf(stderr, "Overflow Int  Line: %u \tColumn: %u\n", this->rowIndex, (this->colIndex + 1));
+				buffer->addCharsToOutBuffer(textOverflow);
+			}*/
+
+			buffer->addCharsToOutBuffer(token->getLexem());
+		}
+
+		//Ausgabe von Lexem
+		if(this->tokenType == Token::TT_IDENTIFIER){
+			//Setze Tab
+			buffer->addCharsToOutBuffer(textTab);
+
+			//Label ausgeben
+			buffer->addCharsToOutBuffer(textLexem);
+
+			//Hole Lexem
+			buffer->addCharsToOutBuffer(token->getLexem());
+
+
+		}
+
+		//Ausgabe von Error Symbol
+		if(this->tokenType == Token::TT_ERROR){
+			//Setze Tab
+			buffer->addCharsToOutBuffer(textTab);
+
+			//Label ausgeben
+			buffer->addCharsToOutBuffer(textError);
+
+			//Hole Lexem
+			buffer->addCharsToOutBuffer(token->getLexem());
+
+
+		}
+
+
+		//Zeilenumbruch
+		buffer->addCharsToOutBuffer(textNewLine);
+
+
+
+
+		//cout << this->token->getRow() << ":" << (this->token->getCol() + 1) << " \t TYPE: " << this->token->getTokenType() << ":   ";
+
+		//cout << output << endl;
+
+		//for(int i = 0; i < this->scannerIndex; i++){
+			//cout << this->internBuffer[i];
+		//}
+
+		//cout << endl;
+
+
 	}
+}
+
+void Scanner::printErrorToken(){
+	fprintf(stderr, "unknown Token Line: %u \tColumn: %u \tSymbol: %s \n", this->rowIndex, (this->colIndex + 1), this->internBuffer);
+
+}
+
+int Scanner::sizeOfNumber(uint32_t digit){
+
+	int count = 0;
+
+	//Bestimme Stellenanzahl
+	while(digit != 0){
+		digit = digit / 10;
+		count++;
+	}
+
+	return count;
+}
+
+char *Scanner::intToChar(uint32_t digit, int size, char result[]){
+
+	//Modulo Rechnung zur Umwandlung
+	for(int i = 0; i < size; i++){
+		result[(size - 1) - i] = digit % 10 + '0';
+		//cout << result[(size - 1) - i] << endl;
+		digit = digit / 10;
+	}
+
+	result[size] = '\0';
+
+	return result;
+
+
 }
 
 void Scanner::clearInternBuffer() {
