@@ -21,6 +21,7 @@ public:
 	uint16_t getStateByChar(char currentChar);
 	uint16_t getCharacterType(char currentChar);
 	uint16_t testChar(char currentChar);
+	uint16_t setTokenState();
 
 	uint16_t transitionTable[31][23];
 	uint16_t currentState;

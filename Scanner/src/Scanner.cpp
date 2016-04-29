@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#define OVERFLOW_SIZE (511)
+
 using namespace std;
 
 Scanner::Scanner(char *inputFile, char *outputFile) {
@@ -43,7 +45,14 @@ Scanner::~Scanner() {
 
 void Scanner::buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType) {
 	this->lexemLength++;
-	this->currentChar = this->buffer->getChar();
+
+	if (this->lexemLength < OVERFLOW_SIZE) {
+		this->currentChar = this->buffer->getChar();
+	} else {
+		this->buffer->getChar();
+		this->currentChar = ' ';
+	}
+
 	this->internBuffer[this->scannerIndex] = this->currentChar;
 	this->scannerIndex++;
 
@@ -320,7 +329,11 @@ void Scanner::getNextToken() {
 			} // END SELECT
 		} // END IF
 
-		this->currentState = this->setCurrentState(this->currentChar);
+		if (this->lexemLength <= OVERFLOW_SIZE) {
+			this->currentState = this->setCurrentState(this->currentChar);
+		} else {
+			this->currentState = this->automat->setTokenState();
+		}
 	} // END WHILE
 } // END METHODE
 
