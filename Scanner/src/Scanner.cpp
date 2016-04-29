@@ -424,7 +424,37 @@ void Scanner::checkInteger(uint16_t typ){
 
 	} else {
 		//regulaeres Integer
+
+		//Pruefe auf voranstehende 0
+		if(this->internBuffer[0] == '0'){
+
+			int size = 0;
+
+			//Ermittle Stellenanzahl
+			size = sizeOfNumber(test);
+			char resultLine[size + 1];
+
+			//Konvertiere int zu einem chararray
+			char *number = intToChar(test, size, resultLine);
+
+			int i = 0;
+
+			while(number[i] != '\0'){
+				this->internBuffer[i] = number[i];
+				i++;
+			}
+
+			this->internBuffer[i] = '\0';
+
+
+		}
+
 		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+
+
+
+
+
 	}
 
 }
