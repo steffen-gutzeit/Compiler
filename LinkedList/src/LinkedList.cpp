@@ -90,7 +90,7 @@ bool LinkedList::searchInList(list *currentList, char *lexem) {
 bool LinkedList::sameStrings(char *value, char *compare) {
 	uint16_t i = 0;
 
-	if (this->strlen(value) != this->strlen(compare)) {
+	if (this->strlen(value) > this->strlen(compare)) {
 		while (value[i] != '\0') {
 			if (value[i] != compare[i]) {
 				return false;
@@ -106,6 +106,7 @@ bool LinkedList::sameStrings(char *value, char *compare) {
 		}
 	}
 
+	//printf("Teste: %s mit %s \n", value, compare);
 
 	return true;
 }
