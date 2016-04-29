@@ -159,10 +159,13 @@ void Scanner::getNextToken() {
 				this->buildIntegerOrIdentifier(Automat::IDENTIFIER, Token::TT_IDENTIFIER);
 				break;
 
-			case Automat::IF_1:
+			case Automat::IF_SMALL_1:
 				this->whileIfCascade(Automat::IF);
 				break;
 
+			case Automat::IF_CAPITAL_1:
+				this->whileIfCascade(Automat::IF);
+				break;
 
 			case Automat::IF:
 				this->getNextChar();
@@ -173,19 +176,35 @@ void Scanner::getNextToken() {
 				}
 				break;
 
-			case Automat::WHILE_1:
-				this->whileIfCascade(Automat::WHILE_2);
+			case Automat::WHILE_SMALL_1:
+				this->whileIfCascade(Automat::WHILE_SMALL_2);
 				break;
 
-			case Automat::WHILE_2:
-				this->whileIfCascade(Automat::WHILE_3);
+			case Automat::WHILE_SMALL_2:
+				this->whileIfCascade(Automat::WHILE_SMALL_3);
 				break;
 
-			case Automat::WHILE_3:
-				this->whileIfCascade(Automat::WHILE_4);
+			case Automat::WHILE_SMALL_3:
+				this->whileIfCascade(Automat::WHILE_SMALL_4);
 				break;
 
-			case Automat::WHILE_4:
+			case Automat::WHILE_SMALL_4:
+				this->whileIfCascade(Automat::WHILE);
+				break;
+
+			case Automat::WHILE_CAPITAL_1:
+				this->whileIfCascade(Automat::WHILE_CAPITAL_2);
+				break;
+
+			case Automat::WHILE_CAPITAL_2:
+				this->whileIfCascade(Automat::WHILE_CAPITAL_3);
+				break;
+
+			case Automat::WHILE_CAPITAL_3:
+				this->whileIfCascade(Automat::WHILE_CAPITAL_4);
+				break;
+
+			case Automat::WHILE_CAPITAL_4:
 				this->whileIfCascade(Automat::WHILE);
 				break;
 
@@ -426,8 +445,6 @@ void Scanner::printToken() {
 			i++;
 		}
 
-
-
 		//Line
 		char textLine[] = "Line: ";
 		buffer->addCharsToOutBuffer(textLine);
@@ -552,6 +569,7 @@ int Scanner::sizeOfNumber(uint32_t digit){
 
 	return count;
 }
+
 
 char *Scanner::intToChar(uint32_t digit, int size, char result[]){
 
