@@ -28,6 +28,12 @@ uint16_t Automat::testChar(char currentChar) {
 	return this->currentState;
 }
 
+uint16_t Automat::setTokenState() {
+	this->currentState = TOKEN;
+
+	return this->currentState;
+}
+
 uint16_t Automat::getCharacterType(char currentChar) {
 	if (currentChar >= '0' && currentChar <= '9') {
 		return CT_DIGIT;
