@@ -22,12 +22,16 @@ Symtable::~Symtable() {
 }
 
 void Symtable::initSymbols(){
-	char textWhile[] = "while";
-	char textIf[] = "if";
+	char textWhile1[] = "while";
+	char textIf1[] = "if";
+	char textWhile2[] = "WHILE";
+	char textIf2[] = "IF";
 
 	//Fülle Symboltabelle mit Schluesselwörter
-	insert(textWhile, 4); 	//While: TT_WHILE = 4
-	insert(textIf, 3);		//If:	 TT_IF = 3
+	insert(textWhile1, 4); 	//While: TT_WHILE = 4
+	insert(textWhile2, 4); 	//While: TT_WHILE = 4
+	insert(textIf1, 3);		//If:	 TT_IF = 3
+	insert(textIf2, 3);		//If:	 TT_IF = 3
 }
 
 char *Symtable::insert(char* lexem, int typ) {
