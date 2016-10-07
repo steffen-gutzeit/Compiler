@@ -20,7 +20,7 @@ public:
 	Scanner(char *inputFile, char *outputFile);
 	virtual ~Scanner();
 
-	void getNextToken();
+	Token *getNextToken();
 
 
 private:
@@ -31,6 +31,7 @@ private:
 
 	char *result;
 
+	bool eof;
 
 	char internBuffer[512];
 	char currentChar;
@@ -53,7 +54,8 @@ private:
 	void checkInteger(uint16_t typ);
 	void incrementColCount();
 	void decrementColCount();
-	void generateToken(uint16_t typ);
+	Token *generateToken(uint16_t typ);
+	void generateTokenPrint(uint16_t typ);
 	void clearInternBuffer();
 
 	void buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType);
