@@ -1,29 +1,32 @@
 #include "Parser.h"
 
-Parser::Parser(Scanner *myScanner)
+Parser::Parser(Scanner *myScanner, Token *token)
 {
 	this->scanner = myScanner;
+	this->token = token;
 	parseTree = new ParseTree(myScanner);
 }
 
-void Parser::syntaxError(Token::tokenType expected[], int expectedCount, Token *t)
+
+void Parser::syntaxError(uint16_t expected[], int expectedCount, Token *t)
 {
-	std::cerr << "Syntax Error: Expected '" << Const::tokenTypeAsString(expected[0]) << "'";
+//	std::cerr << "Syntax Error: Expected '" << Const::tokenTypeAsString(expected[0]) << "'";
+	std::cerr << "Syntax Error: Expected '" << this->token.getTokenType(expected[0]) << "'";
 
 	for (int i = 1; i < expectedCount; i++) {
 		if (i == expectedCount - 1) std::cerr << " or '"; else std::cerr << ", '";
-		std::cerr << Const::tokenTypeAsString(expected[i]) << "'";
+		std::cerr << this->token.getTokenType(expected[i]) << "'";
 	}
 
-	std::cerr << " at line " << t->getLine() << ", column " << t->getColumn() << " instead of '" << Const::tokenTypeAsString(t->getTokenType()) << "'." << std::endl;
+	std::cerr << " at line " << t->getLine() << ", column " << t->getColumn() << " instead of '" << this->token.getTokenType(t->getTokenType()) << "'." << std::endl;
 	exit(1);
 }
 
-//void Parser::syntaxError(Token::tokenType expected, Token *t)
-//{
-//	int tokens[] = {expected};
-//	syntaxError(tokens, 1, t);
-//}
+void Parser::syntaxError(uint16_t expected, Token *t)
+{
+	uint16_t tokens[] = {expected};
+	syntaxError(tokens, 1, t);
+}
 
 int Parser::processFile()
 {
@@ -31,10 +34,10 @@ int Parser::processFile()
 
 	Token *myCommand[MAX_POSSIBLE_TOKENS] = {};
 	Token *t;
-	int tokenCount = 0;
-	int tokenParsed;
+	uint8_t tokenCount = 0;
+	uint8_t tokenParsed;
 	
-	for (int i = 0; i < MAX_POSSIBLE_TOKENS; i++) myCommand[i] = new Token(Token::TT_ERROR, "", 0, 0);
+	for (uint8_t i = 0; i < MAX_POSSIBLE_TOKENS; i++) myCommand[i] = new Token(Token::TT_ERROR, "", 0, 0);
 
 	// Token stehen hier zur Verfügung, keine Nacharbeit mehr nötig
 	while (t = scanner->nextToken()) {
@@ -56,7 +59,7 @@ int Parser::processFile()
 		#endif
 		
 		// TODO: TOKEN_WRITE, TOKEN_READ,
-		int tokens[] = {Token::TT_IDENTIFIER, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
+		uint16_t tokens[] = {Token::TT_IDENTIFIER, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
 		syntaxError(tokens, 6, myCommand[tokenParsed]);
 	}
 	
@@ -72,13 +75,13 @@ int Parser::processFile()
 	return 0;
 }
 
-int Parser::PROG(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::PROG(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "PROG " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_PROG)));
 	
 	// DECLS
@@ -90,13 +93,13 @@ int Parser::PROG(Node *node, Token *myCommand[], int startCount, int tokenCount)
 	return where;
 }
 
-int Parser::DECLS(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::DECLS(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "DECLS " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_DECLS)));
 	
 	switch (myCommand[where]->getTokenType()) {
@@ -126,13 +129,13 @@ int Parser::DECLS(Node *node, Token *myCommand[], int startCount, int tokenCount
 	return where;
 }
 
-int Parser::DECL(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::DECL(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "DECL " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_DECL)));
 	
 	// TYPE
@@ -155,13 +158,13 @@ int Parser::DECL(Node *node, Token *myCommand[], int startCount, int tokenCount)
 	return where;
 }
 
-int Parser::ARRAY(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::ARRAY(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "ARRAY " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_ARRAY)));
 	
 	switch (myCommand[where]->getTokenType()) {
@@ -219,13 +222,13 @@ int Parser::ARRAY(Node *node, Token *myCommand[], int startCount, int tokenCount
 //	return where;
 //}
 
-int Parser::STATEMENTS(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::STATEMENTS(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "STATEMENTS " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_STATEMENTS)));
 	
 	switch (myCommand[where]->getTokenType()) {
@@ -259,13 +262,13 @@ int Parser::STATEMENTS(Node *node, Token *myCommand[], int startCount, int token
 	return where;
 }
 
-int Parser::STATEMENT(Node * node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "STATEMENT " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_STATEMENT)));
 	
 	switch (myCommand[where]->getTokenType()) {
@@ -407,20 +410,20 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], int startCount, int token
 			
 		default:
 			//TODO: TOKEN_WRITE, TOKEN_READ,
-			int tokens[] = {Token::TT_IDENTIFIER, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
+			uint16_t tokens[] = {Token::TT_IDENTIFIER, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
 			syntaxError(tokens, 6, myCommand[where]);
 	}
 			
 	return where;
 }
 
-int Parser::EXP(Node * node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::EXP(Node * node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "EXP " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_EXP)));
 
 	// EXP2
@@ -432,13 +435,13 @@ int Parser::EXP(Node * node, Token *myCommand[], int startCount, int tokenCount)
 	return where;
 }
 
-int Parser::EXP2(Node * node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::EXP2(Node * node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "EXP2 " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_EXP2)));
 
 	switch (myCommand[where]->getTokenType()) {
@@ -518,20 +521,20 @@ int Parser::EXP2(Node * node, Token *myCommand[], int startCount, int tokenCount
 //			break;
 			
 		default:
-			int tokens[] = {Token::TT_BRACKET_UPON, Token::TT_IDENTIFIER, Token::TT_INTEGER, Token::TT_MINUS, Token::TT_EXCLAMATION_MARK};
+			uint16_t tokens[] = {Token::TT_BRACKET_UPON, Token::TT_IDENTIFIER, Token::TT_INTEGER, Token::TT_MINUS, Token::TT_EXCLAMATION_MARK};
 			syntaxError(tokens, 7, myCommand[where]);
 	}
 
 	return where;
 }
 
-int Parser::INDEX(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::INDEX(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "INDEX " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_INDEX)));
 	
 	switch (myCommand[where]->getTokenType()) {
@@ -560,13 +563,13 @@ int Parser::INDEX(Node *node, Token *myCommand[], int startCount, int tokenCount
 	return where;
 }
 
-int Parser::OP_EXP(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::OP_EXP(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "OP_EXP " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_OP_EXP)));
 	
 	switch (myCommand[where]->getTokenType()) {
@@ -596,13 +599,13 @@ int Parser::OP_EXP(Node *node, Token *myCommand[], int startCount, int tokenCoun
 	return where;
 }
 
-int Parser::OP(Node *node, Token *myCommand[], int startCount, int tokenCount)
+int Parser::OP(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tokenCount)
 {
 	#ifdef DEBUG
 	std::cout << "OP " << startCount << std::endl;
 	#endif
 
-	int where = startCount;
+	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(NODE_OP)));
 	
 	switch (myCommand[where]->getTokenType()) {
@@ -622,7 +625,7 @@ int Parser::OP(Node *node, Token *myCommand[], int startCount, int tokenCount)
 			break;
 			
 		default:
-			int tokens[] = {Token::TT_PLUS, Token::TT_MINUS, Token::TT_STAR, Token::TT_COLON, Token::TT_LESS, Token::TT_MORE, Token::TT_EQUAL, Token::TT_MORE_COLON_MORE, Token::TT_AND};
+			uint16_t tokens[] = {Token::TT_PLUS, Token::TT_MINUS, Token::TT_STAR, Token::TT_COLON, Token::TT_LESS, Token::TT_MORE, Token::TT_EQUAL, Token::TT_MORE_COLON_MORE, Token::TT_AND};
 			syntaxError(tokens, 7, myCommand[where]);
 	}
 	
