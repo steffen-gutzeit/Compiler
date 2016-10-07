@@ -56,7 +56,12 @@ public:
 		TT_SQUARE_BRACKET_CLOSE = 24,
 
 		TT_BLANK				= 25,
-		TT_ERROR				= 26
+		TT_ERROR				= 26,
+
+		TT_READ					= 27,
+		TT_WRITE				= 28,
+		TT_ELSE					= 29,
+		TT_INT					= 30
 	};
 
 private:

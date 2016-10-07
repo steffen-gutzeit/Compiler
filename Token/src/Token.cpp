@@ -84,6 +84,22 @@ uint16_t Token::matchStateToType(uint16_t stateType) {
 		return TT_WHILE;
 		break;
 
+	case Automat::READ:
+		return TT_READ;
+		break;
+
+	case Automat::WRITE:
+		return TT_WRITE;
+		break;
+
+	case Automat::INT:
+		return TT_INT;
+		break;
+
+	case Automat::ELSE:
+		return TT_ELSE;
+		break;
+
 	case Automat::AND:
 	case Automat::SIGN:
 	case Automat::COLON:
@@ -127,6 +143,10 @@ const char *Token::getTokenType(){
     case TT_SQUARE_BRACKET_CLOSE: return "SqrBra_Close\t"; break;
     case TT_BLANK: return "Blank\t"; break;
     case TT_ERROR: return "Error\t\t"; break;
+    case TT_READ: return "Read\t\t"; break;
+    case TT_WRITE: return "Write\t\t"; break;
+    case TT_INT: return "Integer\t"; break;
+    case TT_ELSE: return "Else\t\ŧ"; break;
 
     }
     //Sollte nie erreicht werden :)
@@ -165,6 +185,10 @@ const char *Token::getTokenType(uint16_t &tokenType){
     case TT_SQUARE_BRACKET_CLOSE: return "SqrBra_Close\t"; break;
     case TT_BLANK: return "Blank\t"; break;
     case TT_ERROR: return "Error\t\t"; break;
+    case TT_READ: return "Read\t\t"; break;
+    case TT_WRITE: return "Write\t\t"; break;
+    case TT_INT: return "Integer\t"; break;
+    case TT_ELSE: return "Else\t\ŧ"; break;
 
     }
     //Sollte nie erreicht werden :)
