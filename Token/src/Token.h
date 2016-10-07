@@ -22,7 +22,7 @@ public:
 	uint16_t matchStateToType(uint16_t stateType);
 	char *getLexem();
 	const char *getTokenType();
-	const char *getTokenType(uint32_t &tokenType);
+	const char *getTokenType(uint16_t &tokenType);
 
 	enum tokenType {
 		TT_DUMMY				=  0,
@@ -45,10 +45,13 @@ public:
 		//TT_QUESTION_MARK      	= 16,
 		TT_AND                	= 17,
 		TT_SEMICOLON          	= 18,
+		// (
 		TT_BRACKET_UPON       	= 19,
 		TT_BRACKET_CLOSE      	= 20,
+		// {
 		TT_BRACE_UPON         	= 21,
 		TT_BRACE_CLOSE        	= 22,
+		// [
 		TT_SQUARE_BRACKET_UPON  = 23,
 		TT_SQUARE_BRACKET_CLOSE = 24,
 

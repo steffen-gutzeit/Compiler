@@ -133,3 +133,41 @@ const char *Token::getTokenType(){
     //Default Rückgabewert
     return "Error";
 }
+
+
+const char *Token::getTokenType(uint16_t &tokenType){
+    switch (tokenType){
+
+    case TT_DUMMY: return "Dummy\t"; break;
+    case TT_SIGN: return "Sign\t\t"; break;
+    case TT_INTEGER: return "Integer\t\t"; break;
+    case TT_IDENTIFIER: return "Identifier\t"; break;
+    case TT_IF: return "IF\t\t"; break;
+    case TT_WHILE: return "WHILE\t\t"; break;
+    case TT_PLUS: return "Plus\t\t"; break;
+    case TT_MINUS: return "Minus\t\t"; break;
+    case TT_COLON: return "Colon\t\t"; break;
+    case TT_STAR: return "Star\t\t"; break;
+    case TT_LESS: return "Less\t\t"; break;
+    case TT_MORE: return "More\t\t"; break;
+    case TT_EQUAL: return "Equal\t\t"; break;
+    case TT_COLON_EQUAL: return "COLON_EQUAL\t"; break;
+    case TT_MORE_COLON_MORE: return "Mo_Co_Mo\t\t"; break;
+    case TT_EXCLAMATION_MARK: return "Excla_Mark\t"; break;
+    //case 16: return "Quest_Mark"; break;
+    case TT_AND: return "And\t\t"; break;
+    case TT_SEMICOLON: return "Semicolon\t"; break;
+    case TT_BRACKET_UPON: return "Brack_Open\t"; break;
+    case TT_BRACKET_CLOSE: return "Brack_Close\t"; break;
+    case TT_BRACE_UPON: return "Brace_Open\t"; break;
+    case TT_BRACE_CLOSE: return "Brace_Close\t"; break;
+    case TT_SQUARE_BRACKET_UPON: return "SqrBra_Open\t"; break;
+    case TT_SQUARE_BRACKET_CLOSE: return "SqrBra_Close\t"; break;
+    case TT_BLANK: return "Blank\t"; break;
+    case TT_ERROR: return "Error\t\t"; break;
+
+    }
+    //Sollte nie erreicht werden :)
+    //Default Rückgabewert
+    return "Error";
+}
