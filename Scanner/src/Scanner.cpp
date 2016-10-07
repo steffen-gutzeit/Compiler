@@ -22,6 +22,7 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 	automat = new Automat();
 	symtable = new Symtable();
 	token = NULL;
+	eof = false;
 
 	this->currentState = 0;
 	this->scannerIndex = 0;
@@ -114,16 +115,19 @@ void Scanner::setLexemData(int16_t lexemLength, uint16_t tokenType) {
 	this->tokenType = tokenType;
 }
 
-void Scanner::getNextToken() {
+Token *Scanner::getNextToken() {
     //End of File Schaltvariable
-    bool eof = false;
+    bool eot = false;
 
     //Hauptschleife solange das Ende der Datei nicht erreicht ist
-	while(eof == false){
+	while(eot == false){
 		if(this->currentChar == '\0'){
+			//End of File ist erreicht
 			eof = true;
+			eot = true;
 
-			this->generateToken(this->tokenType);
+			token = NULL;
+			//this->generateToken(this->tokenType);
 		} else {
 			//cout << "\t" << (this->currentState) << endl;
 			switch (this->currentState) {
@@ -133,7 +137,14 @@ void Scanner::getNextToken() {
 				break;
 
 			case Automat::TOKEN:
-				this->generateToken(this->tokenType);
+				if(this->tokenType != Token::TT_BLANK){
+					token = this->generateToken(this->tokenType);
+					eot = true;
+				}else{
+					generateTokenPrint(this->tokenType);
+					eot = false;
+				}
+
 
 				this->colIndex += this->lexemLength;
 				this->lexemLength = 0;
@@ -323,7 +334,8 @@ void Scanner::getNextToken() {
 				this->internBuffer[1] = '\0';
 
 				this->setLexemData(1, Token::TT_EQUAL);
-				this->generateToken(Token::TT_EQUAL);
+				token = this->generateToken(Token::TT_EQUAL);
+				eot = true;
 				this->buffer->dekrementBufferPointer(2);
 				break;
 			} // END SELECT
@@ -335,6 +347,8 @@ void Scanner::getNextToken() {
 			this->currentState = this->automat->setTokenState();
 		}
 	} // END WHILE
+
+	return token;
 } // END METHODE
 
 void Scanner::incrementColCount() {
@@ -355,40 +369,93 @@ uint16_t Scanner::getCurrentState(char currentChar) {
 	return this->automat->getStateByChar(currentChar);
 }
 
-void Scanner::generateToken(uint16_t typ) {
+Token *Scanner::generateToken(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
 
-
-		if(typ == token->TT_INTEGER){
-			checkInteger(typ);
-		}else{
-			//Pruefen ob es in die Symboltabelle eingetragen werden muss
-			if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
-
-				//Key Value zurueck bekommen
-				char *key = symtable->insert(this->internBuffer, typ);
-				//printf("Scanner: %p \n", key);
-				//Token erstellen mit Verweis auf Symboltabelle
-				//cout << "Token: " << key << endl;
-				this->token = new Token(this->rowIndex, this->colIndex, typ, key);
+			if(typ == token->TT_INTEGER){
+				checkInteger(typ);
 			}else{
-				this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+				//Pruefen ob es in die Symboltabelle eingetragen werden muss
+				if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
+
+					//Key Value zurueck bekommen
+					char *key = symtable->insert(this->internBuffer, typ);
+					//printf("Scanner: %p \n", key);
+					//Token erstellen mit Verweis auf Symboltabelle
+					//cout << "Token: " << key << endl;
+					this->token = new Token(this->rowIndex, this->colIndex, typ, key);
+				}else{
+					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+				}
+
 			}
 
-		}
+			//Falls If oder While zu einem  Identifier werden
+			char tmp = this->internBuffer[0];
+			if((typ == token->TT_IDENTIFIER) && ((tmp == 'i') || (tmp == 'I') || (tmp == 'w') || (tmp == 'W'))){
+				decrementColCount();
+			}
 
-		//Falls If oder While zu einem  Identifier werden
-		char tmp = this->internBuffer[0];
-		if((typ == token->TT_IDENTIFIER) && ((tmp == 'i') || (tmp == 'I') || (tmp == 'w') || (tmp == 'W'))){
-			decrementColCount();
-		}
+
+
 
 		printToken();
 
 		//Temporaerer Fix für den Memory Leak durch die erstellten Token Objekte
-		if(this->token){
+		/*if(this->token){
 			delete(this->token);
-		}
+		}*/
+	}
+	this->clearInternBuffer();
+	//writeOutput();
+
+	/*if (typ == Token::TT_IDENTIFIER) {
+		symTable->insert(this->internBuffer, typ);
+ 		for(int i = 0; i < this->scannerIndex; i++){
+	        //cout << this->internBuffer[i];// << this->automat->getCols() << " - " << this->automat->getRows();
+	    }
+	}*/
+
+	return this->token;
+
+}
+
+void Scanner::generateTokenPrint(uint16_t typ) {
+	if (this->internBuffer[0] != '\0') {
+
+			if(typ == token->TT_INTEGER){
+				checkInteger(typ);
+			}else{
+				//Pruefen ob es in die Symboltabelle eingetragen werden muss
+				if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
+
+					//Key Value zurueck bekommen
+					char *key = symtable->insert(this->internBuffer, typ);
+					//printf("Scanner: %p \n", key);
+					//Token erstellen mit Verweis auf Symboltabelle
+					//cout << "Token: " << key << endl;
+					this->token = new Token(this->rowIndex, this->colIndex, typ, key);
+				}else{
+					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+				}
+
+			}
+
+			//Falls If oder While zu einem  Identifier werden
+			char tmp = this->internBuffer[0];
+			if((typ == token->TT_IDENTIFIER) && ((tmp == 'i') || (tmp == 'I') || (tmp == 'w') || (tmp == 'W'))){
+				decrementColCount();
+			}
+
+
+
+
+		printToken();
+
+		//Temporaerer Fix für den Memory Leak durch die erstellten Token Objekte
+		/*if(this->token){
+			delete(this->token);
+		}*/
 	}
 	this->clearInternBuffer();
 	//writeOutput();
@@ -401,9 +468,8 @@ void Scanner::generateToken(uint16_t typ) {
 	}*/
 
 
-
-
 }
+
 
 void Scanner::checkInteger(uint16_t typ){
 	char *numberTemp = this->internBuffer;
