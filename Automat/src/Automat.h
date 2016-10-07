@@ -23,7 +23,7 @@ public:
 	uint16_t testChar(char currentChar);
 	uint16_t setTokenState();
 
-	uint16_t transitionTable[31][23];
+	uint16_t transitionTable[55][35];
 	uint16_t currentState;
 
 	enum StateName {
@@ -48,17 +48,41 @@ public:
 		WHILE_CAPITAL_3 = 17,
 		WHILE_CAPITAL_4 = 18,
 		WHILE			= 19,
-		SIGN 			= 20,
-		COLON 			= 21,
-		STAR 			= 22,
-		EQUAL 			= 23,
-		AND_1 			= 24,
-		AND 			= 25,
-		COMMENT_1 		= 26,
-		COMMENT_2 		= 27,
-		COLON_EQUAL 	= 28,
-		COMPLEX_1 		= 29,
-		CHECK			= 30
+		READ_SMALL_1	= 20,
+		READ_SMALL_2	= 21,
+		READ_SMALL_3	= 22,
+		READ_CAPITAL_1	= 23,
+		READ_CAPITAL_2	= 24,
+		READ_CAPITAL_3	= 25,
+		READ			= 26,
+		INT_SMALL_1		= 27,
+		INT_CAPITAL_1	= 29,
+		INT				= 31,
+		WRITE_SMALL_1	= 32,
+		WRITE_SMALL_2	= 33,
+		WRITE_SMALL_3	= 34,
+		WRITE_CAPITAL_1 = 36,
+		WRITE_CAPITAL_2	= 37,
+		WRITE_CAPITAL_3	= 38,
+		WRITE			= 40,
+		ELSE_SMALL_1	= 41,
+		ELSE_SMALL_2	= 42,
+		ELSE_SMALL_3	= 43,
+		ELSE_CAPITAL_1	= 44,
+		ELSE_CAPITAL_2	= 45,
+		ELSE_CAPITAL_3	= 46,
+		ELSE			= 47,
+		SIGN 			= 48,
+		COLON 			= 49,
+		STAR 			= 50,
+		EQUAL 			= 51,
+		AND_1 			= 52,
+		AND 			= 53,
+		COMMENT_1 		= 54,
+		COMMENT_2 		= 55,
+		COLON_EQUAL 	= 56,
+		COMPLEX_1 		= 57,
+		CHECK			= 58
 	};
 
 
@@ -77,15 +101,27 @@ public:
 		CT_CAPITAL_H	= 11,
 		CT_CAPITAL_L	= 12,
 		CT_CAPITAL_E	= 13,
-		CT_SIGN			= 14,
-		CT_SIGN_COLON	= 15,
-		CT_SIGN_STAR	= 16,
-		CT_SIGN_EQUAL	= 17,
-		CT_SIGN_AND		= 18,
-		CT_BLANK		= 19,
-		CT_LINE_BREAK	= 20,
-		CT_TAB			= 21,
-		CT_NOT_ALLOWED	= 22
+		CT_SMALL_R		= 14,
+		CT_SMALL_A		= 15,
+		CT_SMALL_D		= 16,
+		CT_SMALL_N		= 17,
+		CT_SMALL_T		= 18,
+		CT_SMALL_S		= 19,
+		CT_CAPITAL_R	= 20,
+		CT_CAPITAL_A	= 21,
+		CT_CAPITAL_D	= 22,
+		CT_CAPITAL_N	= 23,
+		CT_CAPITAL_T	= 24,
+		CT_CAPITAL_S	= 25,
+		CT_SIGN			= 26,
+		CT_SIGN_COLON	= 27,
+		CT_SIGN_STAR	= 28,
+		CT_SIGN_EQUAL	= 29,
+		CT_SIGN_AND		= 30,
+		CT_BLANK		= 31,
+		CT_LINE_BREAK	= 32,
+		CT_TAB			= 33,
+		CT_NOT_ALLOWED	= 34
 	};
 };
 #endif /* AUTOMAT_SRC_AUTOMAT_H_ */
