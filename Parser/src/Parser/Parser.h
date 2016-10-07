@@ -2,9 +2,9 @@
 #include "../../../Scanner/src/Scanner.h"
 #include "../../../Token/src/Token.h"
 #include "parserConst.h"
-#include "Node.h"
-#include "NodeInfo.h"
-#include "ParseTree.h"
+#include "../Node/Node.h"
+#include "../NodeInfo/NodeInfo.h"
+#include "../Tree/ParseTree.h"
 
 class Parser
 {
@@ -14,8 +14,9 @@ public:
 	int processFile();
 	
 private:
-	void syntaxError(tokenType expected, Token *t);
-	void syntaxError(tokenType expected[], int expectedCount, Token *t);
+
+	void syntaxError(Token::tokenType expected, Token *t);
+	void syntaxError(Token::tokenType expected[], int expectedCount, Token *t);
 
 	// implement grammar
 	int PROG(Node *node, Token *myCommand[], int startCount, int tokenCount);

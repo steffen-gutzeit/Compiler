@@ -45,10 +45,13 @@ public:
 		//TT_QUESTION_MARK      	= 16,
 		TT_AND                	= 17,
 		TT_SEMICOLON          	= 18,
+		// {
 		TT_BRACKET_UPON       	= 19,
 		TT_BRACKET_CLOSE      	= 20,
+		// (
 		TT_BRACE_UPON         	= 21,
 		TT_BRACE_CLOSE        	= 22,
+		// [
 		TT_SQUARE_BRACKET_UPON  = 23,
 		TT_SQUARE_BRACKET_CLOSE = 24,
 
