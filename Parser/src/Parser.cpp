@@ -7,12 +7,27 @@
 
 #include "Parser.h"
 
-Parser::Parser() {
-	// TODO Auto-generated constructor stub
+/*
+ * Konstruktor
+ */
+Parser::Parser(Scanner *scanner) {
 
+	this->scanner = scanner;
 }
 
+/*
+ * Destruktor
+ */
 Parser::~Parser() {
-	// TODO Auto-generated destructor stub
+
+
 }
 
+
+/*
+ * Haupteinstiegspunkt zum parsen der Datei
+ * Wird von der main Methode aufgerufen
+ */
+int Parser::parseFile(){
+
+}
