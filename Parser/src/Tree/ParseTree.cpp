@@ -44,8 +44,8 @@ void ParseTree::setType(Node *node, ParserConstant::Typification typification)
 
 void ParseTree::printIdentifierNotFound(char *lexem) {
 //TODO
-	//	if (!(scanner->symtable->lookUp(lexem))) {
-//		std::cerr << "Internal Error: Identifier " << lexem << " not found in Symbol Table." << std::endl;
+//	if (!(scanner->symtable->lookUp(lexem))) {
+		std::cerr << "Internal Error: Identifier " << lexem << " not found in Symbol Table." << std::endl;
 //	}
 }
 
@@ -410,8 +410,6 @@ void ParseTree::makeCode(Node *myNode)
 			}
 			break;
 			
-//		case ParserConstant::NODE:
-//			break;
 
 		case ParserConstant::NODE_STATEMENTS:
 			if (myNode->getChildrenCount() > 0) {
@@ -437,19 +435,11 @@ void ParseTree::makeCode(Node *myNode)
 					case Token::TT_WRITE:
 						// write ( EXP )
 						makeCode(myNode->getChild(2));
-						if (getType(myNode->getChild(2)) == ParserConstant::intType) {
-							std::cout << "PRI" << std::endl;
-						} else {
-							std::cout << "PRF" << std::endl;
-						}
+						std::cout << "PRI" << std::endl;
 						break;
 					case Token::TT_READ:
 						// read ( identifier INDEX )
-						if ((getType(myNode->getChild(2)) == ParserConstant::intType) || (getType(myNode->getChild(2)) == ParserConstant::intArrayType)) {
-							std::cout << "RDI" << std::endl;
-						} else {
-							std::cout << "RDF" << std::endl;
-						}
+						std::cout << "REA" << std::endl;
 						std::cout << "LA " << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem();
 						makeCode(myNode->getChild(3));
 						std::cout << "STR" << std::endl;
@@ -492,9 +482,7 @@ void ParseTree::makeCode(Node *myNode)
 			if (myNode->getChildrenCount() > 0) {
 				// [ EXP ]
 				makeCode(myNode->getChild(1));
-				std::cout << "ADI" << std::endl;
-			} else {
-				// €
+				std::cout << "ADD" << std::endl;
 			}
 			break;
 		
@@ -526,11 +514,7 @@ void ParseTree::makeCode(Node *myNode)
 					if (getType(myNode->getChild(1)) == ParserConstant::intType) {
 						std::cout << "LC 0" << std::endl;
 						makeCode(myNode->getChild(1));
-						std::cout << "SBI" << std::endl;
-					} else {
-						std::cout << "LC 0.0" << std::endl;
-						makeCode(myNode->getChild(1));
-						std::cout << "SBF" << std::endl;
+						std::cout << "SUB" << std::endl;
 					}
 					break;
 				case Token::TT_EXCLAMATION_MARK:
@@ -546,62 +530,36 @@ void ParseTree::makeCode(Node *myNode)
 			if (myNode->getChildrenCount() > 0) {
 				// OP EXP
 				makeCode(myNode->getChild(1));
-				bool isInt;
-				if (getType(myNode->getChild(1)) == ParserConstant::intType) isInt = true; else isInt = false;
 				switch (getType(myNode->getChild(0))) {
 					case ParserConstant::opPlus:
-						if (isInt)
-							std::cout << "ADI" << std::endl;
-						else
-							std::cout << "ADF" << std::endl;
+						std::cout << "ADD" << std::endl;
 						break;
 					case ParserConstant::opMinus:
-						if (isInt)
-							std::cout << "SBI" << std::endl;
-						else
-							std::cout << "SBF" << std::endl;
-						break;
+						std::cout << "SUB" << std::endl;
 					case ParserConstant::opMult:
-						if (isInt)
-							std::cout << "MLI" << std::endl;
-						else
-							std::cout << "MLF" << std::endl;
-						break;
+						std::cout << "MUL" << std::endl;
 					case ParserConstant::opDiv:
-						if (isInt)
-							std::cout << "DVI" << std::endl;
-						else
-							std::cout << "DVF" << std::endl;
-						break;
+						std::cout << "DIV" << std::endl;
 					case ParserConstant::opLess:
-						if (isInt)
-							std::cout << "LSI" << std::endl;
-						else
-							std::cout << "LSF" << std::endl;
+						std::cout << "LES" << std::endl;
 						break;
 					case ParserConstant::opGreater:
-//						if (isInt)
-//							std::cout << "LSI" << std::endl;
-//						else
-//							std::cout << "LSF" << std::endl;
-						break;
 						//TODO GREATER
+//						std::cout << "LSI" << std::endl;
+						break;
 					case ParserConstant::opEqual:
-						if (isInt)
-							std::cout << "EQI" << std::endl;
-						else
-							std::cout << "EQF" << std::endl;
+						std::cout << "EQU" << std::endl;
 						break;
 					case ParserConstant::opUnEqual:
-//						if (isInt)
-//							std::cout << "EQI" << std::endl;
-//						else
-//							std::cout << "EQF" << std::endl;
 						//TODO
+//						std::cout << "EQI" << std::endl;
 						break;
 					case ParserConstant::opAnd:
 						std::cout << "AND" << std::endl;
 						break;
+
+					default:
+						std::cout << "BLUB - TBD" << std::endl;
 				}
 			} else {
 				// €
@@ -622,4 +580,3 @@ void ParseTree::makeCode(Node *myNode)
 			break;
 	}
 }
-

@@ -42,7 +42,7 @@ int Parser::processFile()
 	}
 
 	// Token stehen hier zur Verfügung, keine Nacharbeit mehr nötig
-	while (t = scanner->getNextToken()) {
+	while ((t = scanner->getNextToken())) {
 		myCommand[tokenCount++] = t;
 	}
 

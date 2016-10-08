@@ -38,7 +38,7 @@ Token *NodeInfo::getToken() {
 	return this->token;
 }
 
-char* NodeInfo::getLexem(){
+char *NodeInfo::getLexem(){
 
 	return this->token->getLexem();
 }
@@ -48,7 +48,6 @@ ParserConstant::Typification NodeInfo::getTypification() {
 }
 
 uint16_t NodeInfo::getLexemAsInteger() {
-	// TODO
-	// this->token->getLexemAsInt()
-	return 815;
+	//TODO
+	return 4711;
 }
