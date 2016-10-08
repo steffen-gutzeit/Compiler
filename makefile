@@ -17,8 +17,8 @@
 #makeCompiler: BufferTarget AutomatTarget ScannerTarget SymTableTarget TokenTarget LinkedListTarget 
 #	g++ -g  Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o LinkedList/debug/LinkedList.o -o Compiler
  
-makeCompiler: AutomatTarget BufferTarget HashMapTarget LinkedListTarget ScannerTarget SymTableTarget TokenTarget TestScannerTarget 
-	g++ -g -Ofast Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Scanner/debug/TestScanner.o -o Compiler
+makeCompiler: ParserConstTarget MarkerTarget NodeTarget NodeInfoTarget ParserTarget ParseTreeTarget AutomatTarget BufferTarget HashMapTarget LinkedListTarget ScannerTarget SymTableTarget TokenTarget TestScannerTarget 
+	g++ -g -Ofast Parser/debug/parserConst.o Parser/debug/Marker.o Parser/debug/Node.o Parser/debug/NodeInfo.o Parser/debug/Parser.o Parser/debug/ParseTree.o Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Scanner/debug/TestScanner.o -o Compiler
 	
 
 # compilieren des Files Automat.cpp zu Automat.o, 
@@ -52,7 +52,28 @@ TestScannerTarget :  Scanner/src/TestScanner.cpp
 	g++ -g -Ofast -c -Wall Scanner/src/TestScanner.cpp -o Scanner/debug/TestScanner.o  	
 
 #TestHashMapTarget :  HashMap/src/HashMap_test.cpp
-#	g++ -g  -c -Wall HashMap/src/HashMap_test.cpp -o HashMap/debug/HashMap_test.o  	
+#	g++ -g  -c -Wall HashMap/src/HashMap_test.cpp -o HashMap/debug/HashMap_test.o  
+
+ParserConstTarget : Parser/src/Constant/parserConst.cpp
+	g++ -g -Ofast -c -Wall Parser/src/Constant/parserConst.cpp -o Parser/debug/parserConst.o 
+
+MarkerTarget : Parser/src/Marker/Marker.cpp
+	g++ -g -Ofast -c -Wall Parser/src/Marker/Marker.cpp -o Parser/debug/Marker.o 
+
+NodeTarget : Parser/src/Node/Node.cpp
+	g++ -g -Ofast -c -Wall Parser/src/Node/Node.cpp -o Parser/debug/Node.o 
+
+NodeInfoTarget : Parser/src/NodeInfo/NodeInfo.cpp
+	g++ -g -Ofast -c -Wall Parser/src/NodeInfo/NodeInfo.cpp -o Parser/debug/NodeInfo.o 
+
+ParserTarget : Parser/src/Parser/Parser.cpp
+	g++ -g -Ofast -c -Wall Parser/src/Parser/Parser.cpp -o Parser/debug/Parser.o 
+
+ParseTreeTarget : Parser/src/Tree/ParseTree.cpp
+	g++ -g -Ofast -c -Wall Parser/src/Tree/ParseTree.cpp -o Parser/debug/ParseTree.o 
+
+#TestParserTarget : Parser/src/Parse/TestParser.cpp	
+#	g++ -g -Ofast -c -Wall Parser/src/Parse/TestParser.cpp -o Parser/src/Parse/debug/TestParser.o  
 
 
 # loeschen aller files im verzeichnis obj und lib und neu bauen
