@@ -43,10 +43,10 @@ void ParseTree::setType(Node *node, ParserConstant::Typification typification)
 }
 
 void ParseTree::printIdentifierNotFound(char *lexem) {
-	//if (!(scanner->symtable->lookUp(lexem))) {
-		//TODO printFehler
-		//	std::cerr << "Internal Error: Identifier " << identifier << " not found in Symbol Table." << std::endl;
-	//}
+//TODO
+	//	if (!(scanner->symtable->lookUp(lexem))) {
+//		std::cerr << "Internal Error: Identifier " << lexem << " not found in Symbol Table." << std::endl;
+//	}
 }
 
 void ParseTree::typeCheck(Node *myNode) {
@@ -239,9 +239,8 @@ void ParseTree::typeCheck(Node *myNode) {
 			} else if (getType(myNode->getChild(0)) != getType(myNode->getChild(1))) {
 				// incompatible types
 				std::cerr << "Typification Error: incompatible types" << std::endl;
-				//TODO
-				//std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-				//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
+				std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getNodeInfo()->getLexem() << "' of type '" << ParserConstant::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << ParserConstant::typificationAsString(getType(myNode->getChild(3))) << "'";
+				std::cerr << " at line " << myNode->getChild(2)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 				setType(myNode, ParserConstant::errorType);
 			} else if ((getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opLess) || (getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opEqual)) {
 				// TODO vermutlich Greater einbauen ggfs. auch div einbauen
@@ -271,9 +270,8 @@ void ParseTree::typeCheck(Node *myNode) {
 						setType(myNode, ParserConstant::intType);
 					} else {
 						std::cerr << "no primitive type" << std::endl;;
-						//std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-						//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
-						//TODO
+						std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getNodeInfo()->getLexem() << "' of type '" << ParserConstant::typificationAsString(getType(myNode->getChild(3))) << "' is incompatible to type '" << ParserConstant::typificationAsString(getType(myNode->getChild(3))) << "'";
+						std::cerr << " at line " << myNode->getChild(2)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 						setType(myNode, ParserConstant::errorType);
 					}
 					break;
@@ -291,9 +289,8 @@ void ParseTree::typeCheck(Node *myNode) {
 					typeCheck(myNode->getChild(1));
 					if (getType(myNode->getChild(1)) != ParserConstant::intType) {
 						std::cerr << "'!' operator requires integer" << std::endl;
-						//TODO
-						//std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-						//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
+						std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getNodeInfo()->getLexem() << "' of type '" << ParserConstant::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << ParserConstant::typificationAsString(getType(myNode->getChild(3))) << "'";
+						std::cerr << " at line " << myNode->getChild(2)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 						setType(myNode, ParserConstant::errorType);
 					} else {
 						setType(myNode, getType(myNode->getChild(1)));

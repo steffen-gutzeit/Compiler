@@ -17,8 +17,7 @@ void Parser::syntaxError(uint16_t expected[], int expectedCount, Token *t)
 		std::cerr << this->token->getTokenType(expected[i]) << "'";
 	}
 
-	//TODO Wieder einbauen
-//	std::cerr << " at line " << t->getRow() << ", column " << t->getColumn() << " instead of '" << this->token.getTokenType(t->getTokenType()) << "'." << std::endl;
+	std::cerr << " at line " << t->getRow() << ", column " << t->getCol() << " instead of '" << t->getTokenType() << "'." << std::endl;
 	//exit(1);
 }
 
