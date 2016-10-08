@@ -37,16 +37,20 @@ uint16_t Automat::setTokenState() {
 uint16_t Automat::getCharacterType(char currentChar) {
 	if (currentChar >= '0' && currentChar <= '9') {
 		return CT_DIGIT;
-	} else if ( ((currentChar >= 'A') && (currentChar <= 'D')) ||
+	} else if ( ((currentChar >= 'B') && (currentChar <= 'C')) ||
 				(currentChar == 'G') ||
 				((currentChar >= 'J') && (currentChar <= 'K')) ||
-				((currentChar >= 'M') && (currentChar <= 'V')) ||
+				((currentChar >= 'M') && (currentChar <= 'M')) ||
+				((currentChar >= 'O') && (currentChar <= 'Q')) ||
+				((currentChar >= 'U') && (currentChar <= 'V')) ||
 				((currentChar >= 'X') && (currentChar <= 'Z')) ||
 
-				((currentChar >= 'a') && (currentChar <= 'd')) ||
+				((currentChar >= 'b') && (currentChar <= 'c')) ||
 				(currentChar == 'g') ||
 				((currentChar >= 'j') && (currentChar <= 'k')) ||
-				((currentChar >= 'm') && (currentChar <= 'v')) ||
+				((currentChar >= 'm') && (currentChar <= 'm')) ||
+				((currentChar >= 'o') && (currentChar <= 'q')) ||
+				((currentChar >= 'u') && (currentChar <= 'v')) ||
 				((currentChar >= 'x') && (currentChar <= 'z'))) {
 		return CT_LETTER;
 	} else if ( currentChar == 'i') {

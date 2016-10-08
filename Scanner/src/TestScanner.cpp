@@ -26,7 +26,18 @@ int main(int argc, char **argv) {
 				std::cout << argv[i] << endl;
 			}*/
 
-			scanner->getNextToken();
+			bool eof = false;
+
+			while(eof == false){
+				Token *token = scanner->getNextToken();
+
+				if(token == NULL){
+					eof = true;
+				}else{
+					std::cout << token->getTokenType() << endl;
+				}
+			}
+
 
 			printf("Vorgang Beendet.\n");
 

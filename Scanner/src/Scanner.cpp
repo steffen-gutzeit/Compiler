@@ -129,11 +129,12 @@ Token *Scanner::getNextToken() {
 			token = NULL;
 			//this->generateToken(this->tokenType);
 		} else {
-			//cout << "\t" << (this->currentState) << endl;
+			cout << "\t" << (this->currentState) << endl;
 			switch (this->currentState) {
 			case Automat::INIT:
 				this->lexemLength = 0;
 				this->getNextChar();
+				cout << this->currentChar << endl;
 				break;
 
 			case Automat::TOKEN:
@@ -256,6 +257,7 @@ Token *Scanner::getNextToken() {
 				break;
 
 			case Automat::READ_SMALL_1:
+
 				this->whileIfCascade(Automat::READ_SMALL_2);
 				break;
 
