@@ -73,6 +73,30 @@ uint16_t Automat::getCharacterType(char currentChar) {
 		return CT_CAPITAL_L;
 	} else if ( currentChar == 'E') {
 		return CT_CAPITAL_E;
+	} else if ( currentChar == 'r') {
+		return CT_SMALL_R;
+	} else if ( currentChar == 'R') {
+		return CT_CAPITAL_R;
+	} else if ( currentChar == 'a') {
+		return CT_SMALL_A;
+	} else if ( currentChar == 'A') {
+		return CT_CAPITAL_A;
+	} else if ( currentChar == 'd') {
+		return CT_SMALL_D;
+	} else if ( currentChar == 'D') {
+		return CT_CAPITAL_D;
+	} else if ( currentChar == 'n') {
+		return CT_SMALL_N;
+	} else if ( currentChar == 'N') {
+		return CT_CAPITAL_N;
+	} else if ( currentChar == 't') {
+		return CT_SMALL_T;
+	} else if ( currentChar == 'T') {
+		return CT_CAPITAL_T;
+	} else if ( currentChar == 's') {
+		return CT_SMALL_S;
+	} else if ( currentChar == 'S') {
+		return CT_CAPITAL_S;
 	} else if ( currentChar == ':') {
 		return CT_SIGN_COLON;
 	} else if ( currentChar == '*') {
