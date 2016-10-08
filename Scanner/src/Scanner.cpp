@@ -180,11 +180,19 @@ Token *Scanner::getNextToken() {
 				break;
 
 			case Automat::IF_SMALL_1:
-				this->whileIfCascade(Automat::IF);
+				if (this->currentChar == 'f') {
+					this->whileIfCascade(Automat::IF);
+				} else if (this->currentChar == 'n') {
+					this->whileIfCascade(Automat::INT_SMALL_1);
+				}
 				break;
 
 			case Automat::IF_CAPITAL_1:
-				this->whileIfCascade(Automat::IF);
+				if (this->currentChar == 'F') {
+					this->whileIfCascade(Automat::IF);
+				} else if (this->currentChar == 'N') {
+					this->whileIfCascade(Automat::INT_CAPITAL_1);
+				}
 				break;
 
 			case Automat::IF:
@@ -197,7 +205,11 @@ Token *Scanner::getNextToken() {
 				break;
 
 			case Automat::WHILE_SMALL_1:
-				this->whileIfCascade(Automat::WHILE_SMALL_2);
+				if (this->currentChar == 'h') {
+					this->whileIfCascade(Automat::WHILE_SMALL_2);
+				} else if (this->currentChar == 'r') {
+					this->whileIfCascade(Automat::WRITE_SMALL_1);
+				}
 				break;
 
 			case Automat::WHILE_SMALL_2:
@@ -213,7 +225,11 @@ Token *Scanner::getNextToken() {
 				break;
 
 			case Automat::WHILE_CAPITAL_1:
-				this->whileIfCascade(Automat::WHILE_CAPITAL_2);
+				if (this->currentChar == 'H') {
+					this->whileIfCascade(Automat::WHILE_CAPITAL_2);
+				} else if (this->currentChar == 'R') {
+					this->whileIfCascade(Automat::WRITE_CAPITAL_1);
+				}
 				break;
 
 			case Automat::WHILE_CAPITAL_2:
@@ -234,6 +250,130 @@ Token *Scanner::getNextToken() {
 				if (this->getCurrentState(this->currentChar) != Automat::IDENTIFIER) {
 					this->lexemLength = 5;
 					this->initForTokenGeneration(Token::TT_WHILE);
+				} else {
+					this->lexemLength++;
+				}
+				break;
+
+			case Automat::READ_SMALL_1:
+				this->whileIfCascade(Automat::READ_SMALL_2);
+				break;
+
+			case Automat::READ_SMALL_2:
+				this->whileIfCascade(Automat::READ_SMALL_3);
+				break;
+
+			case Automat::READ_SMALL_3:
+				this->whileIfCascade(Automat::READ);
+				break;
+
+			case Automat::READ_CAPITAL_1:
+				this->whileIfCascade(Automat::READ_CAPITAL_2);
+				break;
+
+			case Automat::READ_CAPITAL_2:
+				this->whileIfCascade(Automat::READ_CAPITAL_3);
+				break;
+
+			case Automat::READ_CAPITAL_3:
+				this->whileIfCascade(Automat::READ);
+				break;
+
+			case Automat::READ:
+				this->getNextChar();
+
+				if (this->getCurrentState(this->currentChar) != Automat::IDENTIFIER) {
+					this->lexemLength = 4;
+					this->initForTokenGeneration(Token::TT_READ);
+				} else {
+					this->lexemLength++;
+				}
+				break;
+
+			case Automat::INT_SMALL_1:
+				this->whileIfCascade(Automat::INT);
+				break;
+
+			case Automat::INT_CAPITAL_1:
+				this->whileIfCascade(Automat::INT);
+				break;
+
+			case Automat::INT:
+				this->getNextChar();
+
+				if (this->getCurrentState(this->currentChar) != Automat::IDENTIFIER) {
+					this->lexemLength = 3;
+					this->initForTokenGeneration(Token::TT_INT);
+				} else {
+					this->lexemLength++;
+				}
+				break;
+
+			case Automat::WRITE_SMALL_1:
+				this->whileIfCascade(Automat::WRITE_SMALL_2);
+				break;
+
+			case Automat::WRITE_SMALL_2:
+				this->whileIfCascade(Automat::WRITE_SMALL_3);
+				break;
+
+			case Automat::WRITE_SMALL_3:
+				this->whileIfCascade(Automat::WRITE);
+				break;
+
+			case Automat::WRITE_CAPITAL_1:
+				this->whileIfCascade(Automat::WRITE_CAPITAL_2);
+				break;
+
+			case Automat::WRITE_CAPITAL_2:
+				this->whileIfCascade(Automat::WRITE_CAPITAL_3);
+				break;
+
+			case Automat::WRITE_CAPITAL_3:
+				this->whileIfCascade(Automat::WRITE);
+				break;
+
+			case Automat::WRITE:
+				this->getNextChar();
+
+				if (this->getCurrentState(this->currentChar) != Automat::IDENTIFIER) {
+					this->lexemLength = 5;
+					this->initForTokenGeneration(Token::TT_WRITE);
+				} else {
+					this->lexemLength++;
+				}
+				break;
+
+			case Automat::ELSE_SMALL_1:
+				this->whileIfCascade(Automat::ELSE_SMALL_2);
+				break;
+
+			case Automat::ELSE_SMALL_2:
+				this->whileIfCascade(Automat::ELSE_SMALL_3);
+				break;
+
+			case Automat::ELSE_SMALL_3:
+				this->whileIfCascade(Automat::ELSE);
+				break;
+
+			case Automat::ELSE_CAPITAL_1:
+				this->whileIfCascade(Automat::ELSE_CAPITAL_2);
+				break;
+
+			case Automat::ELSE_CAPITAL_2:
+				this->whileIfCascade(Automat::ELSE_CAPITAL_3);
+				break;
+
+			case Automat::ELSE_CAPITAL_3:
+				this->whileIfCascade(Automat::ELSE);
+				break;
+
+			case Automat::ELSE:
+				this->getNextChar();
+
+				if (this->getCurrentState(this->currentChar) != Automat::IDENTIFIER) {
+					this->lexemLength = 4;
+					this->initForTokenGeneration(Token::TT_ELSE);
 				} else {
 					this->lexemLength++;
 				}
