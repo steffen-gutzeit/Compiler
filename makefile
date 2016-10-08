@@ -17,8 +17,8 @@
 #makeCompiler: BufferTarget AutomatTarget ScannerTarget SymTableTarget TokenTarget LinkedListTarget 
 #	g++ -g  Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o LinkedList/debug/LinkedList.o -o Compiler
  
-makeCompiler: ParserConstTarget MarkerTarget NodeTarget NodeInfoTarget ParserTarget ParseTreeTarget AutomatTarget BufferTarget HashMapTarget LinkedListTarget ScannerTarget SymTableTarget TokenTarget TestScannerTarget 
-	g++ -g -Ofast Parser/debug/ParserConstant.o Parser/debug/Marker.o Parser/debug/Node.o Parser/debug/NodeInfo.o Parser/debug/Parser.o Parser/debug/ParseTree.o Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Scanner/debug/TestScanner.o -o Compiler
+makeCompiler: ParserConstTarget MarkerTarget NodeTarget NodeInfoTarget ParserTarget ParseTreeTarget AutomatTarget BufferTarget HashMapTarget LinkedListTarget ScannerTarget SymTableTarget TokenTarget TestParserTarget 
+	g++ -g -Ofast Parser/debug/ParserConstant.o Parser/debug/Marker.o Parser/debug/Node.o Parser/debug/NodeInfo.o Parser/debug/Parser.o Parser/debug/ParseTree.o Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Parser/debug/TestParser.o -o Compiler
 	
 
 # compilieren des Files Automat.cpp zu Automat.o, 
@@ -48,8 +48,8 @@ HashMapTarget : HashMap/src/HashMap.cpp HashMap/src/HashMap.h
 LinkedListTarget : LinkedList/src/LinkedList.cpp LinkedList/src/LinkedList.h
 	g++ -g -Ofast -c -Wall LinkedList/src/LinkedList.cpp -o LinkedList/debug/LinkedList.o 
 
-TestScannerTarget :  Scanner/src/TestScanner.cpp
-	g++ -g -Ofast -c -Wall Scanner/src/TestScanner.cpp -o Scanner/debug/TestScanner.o  	
+#TestScannerTarget :  Scanner/src/TestScanner.cpp
+#	g++ -g -Ofast -c -Wall Scanner/src/TestScanner.cpp -o Scanner/debug/TestScanner.o  	
 
 #TestHashMapTarget :  HashMap/src/HashMap_test.cpp
 #	g++ -g  -c -Wall HashMap/src/HashMap_test.cpp -o HashMap/debug/HashMap_test.o  
@@ -72,8 +72,8 @@ ParserTarget : Parser/src/Parser/Parser.cpp
 ParseTreeTarget : Parser/src/Tree/ParseTree.cpp
 	g++ -g -Ofast -c -Wall Parser/src/Tree/ParseTree.cpp -o Parser/debug/ParseTree.o 
 
-#TestParserTarget : Parser/src/Parse/TestParser.cpp	
-#	g++ -g -Ofast -c -Wall Parser/src/Parse/TestParser.cpp -o Parser/src/Parse/debug/TestParser.o  
+TestParserTarget : Parser/src/Parser/TestParser.cpp	
+	g++ -g -Ofast -c -Wall Parser/src/Parser/TestParser.cpp -o Parser/debug/TestParser.o  
 
 
 # loeschen aller files im verzeichnis obj und lib und neu bauen
