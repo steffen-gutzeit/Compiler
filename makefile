@@ -18,7 +18,7 @@
 #	g++ -g  Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o LinkedList/debug/LinkedList.o -o Compiler
  
 makeCompiler: ParserConstTarget MarkerTarget NodeTarget NodeInfoTarget ParserTarget ParseTreeTarget AutomatTarget BufferTarget HashMapTarget LinkedListTarget ScannerTarget SymTableTarget TokenTarget TestScannerTarget 
-	g++ -g -Ofast Parser/debug/parserConst.o Parser/debug/Marker.o Parser/debug/Node.o Parser/debug/NodeInfo.o Parser/debug/Parser.o Parser/debug/ParseTree.o Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Scanner/debug/TestScanner.o -o Compiler
+	g++ -g -Ofast Parser/debug/ParserConstant.o Parser/debug/Marker.o Parser/debug/Node.o Parser/debug/NodeInfo.o Parser/debug/Parser.o Parser/debug/ParseTree.o Automat/debug/Automat.o Scanner/debug/Scanner.o Buffer/debug/Buffer.o HashMap/debug/HashMap.o Symtable/debug/Symtable.o Token/debug/Token.o LinkedList/debug/LinkedList.o Scanner/debug/TestScanner.o -o Compiler
 	
 
 # compilieren des Files Automat.cpp zu Automat.o, 
@@ -54,8 +54,8 @@ TestScannerTarget :  Scanner/src/TestScanner.cpp
 #TestHashMapTarget :  HashMap/src/HashMap_test.cpp
 #	g++ -g  -c -Wall HashMap/src/HashMap_test.cpp -o HashMap/debug/HashMap_test.o  
 
-ParserConstTarget : Parser/src/Constant/parserConst.cpp
-	g++ -g -Ofast -c -Wall Parser/src/Constant/parserConst.cpp -o Parser/debug/parserConst.o 
+ParserConstTarget : Parser/src/ParserConstant/ParserConstant.cpp
+	g++ -g -Ofast -c -Wall Parser/src/ParserConstant/ParserConstant.cpp -o Parser/debug/ParserConstant.o 
 
 MarkerTarget : Parser/src/Marker/Marker.cpp
 	g++ -g -Ofast -c -Wall Parser/src/Marker/Marker.cpp -o Parser/debug/Marker.o 
