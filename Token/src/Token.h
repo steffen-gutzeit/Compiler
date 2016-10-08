@@ -24,6 +24,7 @@ public:
 	const char *getTokenType();
 	const char *getTokenType(uint16_t &tokenType);
 
+
 	enum tokenType {
 		TT_DUMMY				=  0,
 		TT_IDENTIFIER			=  1,
@@ -68,9 +69,10 @@ private:
 	uint16_t tokenID;
 	uint32_t row;
 	uint32_t column;
-	uint8_t tokenType;
+	uint16_t tokenType;
 	char *lexem;
 
 	void setTokenTypeSign(char lexem);
+	const char *getTokenTypeIntern(uint16_t &tokenType);
 };
 #endif /* TOKEN_SRC_TOKEN_H_ */
