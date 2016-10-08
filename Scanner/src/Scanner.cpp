@@ -135,7 +135,7 @@ Token *Scanner::getNextToken() {
 
 			token = NULL;
 			//Nötig, damit zum Schluss der nicht voll Buffer geschrieben wird
-			buffer->addCharsToOutBuffer("\0");
+			buffer->addCharsToOutBuffer(NULL);
 			//this->generateToken(this->tokenType);
 		} else {
 			//cout << "\t" << (this->currentState) << endl;
