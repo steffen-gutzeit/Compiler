@@ -54,8 +54,10 @@ void Node::print()
 				std::cout << myInfo->getToken()->getLexem();
 			} else {
 				// Keyword
+
 				//TODO: reaktivieren
 //				std::cout << Const::tokenTypeAsString(myInfo->getToken()->getTokenType());
+
 			}
 		}
 	}
