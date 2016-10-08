@@ -1548,9 +1548,9 @@ void Automat::initTransitionTable() {
 	transitionTable[i][3]  = IDENTIFIER;
 	transitionTable[i][4]  = IDENTIFIER;
 	transitionTable[i][5]  = IDENTIFIER;
-	transitionTable[i][6]  = IDENTIFIER;
+	transitionTable[i][6]  = ELSE_SMALL_2;
 	transitionTable[i][7]  = IDENTIFIER;
-	transitionTable[i][8]  = ELSE_SMALL_2;
+	transitionTable[i][8]  = IDENTIFIER;
 	transitionTable[i][9]  = IDENTIFIER;
 	transitionTable[i][10] = IDENTIFIER;
 	transitionTable[i][11] = IDENTIFIER;

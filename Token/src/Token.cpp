@@ -146,7 +146,7 @@ const char *Token::getTokenType(){
     case TT_READ: return "Read\t\t"; break;
     case TT_WRITE: return "Write\t\t"; break;
     case TT_INT: return "Integer\t"; break;
-    case TT_ELSE: return "Else\t\ŧ"; break;
+    case TT_ELSE: return "Else\t\t"; break;
 
     }
     //Sollte nie erreicht werden :)

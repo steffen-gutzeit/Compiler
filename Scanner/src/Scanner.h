@@ -35,6 +35,7 @@ private:
 
 	char internBuffer[512];
 	char currentChar;
+	char nextChar;
 	char *outputPath;
 	uint16_t scannerIndex;
 	uint32_t currentState;
@@ -57,6 +58,8 @@ private:
 	Token *generateToken(uint16_t typ);
 	void generateTokenPrint(uint16_t typ);
 	void clearInternBuffer();
+
+	void lookupNextChar();
 
 	void buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType);
 	void initForTokenGeneration(uint16_t tokenType);
