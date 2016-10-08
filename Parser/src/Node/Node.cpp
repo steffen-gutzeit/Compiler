@@ -1,21 +1,21 @@
 #include "Node.h"
 
-Node::Node(NodeInfo *myInfo)
+Node::Node(NodeInfo *nodeInfo)
 {
 	for(uint16_t x = 0; x < MAX_CHILD_NODES; x++){
 		childNodes[x] = NULL;
 	}
-	setInfo(myInfo);
+	this->nodeInfo = nodeInfo;
 }
 
-NodeInfo *Node::getInfo()
+NodeInfo *Node::getNodeInfo()
 {
-	return myInfo;
+	return nodeInfo;
 }
 
-void Node::setInfo(NodeInfo *myInfo)
+void Node::setNodeInfo(NodeInfo *nodeInfo)
 {
-	this->myInfo = myInfo;
+	this->nodeInfo = nodeInfo;
 }
 
 uint16_t Node::getChildrenCount()
@@ -37,21 +37,21 @@ Node *Node::getChild(int which)
 	
 void Node::print()
 {
-	if (myInfo->getType() == NODE_ROOT) {
+	if (nodeInfo->getNodeInfoType() == NODE_ROOT) {
 		std::cout << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 	} else {
-		std::cout << "<" << parserConst::nodeTypeAsString(myInfo->getType());
-		if (myInfo->getTypification() != TYPIFICATION_NONE) {
-			std::cout << " typification=\"" << parserConst::typificationAsString(myInfo->getTypification()) << "\"";
+		std::cout << "<" << parserConst::nodeTypeAsString(nodeInfo->getNodeInfoType());
+		if (nodeInfo->getTypification() != TYPIFICATION_NONE) {
+			std::cout << " typification=\"" << parserConst::typificationAsString(nodeInfo->getTypification()) << "\"";
 		}
 		std::cout << ">";
 	}
 	
 	if (childrenCount == 0) {
-		if (myInfo->getToken() != NULL) {
-			if (myInfo->getToken()->getTokenType() == Token::TT_IDENTIFIER) {
+		if (nodeInfo->getToken() != NULL) {
+			if (nodeInfo->getToken()->getTokenType() == Token::TT_IDENTIFIER) {
 				// Identifier
-				std::cout << myInfo->getToken()->getLexem();
+				std::cout << nodeInfo->getToken()->getLexem();
 			} else {
 				// Keyword
 
@@ -64,7 +64,7 @@ void Node::print()
 
 	for (uint16_t i = 0; i < childrenCount; i++) childNodes[i]->print();
 	
-	if (myInfo->getType() != NODE_ROOT) std::cout << "</" << parserConst::nodeTypeAsString(myInfo->getType()) << ">";
+	if (nodeInfo->getNodeInfoType() != NODE_ROOT) std::cout << "</" << parserConst::nodeTypeAsString(nodeInfo->getNodeInfoType()) << ">";
 }
 
 bool Node::isLeave()

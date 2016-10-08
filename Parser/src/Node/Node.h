@@ -7,10 +7,10 @@ class Node
 {
 	
 public:
-	Node(NodeInfo *myInfo);
+	Node(NodeInfo *nodeInfo);
 
-	NodeInfo *getInfo();
-	void setInfo(NodeInfo *myInfo);
+	NodeInfo *getNodeInfo();
+	void setNodeInfo(NodeInfo *nodeInfo);
 
 	uint16_t getChildrenCount();
 	Node *addChild(Node* myChild);
@@ -21,7 +21,7 @@ public:
 	bool isLeave();
 	
 private:
-	NodeInfo *myInfo;
+	NodeInfo *nodeInfo;
 
 	uint16_t childrenCount;
 	Node *childNodes[MAX_CHILD_NODES];
