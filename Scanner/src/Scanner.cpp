@@ -88,6 +88,13 @@ void Scanner::getNextChar() {
 	this->scannerIndex++;
 }
 
+void Scanner::lookupNextChar() {
+	this->nextChar = this->buffer->getChar();
+	//this->internBuffer[this->scannerIndex] = this->currentChar;
+	//this->scannerIndex++;
+	this->buffer->dekrementBufferPointer();
+}
+
 void Scanner::decrementScannerAndBuffer() {
 	this->scannerIndex--;
 	this->buffer->dekrementBufferPointer();
@@ -129,12 +136,12 @@ Token *Scanner::getNextToken() {
 			token = NULL;
 			//this->generateToken(this->tokenType);
 		} else {
-			cout << "\t" << (this->currentState) << endl;
+			//cout << "\t" << (this->currentState) << endl;
 			switch (this->currentState) {
 			case Automat::INIT:
 				this->lexemLength = 0;
 				this->getNextChar();
-				cout << this->currentChar << endl;
+				//cout << this->currentChar << endl;
 				break;
 
 			case Automat::TOKEN:
@@ -181,17 +188,19 @@ Token *Scanner::getNextToken() {
 				break;
 
 			case Automat::IF_SMALL_1:
-				if (this->currentChar == 'f') {
+				lookupNextChar();
+				if (this->nextChar == 'f') {
 					this->whileIfCascade(Automat::IF);
-				} else if (this->currentChar == 'n') {
+				} else if (this->nextChar == 'n') {
 					this->whileIfCascade(Automat::INT_SMALL_1);
 				}
 				break;
 
 			case Automat::IF_CAPITAL_1:
-				if (this->currentChar == 'F') {
+				lookupNextChar();
+				if (this->nextChar == 'F') {
 					this->whileIfCascade(Automat::IF);
-				} else if (this->currentChar == 'N') {
+				} else if (this->nextChar == 'N') {
 					this->whileIfCascade(Automat::INT_CAPITAL_1);
 				}
 				break;
@@ -206,9 +215,10 @@ Token *Scanner::getNextToken() {
 				break;
 
 			case Automat::WHILE_SMALL_1:
-				if (this->currentChar == 'h') {
+				lookupNextChar();
+				if (this->nextChar == 'h') {
 					this->whileIfCascade(Automat::WHILE_SMALL_2);
-				} else if (this->currentChar == 'r') {
+				} else if (this->nextChar == 'r') {
 					this->whileIfCascade(Automat::WRITE_SMALL_1);
 				}
 				break;
@@ -226,9 +236,10 @@ Token *Scanner::getNextToken() {
 				break;
 
 			case Automat::WHILE_CAPITAL_1:
-				if (this->currentChar == 'H') {
+				lookupNextChar();
+				if (this->nextChar == 'H') {
 					this->whileIfCascade(Automat::WHILE_CAPITAL_2);
-				} else if (this->currentChar == 'R') {
+				} else if (this->nextChar == 'R') {
 					this->whileIfCascade(Automat::WRITE_CAPITAL_1);
 				}
 				break;
