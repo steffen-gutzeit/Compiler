@@ -10,7 +10,7 @@ class Parser
 {
 	
 public:
-	Parser(Scanner *myScanner);
+	Parser(Scanner *myScanner, Token *token);
 	int processFile();
 	Token token;
 	

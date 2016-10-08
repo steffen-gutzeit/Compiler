@@ -10,7 +10,6 @@ Parser::Parser(Scanner *myScanner, Token *token)
 
 void Parser::syntaxError(uint16_t expected[], int expectedCount, Token *t)
 {
-//	std::cerr << "Syntax Error: Expected '" << Const::tokenTypeAsString(expected[0]) << "'";
 	std::cerr << "Syntax Error: Expected '" << this->token.getTokenType(expected[0]) << "'";
 
 	for (int i = 1; i < expectedCount; i++) {
@@ -18,7 +17,8 @@ void Parser::syntaxError(uint16_t expected[], int expectedCount, Token *t)
 		std::cerr << this->token.getTokenType(expected[i]) << "'";
 	}
 
-	std::cerr << " at line " << t->getLine() << ", column " << t->getColumn() << " instead of '" << this->token.getTokenType(t->getTokenType()) << "'." << std::endl;
+	//TODO Wieder einbauen
+//	std::cerr << " at line " << t->getRow() << ", column " << t->getColumn() << " instead of '" << this->token.getTokenType(t->getTokenType()) << "'." << std::endl;
 	exit(1);
 }
 
@@ -40,7 +40,7 @@ int Parser::processFile()
 	for (uint8_t i = 0; i < MAX_POSSIBLE_TOKENS; i++) myCommand[i] = new Token(Token::TT_ERROR, "", 0, 0);
 
 	// Token stehen hier zur Verfügung, keine Nacharbeit mehr nötig
-	while (t = scanner->nextToken()) {
+	while (t = scanner->getNextToken()) {
 		myCommand[tokenCount++] = t;
 	}
 
@@ -58,8 +58,7 @@ int Parser::processFile()
 		std::cout << "grammar only parsed " << tokenParsed << " of " << tokenCount << "." << std::endl;
 		#endif
 		
-		// TODO: TOKEN_WRITE, TOKEN_READ,
-		uint16_t tokens[] = {Token::TT_IDENTIFIER, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
+		uint16_t tokens[] = {Token::TT_IDENTIFIER, Token::TT_WRITE, Token::TT_READ, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
 		syntaxError(tokens, 6, myCommand[tokenParsed]);
 	}
 	
@@ -105,7 +104,7 @@ int Parser::DECLS(Node *node, Token *myCommand[], uint8_t startCount, uint8_t to
 	switch (myCommand[where]->getTokenType()) {
 			
 		// int, float
-		case TOKEN_INT:
+		case Token::TT_INT:
 		//case TOKEN_FLOAT:
 
 			// DECL
@@ -142,7 +141,7 @@ int Parser::DECL(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tok
 	//where = TYPE(myNode, myCommand, where, tokenCount);
 
 	// int
-	// NODE_IDENTIFIER in NODE_INTEGER ändern
+	// TODO: NODE_IDENTIFIER in NODE_INTEGER ändern
 	myNode->addChild(new Node(new NodeInfo(NODE_IDENTIFIER, myCommand[where])));
 	where++;
 
@@ -235,8 +234,8 @@ int Parser::STATEMENTS(Node *node, Token *myCommand[], uint8_t startCount, uint8
 		
 		// identifier, write, read, {, if, while
 		case Token::TT_IDENTIFIER:
-		//case TOKEN_WRITE:
-		//case TOKEN_READ:
+		case Token::TT_WRITE:
+		case Token::TT_READ:
 		case Token::TT_BRACE_UPON:
 		case Token::TT_IF:
 		case Token::TT_WHILE:
@@ -292,7 +291,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			break;
 			
 		// write
-		case TOKEN_WRITE:
+		case Token::TT_WRITE:
 			myNode->addChild(new Node(new NodeInfo(NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -312,7 +311,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			break;
 		
 		// read
-		case TOKEN_READ:
+		case Token::TT_READ:
 			myNode->addChild(new Node(new NodeInfo(NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -375,7 +374,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = STATEMENT(myNode, myCommand, where, tokenCount);
 
 			// else
-			if ((myCommand[where]->getTokenType() != TOKEN_ELSE)) syntaxError(TOKEN_ELSE, myCommand[where]);
+			if ((myCommand[where]->getTokenType() != Token::TT_ELSE)) syntaxError(Token::TT_ELSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -409,8 +408,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			break;
 			
 		default:
-			//TODO: TOKEN_WRITE, TOKEN_READ,
-			uint16_t tokens[] = {Token::TT_IDENTIFIER, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
+			uint16_t tokens[] = {Token::TT_IDENTIFIER, Token::TT_WRITE, Token::TT_READ, Token::TT_BRACE_UPON, Token::TT_IF, Token::TT_WHILE};
 			syntaxError(tokens, 6, myCommand[where]);
 	}
 			
