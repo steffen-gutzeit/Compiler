@@ -12,7 +12,7 @@ public:
 	NodeInfo *getInfo();
 	void setInfo(NodeInfo *myInfo);
 
-	int getChildrenCount();
+	uint16_t getChildrenCount();
 	Node *addChild(Node* myChild);
 	Node *getChild(int which);
 	
@@ -23,7 +23,7 @@ public:
 private:
 	NodeInfo *myInfo;
 
-	int childrenCount;
+	uint16_t childrenCount;
 	Node *childNodes[MAX_CHILD_NODES];
 	
 };

@@ -2,7 +2,7 @@
 
 Node::Node(NodeInfo *myInfo)
 {
-	for(int x = 0; x < MAX_CHILD_NODES; x++){
+	for(uint16_t x = 0; x < MAX_CHILD_NODES; x++){
 		childNodes[x] = NULL;
 	}
 	setInfo(myInfo);
@@ -18,7 +18,7 @@ void Node::setInfo(NodeInfo *myInfo)
 	this->myInfo = myInfo;
 }
 
-int Node::getChildrenCount()
+uint16_t Node::getChildrenCount()
 {
 	return childrenCount;
 }
@@ -60,7 +60,7 @@ void Node::print()
 		}
 	}
 
-	for (int i = 0; i < childrenCount; i++) childNodes[i]->print();
+	for (uint16_t i = 0; i < childrenCount; i++) childNodes[i]->print();
 	
 	if (myInfo->getType() != NODE_ROOT) std::cout << "</" << parserConst::nodeTypeAsString(myInfo->getType()) << ">";
 }
