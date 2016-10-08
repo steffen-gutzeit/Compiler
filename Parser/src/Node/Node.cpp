@@ -49,12 +49,13 @@ void Node::print()
 	
 	if (childrenCount == 0) {
 		if (myInfo->getToken() != NULL) {
-			if (myInfo->getToken()->getTokenType() == TOKEN_IDENTIFIER) {
+			if (myInfo->getToken()->getTokenType() == Token::TT_IDENTIFIER) {
 				// Identifier
 				std::cout << myInfo->getToken()->getLexem();
 			} else {
 				// Keyword
-				std::cout << Const::tokenTypeAsString(myInfo->getToken()->getTokenType());
+				//TODO: reaktivieren
+//				std::cout << Const::tokenTypeAsString(myInfo->getToken()->getTokenType());
 			}
 		}
 	}
