@@ -24,6 +24,7 @@ public:
 	const char *getTokenType();
 	const char *getTokenType(uint16_t &tokenType);
 
+	uint16_t getLexemAsInteger(char *lexem);
 
 	enum tokenType {
 		TT_DUMMY				=  0,

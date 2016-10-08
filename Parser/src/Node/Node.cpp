@@ -6,6 +6,7 @@ Node::Node(NodeInfo *nodeInfo)
 		childNodes[x] = NULL;
 	}
 	this->nodeInfo = nodeInfo;
+	this->childrenCount = 0;
 }
 
 NodeInfo *Node::getNodeInfo()

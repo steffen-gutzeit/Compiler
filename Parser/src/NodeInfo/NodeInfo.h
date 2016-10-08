@@ -8,27 +8,31 @@
  */
 #pragma once
 
-#include "../Constant/parserConst.h"
 #include "../../../Token/src/Token.h"
 #include <iostream>
+
+#include "../ParserConstant/ParserConstant.h"
 
 
 class NodeInfo
 {
 	
 public:
-	NodeInfo(NodeType nodeType = NODE_EMPTY, Token *token = NULL, Typification typification = TYPIFICATION_NONE);
+	NodeInfo(ParserConstant::NodeType nodeType = ParserConstant::NODE_EMPTY,
+			Token *token = NULL,
+			ParserConstant::Typification typification = ParserConstant::noType);
 	
-	void setNodeType(NodeType nodeType);
+	void setNodeType(ParserConstant::NodeType nodeType);
 	void setToken(Token *token);
-	void setTypification(Typification typification);
+	void setTypification(ParserConstant::Typification typification);
 	
-	NodeType getNodeType();
+	ParserConstant::NodeType getNodeType();
 	Token *getToken();
-	Typification getTypification();
+	ParserConstant::Typification getTypification();
+	uint16_t getLexemAsInteger();
 
 private:
-	NodeType nodeType;
+	ParserConstant::NodeType nodeType;
 	Token *token;
-	Typification typification;
+	ParserConstant::Typification typification;
 };

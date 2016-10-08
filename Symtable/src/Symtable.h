@@ -19,7 +19,7 @@ public:
 	virtual ~Symtable();
 	void initSymbols();
 	char *insert(char* lexem, int typ);
-	int lookUp(char* lexem);
+	bool lookUp(char* lexem);
 
 private:
 	void initHashMap();

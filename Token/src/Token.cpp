@@ -47,7 +47,12 @@ char *Token::getLexem(){
 	return this->lexem;
 }
 
-void Token::setTokenTypeSign(char lexem){
+uint16_t getLexemAsInteger(char *lexem) {
+	//TODO Ausprogrammieren
+	return 4711;
+}
+
+void Token::setTokenTypeSign(char lexem) {
 	switch(lexem){
 
 		case '+': this->tokenType = TT_PLUS; break;

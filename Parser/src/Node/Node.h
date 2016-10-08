@@ -1,7 +1,8 @@
 #pragma once
-#include "../Constant/parserConst.h"
 #include "../NodeInfo/NodeInfo.h"
 #include <iostream>
+
+#include "../ParserConstant/ParserConstant.h"
 
 class Node
 {

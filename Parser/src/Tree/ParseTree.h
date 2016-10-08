@@ -2,11 +2,11 @@
 #include <iostream>
 #include "../Node/Node.h"
 #include "../../../Scanner/src/Scanner.h"
+#include "../../../Symtable/src/Symtable.h"
 #include "../Marker/Marker.h"
+#include "../ParserConstant/ParserConstant.h"
 
-class ParseTree
-{
-
+class ParseTree {
 public:
 	ParseTree(Scanner *myScanner);
 	
@@ -19,9 +19,11 @@ public:
 	void typeCheck(Node *myNode = NULL);
 	
 	// helper functions that match getting and setting of typification for identifiers to the symtable
-	SymTableEntry *getSymTableEntryForIdentifier(std::string identifier);
-	void setType(Node *myNode, typification myType);
-	typification getType(Node *myNode);
+
+	void printIdentifierNotFound(char *lexem);
+//	std::string identifier);
+	void setType(Node *myNode, ParserConstant::Typification myType);
+	ParserConstant::Typification getType(Node *myNode);
 
 	
 	void makeCode(Node *myNode = NULL);
@@ -29,6 +31,5 @@ public:
 	
 private:
 	Node *rootNode;
-	Scanner *myScanner;
-	
+	Scanner *scanner;
 };

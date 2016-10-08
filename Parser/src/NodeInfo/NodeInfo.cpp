@@ -10,14 +10,15 @@
 #include "NodeInfo.h"
 
 
-NodeInfo::NodeInfo(NodeType nodeType, Token *token, Typification typification)
+NodeInfo::NodeInfo(ParserConstant::NodeType nodeType,
+		Token *token, ParserConstant::Typification typification)
 {
 	this->nodeType = nodeType;
 	this->token = token;
 	this->typification = typification;
 }
 	
-void NodeInfo::setNodeType(NodeType nodeType) {
+void NodeInfo::setNodeType(ParserConstant::NodeType nodeType) {
 	this->nodeType = nodeType;
 }
 
@@ -25,11 +26,11 @@ void NodeInfo::setToken(Token *token) {
 	this->token = token;
 }
 
-void NodeInfo::setTypification(Typification typification) {
+void NodeInfo::setTypification(ParserConstant::Typification typification) {
 	this->typification = typification;
 }
 
-NodeType NodeInfo::getNodeType() {
+ParserConstant::NodeType NodeInfo::getNodeType() {
 	return this->nodeType;
 }
 
@@ -37,6 +38,12 @@ Token *NodeInfo::getToken() {
 	return this->token;
 }
 
-Typification NodeInfo::getTypification() {
+ParserConstant::Typification NodeInfo::getTypification() {
 	return this->typification;
+}
+
+uint16_t getLexemAsInteger() {
+	// TODO
+	// this->token->getLexemAsInt()
+	return 815;
 }

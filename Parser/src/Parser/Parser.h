@@ -1,9 +1,9 @@
 #pragma once
 #include "../../../Scanner/src/Scanner.h"
 #include "../../../Token/src/Token.h"
-#include "parserConst.h"
 #include "../Node/Node.h"
 #include "../NodeInfo/NodeInfo.h"
+#include "../ParserConstant/ParserConst.h"
 #include "../Tree/ParseTree.h"
 
 class Parser

@@ -7,18 +7,19 @@
  *
  */
 
-#include "parserConst.h"
+#include "ParserConstant.h"
+
 #include <iostream>
 
-parserConst::parserConst()
-{
+ParserConstant::ParserConstant() {
 }
 	
-std::string parserConst::nodeTypeAsString(nodeType myNodeType)
+std::string ParserConstant::nodeTypeAsString(NodeType myNodeType)
 {
 	std::string myResult;
 	switch(myNodeType)
 	{
+	//TODO
 		case NODE_ROOT: myResult = "Root"; break;
 		case NODE_ERROR: myResult = "Node Error"; break;
 		case NODE_PROG: myResult = "PROG"; break;
@@ -43,7 +44,7 @@ std::string parserConst::nodeTypeAsString(nodeType myNodeType)
 
 
 
-std::string parserConst::typificationAsString(typification myTypification)
+std::string parserConst::typificationAsString(Typification myTypification)
 {
 	std::string myResult;
 	switch(myTypification)
