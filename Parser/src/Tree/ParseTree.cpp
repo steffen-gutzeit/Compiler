@@ -25,7 +25,7 @@ Scanner *ParseTree::getScanner()
 
 SymTableEntry *ParseTree::getSymTableEntryForIdentifier(std::string identifier)
 {
-	SymTableEntry *theItem = new SymTableEntry(identifier, TOKEN_IDENTIFIER, 0, 0);
+	SymTableEntry *theItem = new SymTableEntry(identifier, Token::TT_IDENTIFIER, 0, 0);
 			
 	// search for identifier in hashtable
 	SymTableKey myKey = myScanner->mySymTable->getKey(theItem);
@@ -109,7 +109,7 @@ void ParseTree::typeCheck(Node *myNode)
 			typeCheck(myNode->getChild(1));
 			if (getType(myNode->getChild(2)) != TYPIFICATION_NONE || getType(myNode->getChild(1)) == TYPIFICATION_ERROR) {
 				std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getInfo()->getToken()->getLexem() << "' is already defined";
-				std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
+				std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
 				setType(myNode, TYPIFICATION_ERROR);
 			} else {
 				setType(myNode, TYPIFICATION_NONE);
@@ -144,7 +144,7 @@ void ParseTree::typeCheck(Node *myNode)
 			break;
 			
 		case NODE_TYPE:
-			if (myNode->getChild(0)->getInfo()->getToken()->getTokenType() == TOKEN_INT) {
+			if (myNode->getChild(0)->getInfo()->getToken()->getTokenType() == Token::TT_INT) {
 				setType(myNode, TYPIFICATION_INT);
 			} else {
 				setType(myNode, TYPIFICATION_REAL);
@@ -170,7 +170,7 @@ void ParseTree::typeCheck(Node *myNode)
 				typeCheck(myNode->getChild(1));
 				if (getType(myNode->getChild(0)) == TYPIFICATION_NONE) {
 					std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getInfo()->getToken()->getLexem() << "' is not defined";
-					std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getColumn() << "." << std::endl;
+					std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getCol() << "." << std::endl;
 					setType(myNode, TYPIFICATION_ERROR);
 				} else {
 					if ( (getType(myNode->getChild(3)) == TYPIFICATION_INT) && (
@@ -183,7 +183,7 @@ void ParseTree::typeCheck(Node *myNode)
 						setType(myNode, TYPIFICATION_NONE);
 					} else {
 						std::cerr << "Typification Error: identifier '" << myNode->getChild(0)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-						std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getColumn() << "." << std::endl;
+						std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getCol() << "." << std::endl;
 						setType(myNode, TYPIFICATION_ERROR);
 					}
 						
@@ -191,16 +191,16 @@ void ParseTree::typeCheck(Node *myNode)
 			} else {
 				// NODE_KEYWORD
 				switch (myNode->getChild(0)->getInfo()->getToken()->getTokenType()) {
-					case TOKEN_WRITE:
+					case Token::TT_WRITE:
 						// write ( EXP )
 						typeCheck(myNode->getChild(2));
 						setType(myNode, TYPIFICATION_NONE);
 						break;
-					case TOKEN_READ:
+					case Token::TT_READ:
 						// read ( identifier INDEX )
 						if (getType(myNode->getChild(2)) == TYPIFICATION_NONE) {
 							std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getInfo()->getToken()->getLexem() << "' is not defined";
-							std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getColumn() << "." << std::endl;
+							std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getCol() << "." << std::endl;
 							setType(myNode, TYPIFICATION_ERROR);							
 						} else {
 							if ( ((getType(myNode->getChild(2)) == TYPIFICATION_INT) || ((getType(myNode->getChild(2)) == TYPIFICATION_REAL)) && (getType(myNode->getChild(3)) == TYPIFICATION_NONE))
@@ -208,36 +208,36 @@ void ParseTree::typeCheck(Node *myNode)
 								setType(myNode, TYPIFICATION_NONE);							
 							} else {
 								std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-								std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
+								std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
 								setType(myNode, TYPIFICATION_ERROR);
 							}
 						}
 						break;
-					case TOKEN_CURLY_BRACE_OPEN:
+					case Token::TT_BRACE_UPON:
 						// { STATEMENTS }
 						typeCheck(myNode->getChild(1));
 						setType(myNode, TYPIFICATION_NONE);
 						break;
-					case TOKEN_IF:
+					case Token::TT_IF:
 						// if ( EXP ) STATEMENT else STATEMENT
 						typeCheck(myNode->getChild(2));
 						typeCheck(myNode->getChild(4));
 						typeCheck(myNode->getChild(6));
 						if (getType(myNode->getChild(2)) == TYPIFICATION_INT) {
 							std::cerr << "Typification Error: integer required as expression for 'if' statement";
-							std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getColumn() << "." << std::endl;
+							std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getCol() << "." << std::endl;
 							setType(myNode, TYPIFICATION_ERROR);
 						} else {
 							setType(myNode, TYPIFICATION_NONE);
 						}
 						break;
-					case TOKEN_WHILE:
+					case Token::TT_WHILE:
 						// while ( EXP ) STATEMENT
 						typeCheck(myNode->getChild(2));
 						typeCheck(myNode->getChild(4));
 						if (getType(myNode->getChild(2)) == TYPIFICATION_INT) {
 							std::cerr << "Typification Error: integer required as expression for 'while' statement";
-							std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getColumn() << "." << std::endl;
+							std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getCol() << "." << std::endl;
 							setType(myNode, TYPIFICATION_ERROR);
 						} else {
 							setType(myNode, TYPIFICATION_NONE);
@@ -259,7 +259,7 @@ void ParseTree::typeCheck(Node *myNode)
 					setType(myNode, TYPIFICATION_ARRAY);
 				} else {
 					std::cerr << "Typification Error: integer required as index";
-					std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getColumn() << "." << std::endl;
+					std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getCol() << "." << std::endl;
 					setType(myNode, TYPIFICATION_ERROR);
 				}
 			} else {
@@ -279,13 +279,13 @@ void ParseTree::typeCheck(Node *myNode)
 				std::cerr << "Typification Error: incompatible types" << std::endl;
 				//TODO
 				//std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-				//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
+				//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
 				setType(myNode, TYPIFICATION_ERROR);
 			} else if ((getType(myNode->getChild(0)) == TYPIFICATION_REAL) && (getType(myNode->getChild(1)->getChild(0)) == TYPIFICATION_OP_AND)) {
 				std::cerr << "'&' operator requires integer" << std::endl;
 				//TODO
 				//std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-				//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
+				//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
 				setType(myNode, TYPIFICATION_ERROR);
 			} else if ((getType(myNode->getChild(1)->getChild(0)) == TYPIFICATION_OP_LESS) || (getType(myNode->getChild(1)->getChild(0)) == TYPIFICATION_OP_EQUAL)) {
 				setType(myNode, TYPIFICATION_INT);
@@ -296,20 +296,20 @@ void ParseTree::typeCheck(Node *myNode)
 			
 		case NODE_EXP2:
 			switch (myNode->getChild(0)->getInfo()->getToken()->getTokenType()) {
-				case TOKEN_BRACE_OPEN:
+				case Token::TT_BRACE_UPON:
 					// ( EXP )
 					typeCheck(myNode->getChild(1));
 					setType(myNode, getType(myNode->getChild(1)));
 					break;
-				case TOKEN_IDENTIFIER:
+				case Token::TT_IDENTIFIER:
 					// identifier INDEX
 					typeCheck(myNode->getChild(1));
 					if (getType(myNode->getChild(0)) == TYPIFICATION_NONE) {
 						std::cerr << "Typification Error: identifier '" << myNode->getChild(0)->getInfo()->getToken()->getLexem() << "' is not defined";
-						std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getColumn() << "." << std::endl;
+						std::cerr << " at line " << myNode->getChild(0)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getInfo()->getToken()->getCol() << "." << std::endl;
 						setType(myNode, TYPIFICATION_ERROR);							
-					} else if ((getType(myNode->getChild(0)) == TYPIFICATION_INT) || ((getType(myNode->getChild(0)) == TYPIFICATION_REAL)) && (getType(myNode->getChild(1)) == TYPIFICATION_NONE)) {
-						setType(myNode, getType(myNode->getChild(0)));
+//					} else if ((getType(myNode->getChild(0)) == TYPIFICATION_INT) || ((getType(myNode->getChild(0)) == TYPIFICATION_REAL)) && (getType(myNode->getChild(1)) == TYPIFICATION_NONE)) {
+//						setType(myNode, getType(myNode->getChild(0)));
 					} else if ((getType(myNode->getChild(0)) == TYPIFICATION_INT_ARRAY) && (getType(myNode->getChild(1)) == TYPIFICATION_ARRAY)) {
 						setType(myNode, TYPIFICATION_INT);
 					} else if ((getType(myNode->getChild(0)) == TYPIFICATION_REAL_ARRAY) && (getType(myNode->getChild(1)) == TYPIFICATION_ARRAY)) {
@@ -317,42 +317,42 @@ void ParseTree::typeCheck(Node *myNode)
 					} else {
 						std::cerr << "no primitive type" << std::endl;;
 						//std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-						//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
+						//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
 						//TODO
 						setType(myNode, TYPIFICATION_ERROR);
 					}
 					break;
-				case TOKEN_INTEGER:
+				case Token::TT_INT:
 					// integer
 					setType(myNode, TYPIFICATION_INT);
 					break;
-				case TOKEN_REAL:
-					// real
-					setType(myNode, TYPIFICATION_REAL);
+//				case TOKEN_REAL:
+//					// real
+//					setType(myNode, TYPIFICATION_REAL);
 					break;
-				case TOKEN_MINUS:
+				case Token::TT_MINUS:
 					// - EXP2
 					typeCheck(myNode->getChild(1));
 					setType(myNode, getType(myNode->getChild(1)));
 					break;
-				case TOKEN_EXCLAMATIONMARK:
+				case Token::TT_EXCLAMATION_MARK:
 					// ! EXP2
 					typeCheck(myNode->getChild(1));
 					if (getType(myNode->getChild(1)) != TYPIFICATION_INT) {
 						std::cerr << "'!' operator requires integer" << std::endl;
 						//TODO
 						//std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
-						//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
+						//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getCol() << "." << std::endl;
 						setType(myNode, TYPIFICATION_ERROR);
 					} else {
 						setType(myNode, getType(myNode->getChild(1)));
 					}
 					break;
-				case TOKEN_FLOAT:
-					// float EXP2
-					typeCheck(myNode->getChild(1));
-					setType(myNode, TYPIFICATION_REAL);
-					break;
+//				case TOKEN_FLOAT:
+//					// float EXP2
+//					typeCheck(myNode->getChild(1));
+//					setType(myNode, TYPIFICATION_REAL);
+//					break;
 			}
 
 			break;
@@ -372,25 +372,30 @@ void ParseTree::typeCheck(Node *myNode)
 		case NODE_OP:
 			// OP
 			switch (myNode->getChild(0)->getInfo()->getToken()->getTokenType()) {
-				case TOKEN_PLUS:
+				case Token::TT_PLUS:
 					setType(myNode, TYPIFICATION_OP_PLUS);
 					break;
-				case TOKEN_MINUS:
+				case Token::TT_MINUS:
 					setType(myNode, TYPIFICATION_OP_MINUS);
 					break;
-				case TOKEN_STAR:
+				case Token::TT_STAR:
 					setType(myNode, TYPIFICATION_OP_MULT);
 					break;
-				case TOKEN_SLASH:
-					setType(myNode, TYPIFICATION_OP_DIV);
+				case Token::TT_COLON:
+					setType(myNode, TYPIFICATION_TT_COLON);
 					break;
-				case TOKEN_SMALLER:
+				case Token::TT_LESS:
 					setType(myNode, TYPIFICATION_OP_LESS);
 					break;
-				case TOKEN_ASSIGN:
+				case Token::TT_MORE:
+					setType(myNode, TYPIFICATION_OP_MORE);
+					break;
+				case Token::TT_EQUAL:
 					setType(myNode, TYPIFICATION_OP_EQUAL);
 					break;
-				case TOKEN_AND:
+				case Token::TT_MORE_COLON_MORE:
+					setType(myNode, TYPIFICATION_OP_MORE_COLON_MORE);
+				case Token::TT_AND:
 					setType(myNode, TYPIFICATION_OP_AND);
 					break;
 				default:
@@ -486,7 +491,7 @@ void ParseTree::makeCode(Node *myNode)
 			} else {
 				// NODE_KEYWORD
 				switch (myNode->getChild(0)->getInfo()->getToken()->getTokenType()) {
-					case TOKEN_WRITE:
+					case Token::TT_WRITE:
 						// write ( EXP )
 						makeCode(myNode->getChild(2));
 						if (getType(myNode->getChild(2)) == TYPIFICATION_INT) {
@@ -495,7 +500,7 @@ void ParseTree::makeCode(Node *myNode)
 							std::cout << "PRF" << std::endl;
 						}
 						break;
-					case TOKEN_READ:
+					case Token::TT_READ:
 						// read ( identifier INDEX )
 						if ((getType(myNode->getChild(2)) == TYPIFICATION_INT) || (getType(myNode->getChild(2)) == TYPIFICATION_INT_ARRAY)) {
 							std::cout << "RDI" << std::endl;
@@ -506,11 +511,11 @@ void ParseTree::makeCode(Node *myNode)
 						makeCode(myNode->getChild(3));
 						std::cout << "STR" << std::endl;
 						break;
-					case TOKEN_CURLY_BRACE_OPEN:
+					case Token::TT_BRACE_UPON:
 						// { STATEMENTS }
 						makeCode(myNode->getChild(1));
 						break;
-					case TOKEN_IF:
+					case Token::TT_IF:
 						// if ( EXP ) STATEMENT else STATEMENT
 						makeCode(myNode->getChild(2));
 						m1 = new Marker();
@@ -522,7 +527,7 @@ void ParseTree::makeCode(Node *myNode)
 						makeCode(myNode->getChild(6));
 						std::cout << "*" << m2->getName() << " NOP" << std::endl;
 						break;
-					case TOKEN_WHILE:
+					case Token::TT_WHILE:
 						// while ( EXP ) STATEMENT
 						m1 = new Marker();
 						m2 = new Marker();
@@ -559,25 +564,25 @@ void ParseTree::makeCode(Node *myNode)
 			
 		case NODE_EXP2:
 			switch (myNode->getChild(0)->getInfo()->getToken()->getTokenType()) {
-				case TOKEN_BRACE_OPEN:
+				case Token::TT_BRACKET_UPON:
 					// ( EXP )
 					makeCode(myNode->getChild(1));
 					break;
-				case TOKEN_IDENTIFIER:
+				case Token::TT_IDENTIFIER:
 					// identifier INDEX
 					std::cout << "LA " << myNode->getChild(0)->getInfo()->getToken()->getLexem() << std::endl;
 					makeCode(myNode->getChild(1));
 					std::cout << "LV" << std::endl;
 					break;
-				case TOKEN_INTEGER:
+				case Token::TT_INT:
 					// integer
 					std::cout << "LC " << myNode->getChild(0)->getInfo()->getToken()->getIntValue() << std::endl;
 					break;
-				case TOKEN_REAL:
-					// real
-					std::cout << "LC " << myNode->getChild(0)->getInfo()->getToken()->getFloatValue() << std::endl;
-					break;
-				case TOKEN_MINUS:
+//				case TOKEN_REAL:
+//					// real
+//					std::cout << "LC " << myNode->getChild(0)->getInfo()->getToken()->getFloatValue() << std::endl;
+//					break;
+				case Token::TT_MINUS:
 					// - EXP2
 					if (getType(myNode->getChild(1)) == TYPIFICATION_INT) {
 						std::cout << "LC 0" << std::endl;
@@ -589,16 +594,16 @@ void ParseTree::makeCode(Node *myNode)
 						std::cout << "SBF" << std::endl;
 					}
 					break;
-				case TOKEN_EXCLAMATIONMARK:
+				case Token::TT_EXCLAMATION_MARK:
 					// ! EXP2
 					makeCode(myNode->getChild(1));
 					std::cout << "NOT" << std::endl;
 					break;
-				case TOKEN_FLOAT:
-					// float EXP2
-					makeCode(myNode->getChild(1));
-					std::cout << "FLT" << std::endl;
-					break;
+//				case TOKEN_FLOAT:
+//					// float EXP2
+//					makeCode(myNode->getChild(1));
+//					std::cout << "FLT" << std::endl;
+//					break;
 			}
 
 			break;

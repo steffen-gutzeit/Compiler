@@ -35,7 +35,7 @@ static const codeType CODE_STR	=	CODE_LV + 1; // Wert speichern
 static const codeType CODE_PR	=	CODE_STR + 1; // drucken
 static const codeType CODE_RD	=	CODE_PR + 1; // einlesen
 
-// Sprünge mit Argument
+// Sprï¿½nge mit Argument
 static const codeType CODE_JMP	=	CODE_RD + 1; // unbedingter Sprung
 static const codeType CODE_JIN	=	CODE_JMP + 1; // bedingter Sprung
 
@@ -80,19 +80,23 @@ static const typification TYPIFICATION_NONE			= 0;
 
 static const typification TYPIFICATION_ERROR		= TYPIFICATION_NONE - 1;
 
-static const typification TYPIFICATION_INT			= 1;
-static const typification TYPIFICATION_REAL			= TYPIFICATION_INT + 1;
-static const typification TYPIFICATION_ARRAY		= TYPIFICATION_REAL + 1;
-static const typification TYPIFICATION_INT_ARRAY	= TYPIFICATION_ARRAY + 1;
-static const typification TYPIFICATION_REAL_ARRAY	= TYPIFICATION_INT_ARRAY + 1;
-static const typification TYPIFICATION_OP_PLUS		= TYPIFICATION_REAL_ARRAY + 1;
-static const typification TYPIFICATION_OP_MINUS		= TYPIFICATION_OP_PLUS + 1;
-static const typification TYPIFICATION_OP_MULT		= TYPIFICATION_OP_MINUS + 1;
-static const typification TYPIFICATION_OP_DIV		= TYPIFICATION_OP_MULT + 1;
-static const typification TYPIFICATION_OP_LESS		= TYPIFICATION_OP_DIV + 1;
-static const typification TYPIFICATION_OP_NEG		= TYPIFICATION_OP_LESS + 1;
-static const typification TYPIFICATION_OP_AND		= TYPIFICATION_OP_NEG + 1;
-static const typification TYPIFICATION_OP_EQUAL		= TYPIFICATION_OP_AND + 1;
+static const typification TYPIFICATION_INT					= 1;
+//static const typification TYPIFICATION_REAL					= TYPIFICATION_INT + 1;
+static const typification TYPIFICATION_ARRAY				= TYPIFICATION_REAL + 1;
+static const typification TYPIFICATION_INT_ARRAY			= TYPIFICATION_ARRAY + 1;
+static const typification TYPIFICATION_REAL_ARRAY			= TYPIFICATION_INT_ARRAY + 1;
+static const typification TYPIFICATION_OP_PLUS				= TYPIFICATION_REAL_ARRAY + 1;
+static const typification TYPIFICATION_OP_MINUS				= TYPIFICATION_OP_PLUS + 1;
+static const typification TYPIFICATION_OP_MULT				= TYPIFICATION_OP_MINUS + 1;
+static const typification TYPIFICATION_TT_COLON				= TYPIFICATION_TT_COLON + 1;
+static const typification TYPIFICATION_OP_DIV				= TYPIFICATION_OP_MULT + 1;
+static const typification TYPIFICATION_OP_LESS				= TYPIFICATION_OP_DIV + 1;
+static const typification TYPIFICATION_OP_MORE				= TYPIFICATION_OP_MORE + 1;
+static const typification TYPIFICATION_OP_NEG				= TYPIFICATION_OP_LESS + 1;
+static const typification TYPIFICATION_OP_AND				= TYPIFICATION_OP_NEG + 1;
+static const typification TYPIFICATION_OP_EQUAL				= TYPIFICATION_OP_AND + 1;
+static const typification TYPIFICATION_OP_MORE_COLON_MORE	= TYPIFICATION_OP_MORE_COLON_MORE + 1;
+
 
 class parserConst
 {
