@@ -3,16 +3,16 @@
 #include "../../../Token/src/Token.h"
 #include "../Node/Node.h"
 #include "../NodeInfo/NodeInfo.h"
-#include "../ParserConstant/ParserConst.h"
+#include "../ParserConstant/ParserConstant.h"
 #include "../Tree/ParseTree.h"
 
 class Parser
 {
 	
 public:
-	Parser(Scanner *myScanner, Token *token);
+	Parser(Scanner *scanner);
 	int processFile();
-	Token token;
+	Token *token;
 	
 private:
 

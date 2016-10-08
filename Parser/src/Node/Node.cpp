@@ -50,7 +50,7 @@ void Node::print()
 	
 	if (childrenCount == 0) {
 		if (nodeInfo->getToken() != NULL) {
-			if (nodeInfo->getToken()->getTokenType() == Token::TT_IDENTIFIER) {
+			if (nodeInfo->getToken()->getTokenTypeInt() == Token::TT_IDENTIFIER) {
 				// Identifier
 				std::cout << nodeInfo->getToken()->getLexem();
 			} else {

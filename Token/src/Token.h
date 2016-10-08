@@ -21,6 +21,7 @@ public:
 	uint32_t getRow();
 	uint16_t matchStateToType(uint16_t stateType);
 	char *getLexem();
+	uint16_t getTokenTypeInt();
 	const char *getTokenType();
 	const char *getTokenType(uint16_t &tokenType);
 

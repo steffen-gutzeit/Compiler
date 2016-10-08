@@ -504,6 +504,11 @@ Token *Scanner::getNextToken() {
 	return token;
 } // END METHODE
 
+Token *Scanner::getCurrentToken() {
+
+	return this->token;
+}
+
 void Scanner::incrementColCount() {
 	this->colIndex++;
 }

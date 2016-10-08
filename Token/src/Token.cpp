@@ -118,6 +118,10 @@ uint16_t Token::matchStateToType(uint16_t stateType) {
 	return TT_DUMMY;
 }
 
+uint16_t Token::getTokenTypeInt(){
+	return tokenType;
+}
+
 const char *Token::getTokenType(){
 	return getTokenTypeIntern(this->tokenType);
 }

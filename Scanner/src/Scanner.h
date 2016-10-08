@@ -21,6 +21,7 @@ public:
 	virtual ~Scanner();
 
 	Token *getNextToken();
+	Token *getCurrentToken();
 
 
 private:

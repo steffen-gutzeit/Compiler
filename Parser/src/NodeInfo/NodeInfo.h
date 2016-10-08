@@ -30,6 +30,7 @@ public:
 	Token *getToken();
 	ParserConstant::Typification getTypification();
 	uint16_t getLexemAsInteger();
+	char* getLexem();
 
 private:
 	ParserConstant::NodeType nodeType;

@@ -79,19 +79,19 @@ public:
 		noType			= 	0,
 		errorType		= 	1,
 
-		intType			=	1,
-		intArrayType	=	2,
-		arrayType		=	3,
+		intType			=	2,
+		intArrayType	=	3,
+		arrayType		=	4,
 
-		opPlus			=	4,
-		opMinus			=	5,
-		opMult			=	6,
-		opDiv			=	7,
-		opLess			=	8,
-		opGreater		=	9,
-		opEqual			=	10,
-		opUnEqual		=	11,
-		opAnd			=	12
+		opPlus			=	5,
+		opMinus			=	6,
+		opMult			=	7,
+		opDiv			=	8,
+		opLess			=	9,
+		opGreater		=	10,
+		opEqual			=	11,
+		opUnEqual		=	12,
+		opAnd			=	13
 	};
 	
 	ParserConstant();

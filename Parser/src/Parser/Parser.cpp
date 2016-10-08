@@ -1,25 +1,25 @@
 #include "Parser.h"
 
-Parser::Parser(Scanner *myScanner, Token *token)
+Parser::Parser(Scanner *scanner)
 {
-	this->scanner = myScanner;
-	this->token = token;
-	parseTree = new ParseTree(myScanner);
+	this->scanner = scanner;
+	this->token = scanner->getCurrentToken();
+	parseTree = new ParseTree(scanner);
 }
 
 
 void Parser::syntaxError(uint16_t expected[], int expectedCount, Token *t)
 {
-	std::cerr << "Syntax Error: Expected '" << this->token.getTokenType(expected[0]) << "'";
+	std::cerr << "Syntax Error: Expected '" << this->token->getTokenType(expected[0]) << "'";
 
 	for (int i = 1; i < expectedCount; i++) {
 		if (i == expectedCount - 1) std::cerr << " or '"; else std::cerr << ", '";
-		std::cerr << this->token.getTokenType(expected[i]) << "'";
+		std::cerr << this->token->getTokenType(expected[i]) << "'";
 	}
 
 	//TODO Wieder einbauen
 //	std::cerr << " at line " << t->getRow() << ", column " << t->getColumn() << " instead of '" << this->token.getTokenType(t->getTokenType()) << "'." << std::endl;
-	exit(1);
+	//exit(1);
 }
 
 void Parser::syntaxError(uint16_t expected, Token *t)
@@ -37,7 +37,10 @@ int Parser::processFile()
 	uint8_t tokenCount = 0;
 	uint8_t tokenParsed;
 	
-	for (uint8_t i = 0; i < MAX_POSSIBLE_TOKENS; i++) myCommand[i] = new Token(Token::TT_ERROR, "", 0, 0);
+	for (uint16_t i = 0; i < MAX_POSSIBLE_TOKENS; i++) {
+		char* test = "";
+		myCommand[i] = new Token( 0, 0, Token::TT_ERROR, test);
+	}
 
 	// Token stehen hier zur Verfügung, keine Nacharbeit mehr nötig
 	while (t = scanner->getNextToken()) {
@@ -101,7 +104,7 @@ int Parser::DECLS(Node *node, Token *myCommand[], uint8_t startCount, uint8_t to
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_DECLS)));
 	
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 			
 		// int, float
 		case Token::TT_INT:
@@ -111,7 +114,7 @@ int Parser::DECLS(Node *node, Token *myCommand[], uint8_t startCount, uint8_t to
 			where = DECL(myNode, myCommand, where, tokenCount);
 
 			// ;
-			if ((myCommand[where]->getTokenType() != Token::TT_SEMICOLON)) syntaxError(Token::TT_SEMICOLON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_SEMICOLON)) syntaxError(Token::TT_SEMICOLON, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -150,7 +153,7 @@ int Parser::DECL(Node *node, Token *myCommand[], uint8_t startCount, uint8_t tok
 	where = ARRAY(myNode, myCommand, where, tokenCount);
 
 	// identifier
-	if ((myCommand[where]->getTokenType() != Token::TT_IDENTIFIER)) syntaxError(Token::TT_IDENTIFIER, myCommand[where]);
+	if ((myCommand[where]->getTokenTypeInt() != Token::TT_IDENTIFIER)) syntaxError(Token::TT_IDENTIFIER, myCommand[where]);
 	myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 	where++;
 		
@@ -166,7 +169,7 @@ int Parser::ARRAY(Node *node, Token *myCommand[], uint8_t startCount, uint8_t to
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_ARRAY)));
 	
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 		
 		// [
 		case Token::TT_SQUARE_BRACKET_UPON:
@@ -174,12 +177,12 @@ int Parser::ARRAY(Node *node, Token *myCommand[], uint8_t startCount, uint8_t to
 			where++;
 			
 			// integer
-			if ((myCommand[where]->getTokenType() != Token::TT_INTEGER)) syntaxError(Token::TT_INTEGER, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_INTEGER)) syntaxError(Token::TT_INTEGER, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 			where++;
 	
 			// ]
-			if ((myCommand[where]->getTokenType() != Token::TT_SQUARE_BRACKET_CLOSE)) syntaxError(Token::TT_SQUARE_BRACKET_CLOSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_SQUARE_BRACKET_CLOSE)) syntaxError(Token::TT_SQUARE_BRACKET_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -230,7 +233,7 @@ int Parser::STATEMENTS(Node *node, Token *myCommand[], uint8_t startCount, uint8
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_STATEMENTS)));
 	
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 		
 		// identifier, write, read, {, if, while
 		case Token::TT_IDENTIFIER:
@@ -244,7 +247,7 @@ int Parser::STATEMENTS(Node *node, Token *myCommand[], uint8_t startCount, uint8
 			where = STATEMENT(myNode, myCommand, where, tokenCount);
 
 			// ;
-			if ((myCommand[where]->getTokenType() != Token::TT_SEMICOLON)) syntaxError(Token::TT_SEMICOLON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_SEMICOLON)) syntaxError(Token::TT_SEMICOLON, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -270,7 +273,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_STATEMENT)));
 	
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 			
 		// identifier
 		case Token::TT_IDENTIFIER:
@@ -281,7 +284,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = INDEX(myNode, myCommand, where, tokenCount);
 
 			// :=
-			if ((myCommand[where]->getTokenType() != Token::TT_COLON_EQUAL)) syntaxError(Token::TT_COLON_EQUAL, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_COLON_EQUAL)) syntaxError(Token::TT_COLON_EQUAL, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -296,7 +299,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where++;
 			
 			// (
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -304,7 +307,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = EXP(myNode, myCommand, where, tokenCount);
 			
 			// )
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -316,12 +319,12 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where++;
 			
 			// (
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 			
 			// identifier
-			if ((myCommand[where]->getTokenType() != Token::TT_IDENTIFIER)) syntaxError(Token::TT_IDENTIFIER, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_IDENTIFIER)) syntaxError(Token::TT_IDENTIFIER, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 			where++;
 
@@ -329,7 +332,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = INDEX(myNode, myCommand, where, tokenCount);
 			
 			// )
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -345,7 +348,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = STATEMENTS(myNode, myCommand, where, tokenCount);
 			
 			// }
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACE_CLOSE)) syntaxError(Token::TT_BRACE_CLOSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACE_CLOSE)) syntaxError(Token::TT_BRACE_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -358,7 +361,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where++;
 			
 			// (
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -366,7 +369,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = EXP(myNode, myCommand, where, tokenCount);
 			
 			// )
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -374,7 +377,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = STATEMENT(myNode, myCommand, where, tokenCount);
 
 			// else
-			if ((myCommand[where]->getTokenType() != Token::TT_ELSE)) syntaxError(Token::TT_ELSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_ELSE)) syntaxError(Token::TT_ELSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -390,7 +393,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where++;
 			
 			// (
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -398,7 +401,7 @@ int Parser::STATEMENT(Node * node, Token *myCommand[], uint8_t startCount, uint8
 			where = EXP(myNode, myCommand, where, tokenCount);
 			
 			// )
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -442,7 +445,7 @@ int Parser::EXP2(Node * node, Token *myCommand[], uint8_t startCount, uint8_t to
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_EXP2)));
 
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 		
 		// (
 		case Token::TT_BRACKET_UPON:
@@ -454,7 +457,7 @@ int Parser::EXP2(Node * node, Token *myCommand[], uint8_t startCount, uint8_t to
 			where = EXP(myNode, myCommand, where, tokenCount);
 
 			// )
-			if ((myCommand[where]->getTokenType() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 			
@@ -535,7 +538,7 @@ int Parser::INDEX(Node *node, Token *myCommand[], uint8_t startCount, uint8_t to
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_INDEX)));
 	
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 			
 		// [
 		case Token::TT_SQUARE_BRACKET_UPON:
@@ -547,7 +550,7 @@ int Parser::INDEX(Node *node, Token *myCommand[], uint8_t startCount, uint8_t to
 			where = EXP(myNode, myCommand, where, tokenCount);
 			
 			// ]
-			if ((myCommand[where]->getTokenType() != Token::TT_SQUARE_BRACKET_CLOSE)) syntaxError(Token::TT_SQUARE_BRACKET_CLOSE, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_SQUARE_BRACKET_CLOSE)) syntaxError(Token::TT_SQUARE_BRACKET_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -570,7 +573,7 @@ int Parser::OP_EXP(Node *node, Token *myCommand[], uint8_t startCount, uint8_t t
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_OP_EXP)));
 	
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 
 		// +, -, *, :, <, >, =, =:=, &&
 		case Token::TT_PLUS:
@@ -606,7 +609,7 @@ int Parser::OP(Node *node, Token *myCommand[], uint8_t startCount, uint8_t token
 	uint8_t where = startCount;
 	Node *myNode = node->addChild(new Node(new NodeInfo(ParserConstant::NODE_OP)));
 	
-	switch (myCommand[where]->getTokenType()) {
+	switch (myCommand[where]->getTokenTypeInt()) {
 		
 	// +, -, *, :, <, >, =, =:=, &&
 	case Token::TT_PLUS:
