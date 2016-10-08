@@ -37,7 +37,7 @@ int Parser::processFile()
 	uint8_t tokenParsed;
 	
 	for (uint16_t i = 0; i < MAX_POSSIBLE_TOKENS; i++) {
-		char* test = "";
+		char* test = NULL;
 		myCommand[i] = new Token( 0, 0, Token::TT_ERROR, test);
 	}
 
