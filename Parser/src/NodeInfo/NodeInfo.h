@@ -17,19 +17,18 @@ class NodeInfo
 {
 	
 public:
-	NodeInfo(nodeType myType = NODE_EMPTY, Token *myToken = NULL, typification myTypification = TYPIFICATION_NONE);
+	NodeInfo(NodeType nodeType = NODE_EMPTY, Token *token = NULL, Typification typification = TYPIFICATION_NONE);
 	
-	void setType(nodeType myType);
-	nodeType getType();
+	void setNodeType(NodeType nodeType);
+	void setToken(Token *token);
+	void setTypification(Typification typification);
 	
-	void setToken(Token *myToken);
+	NodeType getNodeType();
 	Token *getToken();
-	
-	void setTypification(typification myTypification);
-	typification getTypification();
-	
+	Typification getTypification();
+
 private:
-	nodeType myType;
-	Token *myToken;
-	typification myTypification;
+	NodeType nodeType;
+	Token *token;
+	Typification typification;
 };

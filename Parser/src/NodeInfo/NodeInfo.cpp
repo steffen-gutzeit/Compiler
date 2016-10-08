@@ -10,40 +10,33 @@
 #include "NodeInfo.h"
 
 
-NodeInfo::NodeInfo(nodeType myType, Token *myToken, typification myTypification)
+NodeInfo::NodeInfo(NodeType nodeType, Token *token, Typification typification)
 {
-	setType(myType);
-	setToken(myToken);
-	setTypification(myTypification);
+	this->nodeType = nodeType;
+	this->token = token;
+	this->typification = typification;
 }
 	
-void NodeInfo::setType(nodeType myType)
-{
-	this->myType = myType;
+void NodeInfo::setNodeType(NodeType nodeType) {
+	this->nodeType = nodeType;
 }
 
-nodeType NodeInfo::getType()
-{
-	return myType;
+void NodeInfo::setToken(Token *token) {
+	this->token = token;
 }
 
-void NodeInfo::setToken(Token *myToken)
-{
-	this->myToken = myToken;
+void NodeInfo::setTypification(Typification typification) {
+	this->typification = typification;
 }
 
-Token *NodeInfo::getToken()
-{
-	return myToken;
+NodeType NodeInfo::getNodeType() {
+	return this->nodeType;
 }
 
-void NodeInfo::setTypification(typification myTypification)
-{
-	this->myTypification = myTypification;
+Token *NodeInfo::getToken() {
+	return this->token;
 }
 
-typification NodeInfo::getTypification()
-{
-	return myTypification;
+Typification NodeInfo::getTypification() {
+	return this->typification;
 }
-
