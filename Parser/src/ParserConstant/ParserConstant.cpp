@@ -26,7 +26,6 @@ std::string ParserConstant::nodeTypeAsString(NodeType myNodeType)
 		case NODE_DECLS: myResult = "DECLS"; break;
 		case NODE_DECL: myResult = "DECL"; break;
 		case NODE_ARRAY: myResult = "ARRAY"; break;
-		case NODE_TYPE: myResult = "TYPE"; break;
 		case NODE_STATEMENTS: myResult = "STATEMENTS"; break;
 		case NODE_STATEMENT: myResult = "STATEMENT"; break;
 		case NODE_EXP: myResult = "EXP"; break;
@@ -44,27 +43,24 @@ std::string ParserConstant::nodeTypeAsString(NodeType myNodeType)
 
 
 
-std::string parserConst::typificationAsString(Typification myTypification)
+std::string ParserConstant::typificationAsString(Typification typification)
 {
 	std::string myResult;
-	switch(myTypification)
+	switch(typification)
 	{
-		case TYPIFICATION_NONE			: myResult="none"; break;   
-		case TYPIFICATION_ERROR			: myResult="error"; break;    
-
-		case TYPIFICATION_INT			: myResult="int"; break;    
-		case TYPIFICATION_REAL			: myResult="real"; break;    
-		case TYPIFICATION_ARRAY			: myResult="array"; break;    
-		case TYPIFICATION_INT_ARRAY		: myResult="int[]"; break;
-		case TYPIFICATION_REAL_ARRAY	: myResult="real[]"; break;
-		case TYPIFICATION_OP_PLUS		: myResult="+"; break;
-		case TYPIFICATION_OP_MINUS		: myResult="-"; break;
-		case TYPIFICATION_OP_MULT		: myResult="*"; break;
-		case TYPIFICATION_OP_DIV		: myResult="/"; break;
-		case TYPIFICATION_OP_LESS		: myResult="<"; break;
-		case TYPIFICATION_OP_NEG		: myResult="!"; break;
-		case TYPIFICATION_OP_AND		: myResult="&"; break;
-		case TYPIFICATION_OP_EQUAL		: myResult="="; break;
+		case noType			: myResult="none"; break;
+		case errorType		: myResult="error"; break;
+		case intType		: myResult="int"; break;
+		case arrayType		: myResult="array"; break;
+		case intArrayType	: myResult="int[]"; break;
+		case opPlus			: myResult="+"; break;
+		case opMinus		: myResult="-"; break;
+		case opMult			: myResult="*"; break;
+		case opDiv			: myResult=":"; break;
+		case opLess	 		: myResult="<"; break;
+		case opUnEqual		: myResult="!"; break;
+		case opAnd			: myResult="&"; break;
+		case opEqual		: myResult="="; break;
 
 		default: myResult = "unknown"; break;
 	}

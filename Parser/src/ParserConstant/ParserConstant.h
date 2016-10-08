@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sstream>
+#include "../ParserConstant/ParserConstant.h"
 
 #define _DEBUG
 #define PARSER // leave here for SymTable.h/SymTable.cpp
@@ -44,11 +45,6 @@ static const codeType CODE_FLT	=	CODE_JIN + 1; // Konvertierung ohne Argument
 static const codeType CODE_DS	=	CODE_FLT + 1; // Speicher reservieren mit Argument
 static const codeType CODE_NOP	=	CODE_DS + 1; // nichts tun
 static const codeType CODE_STP	=	CODE_NOP + 1; // stoppen
-
-
-
-
-
 
 
 

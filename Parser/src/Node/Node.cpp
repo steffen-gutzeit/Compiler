@@ -38,12 +38,12 @@ Node *Node::getChild(int which)
 	
 void Node::print()
 {
-	if (nodeInfo->getNodeInfoType() == NODE_ROOT) {
+	if (nodeInfo->getNodeType() == ParserConstant::NODE_ROOT) {
 		std::cout << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 	} else {
-		std::cout << "<" << parserConst::nodeTypeAsString(nodeInfo->getNodeInfoType());
-		if (nodeInfo->getTypification() != TYPIFICATION_NONE) {
-			std::cout << " typification=\"" << parserConst::typificationAsString(nodeInfo->getTypification()) << "\"";
+		std::cout << "<" << ParserConstant::nodeTypeAsString(nodeInfo->getNodeType());
+		if (nodeInfo->getTypification() != ParserConstant::noType) {
+			std::cout << " typification=\"" << ParserConstant::typificationAsString(nodeInfo->getTypification()) << "\"";
 		}
 		std::cout << ">";
 	}
@@ -65,7 +65,7 @@ void Node::print()
 
 	for (uint16_t i = 0; i < childrenCount; i++) childNodes[i]->print();
 	
-	if (nodeInfo->getNodeInfoType() != NODE_ROOT) std::cout << "</" << parserConst::nodeTypeAsString(nodeInfo->getNodeInfoType()) << ">";
+	if (nodeInfo->getNodeType() != ParserConstant::NODE_ROOT) std::cout << "</" << ParserConstant::nodeTypeAsString(nodeInfo->getNodeType()) << ">";
 }
 
 bool Node::isLeave()
