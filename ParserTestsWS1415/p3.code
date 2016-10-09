@@ -1,0 +1,516 @@
+DS $a 1
+DS $n 1
+DS $w 1
+DS $i 1
+DS $x 1
+DS $tmp 1
+REA
+LA $n
+STR
+LA $n
+LV
+LA $a
+STR
+LA $a
+LV
+LA $w
+STR
+LA $w
+LV
+LA $n
+LV
+LA $w
+LV
+DIV
+ADD
+LC 2
+DIV
+LA $a
+STR
+#m0 NOP
+LA $a
+LV
+LA $w
+LV
+LES
+JIN #m1
+LA $a
+LV
+LA $w
+STR
+LA $w
+LV
+LA $n
+LV
+LA $w
+LV
+DIV
+ADD
+LC 2
+DIV
+LA $a
+STR
+NOP
+JMP #m0
+#m1 NOP
+LA $w
+LV
+PRI
+LC 26
+PRI
+REA
+LA $n
+STR
+REA
+LA $a
+STR
+LC 1
+LA $x
+STR
+LC 0
+LA $tmp
+STR
+#m2 NOP
+LA $tmp
+LV
+LA $x
+LV
+LES
+JIN #m3
+LA $a
+LV
+LA $tmp
+STR
+LC 1
+LA $i
+STR
+#m4 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+JIN #m5
+LA $tmp
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+NOP
+JMP #m4
+#m5 NOP
+LA $n
+LV
+LC 1
+SUB
+LA $x
+LV
+MUL
+LA $tmp
+LV
+ADD
+LA $n
+LV
+DIV
+LA $x
+STR
+LC 2
+LA $i
+STR
+LA $a
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+#m6 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+LA $x
+LV
+LA $tmp
+LV
+LES
+AND
+JIN #m7
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+LA $tmp
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+NOP
+JMP #m6
+#m7 NOP
+NOP
+JMP #m2
+#m3 NOP
+LA $x
+LV
+PRI
+LC 13
+PRI
+LA $x
+LV
+LA $tmp
+STR
+LC 1
+LA $i
+STR
+#m8 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+JIN #m9
+LA $tmp
+LV
+LA $x
+LV
+MUL
+LA $tmp
+STR
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+NOP
+JMP #m8
+#m9 NOP
+LA $tmp
+LV
+PRI
+REA
+LA $a
+STR
+LC 2
+LA $n
+STR
+LC 1
+LA $x
+STR
+LC 0
+LA $tmp
+STR
+#m10 NOP
+LA $tmp
+LV
+LA $x
+LV
+LES
+JIN #m11
+LA $a
+LV
+LA $tmp
+STR
+LC 1
+LA $i
+STR
+#m12 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+JIN #m13
+LA $tmp
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+NOP
+JMP #m12
+#m13 NOP
+LA $n
+LV
+LC 1
+SUB
+LA $x
+LV
+MUL
+LA $tmp
+LV
+ADD
+LA $n
+LV
+DIV
+LA $x
+STR
+LC 2
+LA $i
+STR
+LA $a
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+#m14 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+LA $x
+LV
+LA $tmp
+LV
+LES
+AND
+JIN #m15
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+LA $tmp
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+NOP
+JMP #m14
+#m15 NOP
+NOP
+JMP #m10
+#m11 NOP
+LA $x
+LV
+LA $tmp
+STR
+LC 1
+LA $i
+STR
+#m16 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+JIN #m17
+LA $tmp
+LV
+LA $x
+LV
+MUL
+LA $tmp
+STR
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+NOP
+JMP #m16
+#m17 NOP
+#m18 NOP
+LA $tmp
+LV
+LA $a
+LV
+EQU
+NOT
+LA $n
+LV
+LA $x
+LV
+LES
+AND
+JIN #m19
+LA $n
+LV
+LC 1
+ADD
+LA $n
+STR
+LC 1
+LA $x
+STR
+LC 0
+LA $tmp
+STR
+#m20 NOP
+LA $tmp
+LV
+LA $x
+LV
+LES
+JIN #m21
+LA $a
+LV
+LA $tmp
+STR
+LC 1
+LA $i
+STR
+#m22 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+JIN #m23
+LA $tmp
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+NOP
+JMP #m22
+#m23 NOP
+LA $n
+LV
+LC 1
+SUB
+LA $x
+LV
+MUL
+LA $tmp
+LV
+ADD
+LA $n
+LV
+DIV
+LA $x
+STR
+LC 2
+LA $i
+STR
+LA $a
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+#m24 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+LA $x
+LV
+LA $tmp
+LV
+LES
+AND
+JIN #m25
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+LA $tmp
+LV
+LA $x
+LV
+DIV
+LA $tmp
+STR
+NOP
+JMP #m24
+#m25 NOP
+NOP
+JMP #m20
+#m21 NOP
+LA $x
+LV
+LA $tmp
+STR
+LC 1
+LA $i
+STR
+#m26 NOP
+LA $i
+LV
+LA $n
+LV
+LES
+JIN #m27
+LA $tmp
+LV
+LA $x
+LV
+MUL
+LA $tmp
+STR
+LA $i
+LV
+LC 1
+ADD
+LA $i
+STR
+NOP
+JMP #m26
+#m27 NOP
+NOP
+JMP #m18
+#m19 NOP
+LA $tmp
+LV
+LA $a
+LV
+EQU
+JIN #m28
+LA $x
+LV
+PRI
+LA $n
+LV
+PRI
+NOP
+JMP #m29
+#m28 LC 0
+LC 1
+SUB
+PRI
+NOP
+#m29 NOP
+NOP
+STP
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              

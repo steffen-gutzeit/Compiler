@@ -152,8 +152,9 @@ void ParseTree::typeCheck(Node *myNode)
 			break;
 		
 		case ParserConstant::NODE_STATEMENT:
+			cout << "JO" << endl;
 			if (myNode->getChild(0)->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
-				// identifier INDEX = EXP
+				// identifier INDEX := EXP
 				typeCheck(myNode->getChild(3));
 				typeCheck(myNode->getChild(1));
 				if (getType(myNode->getChild(0)) == ParserConstant::noType) {

@@ -212,7 +212,6 @@ uint16_t Parser::STATEMENT(Node * node, Token *myCommand[], uint16_t startCount,
 			where = INDEX(myNode, myCommand, where, tokenCount);
 
 			// :=
-			cout << myCommand[where]->getTokenTypeInt();
 			if ((myCommand[where]->getTokenTypeInt() != Token::TT_COLON_EQUAL)) syntaxError(Token::TT_COLON_EQUAL, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
