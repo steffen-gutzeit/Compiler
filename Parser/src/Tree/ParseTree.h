@@ -8,7 +8,7 @@
 
 class ParseTree {
 public:
-	ParseTree(Scanner *myScanner);
+	ParseTree(Scanner *scanner);
 	
 	Node *getRootNode();
 	void printXML();

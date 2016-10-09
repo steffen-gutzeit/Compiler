@@ -32,6 +32,7 @@ ParserConstant::Typification ParseTree::getType(Node *node) {
 
 void ParseTree::setType(Node *node, ParserConstant::Typification typification)
 {
+	//cout << node->getNodeInfo()->getNodeType() << " - " << typification << endl;
 	if (node->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
 		// TODO: set in SymTable
 		this->printIdentifierNotFound(node->getNodeInfo()->getLexem());
@@ -43,10 +44,9 @@ void ParseTree::setType(Node *node, ParserConstant::Typification typification)
 }
 
 void ParseTree::printIdentifierNotFound(char *lexem) {
-//TODO
-//	if (!(scanner->symtable->lookUp(lexem))) {
+	if (!(this->scanner->getSymTable()->lookUp(lexem))) {
 		std::cerr << "Internal Error: Identifier " << lexem << " not found in Symbol Table." << std::endl;
-//	}
+	}
 }
 
 void ParseTree::typeCheck(Node *myNode) {
@@ -74,6 +74,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		case ParserConstant::NODE_DECLS:
 			if (myNode->getChild(0) != NULL) {
 				// DECL ; DECLS
+
 				typeCheck(myNode->getChild(0));
 				typeCheck(myNode->getChild(2));
 				setType(myNode, ParserConstant::noType);
@@ -86,7 +87,9 @@ void ParseTree::typeCheck(Node *myNode) {
 		case ParserConstant::NODE_DECL:
 			// int ARRAY identifier
 //			typeCheck(myNode->getChild(0));
+//			setType(myNode, ParserConstant::intType);
 			typeCheck(myNode->getChild(1));
+
 			if (getType(myNode->getChild(2)) != ParserConstant::noType || getType(myNode->getChild(1)) == ParserConstant::errorType) {
 				std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem() << "' is already defined";
 				std::cerr << " at line " << myNode->getChild(2)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
@@ -104,7 +107,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		case ParserConstant::NODE_ARRAY:
 			if (myNode->getChildrenCount() > 0) {
 				// [ integer ]
-				if (myNode->getChild(1)->getNodeInfo()->getLexemAsInteger() > 0) {
+				if (myNode->getChild(1)->getNodeInfo()->getLexemAsInteger() > 3) {
 					setType(myNode, ParserConstant::arrayType);
 				} else {
 					setType(myNode, ParserConstant::errorType);
@@ -163,16 +166,21 @@ void ParseTree::typeCheck(Node *myNode) {
 							std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem() << "' is not defined";
 							std::cerr << " at line " << myNode->getChild(0)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 							setType(myNode, ParserConstant::errorType);
-						} /*else {
-							if ( ((getType(myNode->getChild(2)) == ParserConstant::intType) || ((getType(myNode->getChild(2)) == TYPIFICATION_REAL)) && (getType(myNode->getChild(3)) == ParserConstant::noType))
-								  || ((getType(myNode->getChild(2)) == ParserConstant::intArrayType) || ((getType(myNode->getChild(2)) == TYPIFICATION_REAL_ARRAY)) && (getType(myNode->getChild(3)) == ParserConstant::arrayType)) ) {
+						} else {
+							if (
+									((getType(myNode->getChild(2)) == ParserConstant::intType) &&
+									(getType(myNode->getChild(3)) == ParserConstant::noType))
+								  ||
+								    ((getType(myNode->getChild(2)) == ParserConstant::intArrayType) &&
+									(getType(myNode->getChild(3)) == ParserConstant::arrayType))
+								) {
 								setType(myNode, ParserConstant::noType);
 							} else {
-								std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
+								std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem() << "' of type '" << ParserConstant::typificationAsString(getType(myNode->getChild(3))) << "' is incompatible to type '" << ParserConstant::typificationAsString(getType(myNode->getChild(3))) << "'";
 								std::cerr << " at line " << myNode->getChild(2)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 								setType(myNode, ParserConstant::errorType);
 							}
-						}*/
+						}
 						//TODO Bei fehlerhaften Verhalten von ( identifier INDEX ) hier schauen
 						break;
 					case Token::TT_BRACE_UPON:
@@ -242,8 +250,18 @@ void ParseTree::typeCheck(Node *myNode) {
 				std::cerr << "Typification Error: expression '" << myNode->getChild(0)->getNodeInfo()->getLexem() << "' of type '" << ParserConstant::typificationAsString(getType(myNode->getChild(0))) << "' is incompatible to type '" << ParserConstant::typificationAsString(getType(myNode->getChild(3))) << "'";
 				std::cerr << " at line " << myNode->getChild(2)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 				setType(myNode, ParserConstant::errorType);
-			} else if ((getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opLess) || (getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opEqual)) {
-				// TODO vermutlich Greater einbauen ggfs. auch div einbauen
+			} else if (
+					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opEqual) ||
+//					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opPlus) ||
+//					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opMinus) ||
+//					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opMult) ||
+//					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opDiv) ||
+					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opLess)
+//					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opGreater) ||
+//					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opUnEqual) ||
+//					(getType(myNode->getChild(1)->getChild(0)) == ParserConstant::opAnd)
+					) {
+				// TODO ACHTUNG In Originalverion wurde nur opLess und opEqual benutzt
 				setType(myNode, ParserConstant::intType);
 			} else {
 				setType(myNode, getType(myNode->getChild(0)));
@@ -264,8 +282,8 @@ void ParseTree::typeCheck(Node *myNode) {
 						std::cerr << "Typification Error: identifier '" << myNode->getChild(0)->getNodeInfo()->getToken()->getLexem() << "' is not defined";
 						std::cerr << " at line " << myNode->getChild(0)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 						setType(myNode, ParserConstant::errorType);
-//					} else if ((getType(myNode->getChild(0)) == ParserConstant::intType) || ((getType(myNode->getChild(0)) == TYPIFICATION_REAL)) && (getType(myNode->getChild(1)) == ParserConstant::noType)) {
-//						setType(myNode, getType(myNode->getChild(0)));
+					} else if ((getType(myNode->getChild(0)) == ParserConstant::intType)  && (getType(myNode->getChild(1)) == ParserConstant::noType)) {
+						setType(myNode, getType(myNode->getChild(0)));
 					} else if ((getType(myNode->getChild(0)) == ParserConstant::intArrayType) && (getType(myNode->getChild(1)) == ParserConstant::arrayType)) {
 						setType(myNode, ParserConstant::intType);
 					} else {
@@ -275,7 +293,7 @@ void ParseTree::typeCheck(Node *myNode) {
 						setType(myNode, ParserConstant::errorType);
 					}
 					break;
-				case Token::TT_INT:
+				case Token::TT_INTEGER:
 					// integer
 					setType(myNode, ParserConstant::intType);
 					break;
@@ -338,6 +356,7 @@ void ParseTree::typeCheck(Node *myNode) {
 					break;
 				case Token::TT_MORE_COLON_MORE:
 					setType(myNode, ParserConstant::opUnEqual);
+					break;
 				case Token::TT_AND:
 					setType(myNode, ParserConstant::opAnd);
 					break;
