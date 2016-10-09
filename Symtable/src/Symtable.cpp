@@ -57,7 +57,7 @@ void Symtable::initSymbols(){
 }
 
 char *Symtable::insert(char* lexem, int typ) {
-	char *key;;
+	char *key;
 	//Uebergebe Lexem an HashTable und bekomme KeyValue zurueck. Dieses wird im Token gespeichert.
 	key = this->hashTable->addValue(typ, lexem);
 	//printf("Symbol: %p \n", key);

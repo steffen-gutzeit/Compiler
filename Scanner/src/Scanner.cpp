@@ -540,7 +540,9 @@ Token *Scanner::generateToken(uint16_t typ) {
 				checkInteger(typ);
 			}else{
 				//Pruefen ob es in die Symboltabelle eingetragen werden muss
-				if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
+				if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF
+						 || typ == token->TT_WRITE  || typ == token->TT_READ || typ == token->TT_INT
+						 || typ == token->TT_ELSE){
 
 					//Key Value zurueck bekommen
 					char *key = symtable->insert(this->internBuffer, typ);
@@ -678,13 +680,7 @@ void Scanner::checkInteger(uint16_t typ){
 
 
 		}
-
-		this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
-
-
-
-
-
+		this->token = new Token(this->rowIndex, this->colIndex, typ, test);
 	}
 
 }

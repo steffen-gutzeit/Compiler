@@ -47,7 +47,16 @@ ParserConstant::Typification NodeInfo::getTypification() {
 	return this->typification;
 }
 
-uint16_t NodeInfo::getLexemAsInteger() {
-	//TODO
-	return 4711;
-}
+//uint16_t NodeInfo::getLexemAsInteger() {
+//	//TODO
+//	return 4711;
+//}
+
+//uint16_t Token::getIntValue() {
+//	std::istringstream i(Token::myTokenValue);
+//	int myResult;
+//	i >> myResult;
+//	return myResult;
+//	cout << this->lexem << endl;
+//	return 99994711;
+//}
