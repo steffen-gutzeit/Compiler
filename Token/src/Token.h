@@ -10,10 +10,12 @@
 
 #include <stdint.h>
 #include "../../Automat/src/Automat.h"
+#include "../../Parser/src/ParserConstant/ParserConstant.h"
 
 class Token {
 public:
 	Token(uint16_t row, uint32_t column, uint32_t tokenType, char *lexem);
+	Token(uint16_t row, uint32_t column, uint32_t tokenType, long integerValue);
 	virtual ~Token();
 
 	Token getToken();
@@ -25,7 +27,14 @@ public:
 	const char *getTokenType();
 	const char *getTokenType(uint16_t &tokenType);
 
+	long getIntegerValue();
+
+	void setTypification(ParserConstant::Typification typification);
+	ParserConstant::Typification getTypification();
+
 	uint16_t getLexemAsInteger(char *lexem);
+
+	uint16_t getIntValue();
 
 	enum tokenType {
 		TT_DUMMY				=  0,
@@ -72,7 +81,9 @@ private:
 	uint32_t row;
 	uint32_t column;
 	uint16_t tokenType;
+	ParserConstant::Typification typification;
 	char *lexem;
+	long integerValue;
 
 	void setTokenTypeSign(char lexem);
 	const char *getTokenTypeIntern(uint16_t &tokenType);

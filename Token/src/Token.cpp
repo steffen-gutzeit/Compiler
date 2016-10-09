@@ -13,22 +13,36 @@ Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, char *lexem) {
 	this->tokenID = 0;
 	this->row = row;
 	this->column = column;
-	//this->tokenType = tokenType;
 	this->lexem = lexem;
+	this->integerValue = 0;
 
-	//Abfrage welches Sign
 	if(tokenType == TT_SIGN) {
-		//char lexemTemp[] = lexem;
 		setTokenTypeSign(lexem[0]);
 	} else {
 		this->tokenType = tokenType;
 	}
+}
 
+Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, long integerValue) {
+	this->tokenID = 0;
+	this->row = row;
+	this->column = column;
+	this->lexem = {"TEST"};
+	this->integerValue = integerValue;
 
+	if(tokenType == TT_SIGN) {
+		//setTokenTypeSign(lexem[0]);
+	} else {
+		this->tokenType = tokenType;
+	}
 }
 
 Token::~Token() {
 	// TODO Auto-generated destructor stub
+}
+
+long Token::getIntegerValue() {
+	return this->integerValue;
 }
 
 Token Token::getToken() {
@@ -50,6 +64,23 @@ char *Token::getLexem(){
 uint16_t getLexemAsInteger(char *lexem) {
 	//TODO Ausprogrammieren
 	return 4711;
+}
+
+uint16_t Token::getIntValue() {
+//	std::istringstream i(Token::myTokenValue);
+//	int myResult;
+//	i >> myResult;
+//	return myResult;
+//	cout << this->lexem << endl;
+	return 0;
+}
+
+void Token::setTypification(ParserConstant::Typification typification) {
+	this->typification = typification;
+}
+
+ParserConstant::Typification Token::getTypification()  {
+	return this->typification;
 }
 
 void Token::setTokenTypeSign(char lexem) {
