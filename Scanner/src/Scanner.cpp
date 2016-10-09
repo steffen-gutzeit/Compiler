@@ -44,6 +44,10 @@ Scanner::~Scanner() {
 	//delete token;
 }
 
+Symtable *Scanner::getSymTable(){
+	return symtable;
+}
+
 void Scanner::buildIntegerOrIdentifier(uint16_t state, uint16_t tokenType) {
 	this->lexemLength++;
 

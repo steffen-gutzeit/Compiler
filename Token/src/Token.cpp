@@ -163,7 +163,7 @@ const char *Token::getTokenTypeIntern(uint16_t &tokenType) {
     case TT_ERROR: return "Error\t\t"; break;
     case TT_READ: return "Read\t\t"; break;
     case TT_WRITE: return "Write\t\t"; break;
-    case TT_INT: return "Integer\t"; break;
+    case TT_INT: return "int\t"; break;
     case TT_ELSE: return "Else\t\t"; break;
 
     }
