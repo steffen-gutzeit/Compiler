@@ -15,6 +15,7 @@ Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, char *lexem) {
 	this->column = column;
 	this->lexem = lexem;
 	this->integerValue = 0;
+	this->typification = ParserConstant::noType;
 
 	if(tokenType == TT_SIGN) {
 		setTokenTypeSign(lexem[0]);
@@ -27,15 +28,13 @@ Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, long integerValu
 	this->tokenID = 0;
 	this->row = row;
 	this->column = column;
-	this->lexem = {"TEST"};
+	this->lexem = {"NotRelevant"};
 	this->integerValue = integerValue;
+	this->typification = ParserConstant::noType;
 
-	if(tokenType == TT_SIGN) {
-		//setTokenTypeSign(lexem[0]);
-	} else {
-		this->tokenType = tokenType;
-	}
+	this->tokenType = tokenType;
 }
+
 
 Token::~Token() {
 	// TODO Auto-generated destructor stub
