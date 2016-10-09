@@ -147,7 +147,6 @@ Token *Scanner::getNextToken() {
 			case Automat::INIT:
 				this->lexemLength = 0;
 				this->getNextChar();
-				//cout << this->currentChar << endl;
 				break;
 
 			case Automat::TOKEN:
@@ -548,7 +547,6 @@ Token *Scanner::generateToken(uint16_t typ) {
 					char *key = symtable->insert(this->internBuffer, typ);
 					//printf("Scanner: %p \n", key);
 					//Token erstellen mit Verweis auf Symboltabelle
-					//cout << "Token: " << key << endl;
 					this->token = new Token(this->rowIndex, this->colIndex, typ, key);
 				}else{
 					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);

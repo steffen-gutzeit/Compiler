@@ -35,3 +35,9 @@
 *.dat
 *.txt
 *.sh
+
+.settings/
+Compiler
+Debug/
+code.code
+.gitignore
