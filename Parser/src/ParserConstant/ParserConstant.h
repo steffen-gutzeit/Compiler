@@ -72,7 +72,9 @@ public:
 		NODE_OP			=	14,
 
 		NODE_IDENTIFIER	=	15,
-		NODE_KEYWORD	=	16
+		NODE_KEYWORD	=	16,
+
+		NODE_TYPE		= 	17
 	};
 
 	enum Typification {

@@ -23,6 +23,9 @@ public:
 	Token *getNextToken();
 	Token *getCurrentToken();
 
+	//TODO entfernen!
+	Symtable *getSymTable();
+
 
 private:
 	Automat *automat;
