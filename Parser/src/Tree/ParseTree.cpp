@@ -472,12 +472,8 @@ void ParseTree::makeCode(Node *myNode)
 						break;
 					case Token::TT_READ:
 						// read ( identifier INDEX )
-						if ((getType(myNode->getChild(2)) == ParserConstant::intType) || (getType(myNode->getChild(2)) == ParserConstant::intArrayType)) {
-							std::cout << "RDI" << std::endl;
-						} else {
-							std::cout << "RDF" << std::endl;
-						}
-						std::cout << "LA $" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem();
+						std::cout << "REA" << std::endl;
+						std::cout << "LA $" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem() << endl;
 						makeCode(myNode->getChild(3));
 						std::cout << "STR" << std::endl;
 						break;
@@ -490,23 +486,23 @@ void ParseTree::makeCode(Node *myNode)
 						makeCode(myNode->getChild(2));
 						m1 = new Marker();
 						m2 = new Marker();
-						std::cout << "JIN *" << m1->getName() << std::endl;
+						std::cout << "JIN #" << m1->getName() << std::endl;
 						makeCode(myNode->getChild(4));
-						std::cout << "JMP *" << m2->getName() << std::endl;
-						std::cout << "*" << m1->getName() << " NOP" << std::endl;
+						std::cout << "JMP #" << m2->getName() << std::endl;
+						std::cout << "#" << m1->getName() << " NOP" << std::endl;
 						makeCode(myNode->getChild(6));
-						std::cout << "*" << m2->getName() << " NOP" << std::endl;
+						std::cout << "#" << m2->getName() << " NOP" << std::endl;
 						break;
 					case Token::TT_WHILE:
 						// while ( EXP ) STATEMENT
 						m1 = new Marker();
 						m2 = new Marker();
-						std::cout << "*" << m1->getName() << " NOP" << std::endl;
+						std::cout << "#" << m1->getName() << " NOP" << std::endl;
 						makeCode(myNode->getChild(2));
-						std::cout << "JIN *" << m2->getName() << std::endl;
+						std::cout << "JIN #" << m2->getName() << std::endl;
 						makeCode(myNode->getChild(4));
-						std::cout << "JMP *" << m1->getName() << std::endl;
-						std::cout << "*" << m2->getName() << " NOP" << std::endl;
+						std::cout << "JMP #" << m1->getName() << std::endl;
+						std::cout << "#" << m2->getName() << " NOP" << std::endl;
 						break;
 					default:
 						break;
@@ -581,7 +577,7 @@ void ParseTree::makeCode(Node *myNode)
 						std::cout << "DIV" << std::endl;
 						break;
 					case ParserConstant::opLess:
-						std::cout << "LS" << std::endl;
+						std::cout << "LES" << std::endl;
 						break;
 					case ParserConstant::opEqual:
 						std::cout << "EQ" << std::endl;
@@ -593,7 +589,7 @@ void ParseTree::makeCode(Node *myNode)
 						std::cout << "UNEQUAL?" << std::endl;
 						break;
 					default:
-						std::cout << "UNKNOWN TODO!!" << std::endl;
+						std::cout << "EQU" << std::endl;
 						break;
 				}
 			} else {
