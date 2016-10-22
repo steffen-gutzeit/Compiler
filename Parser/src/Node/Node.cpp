@@ -42,8 +42,8 @@ void Node::print()
 		std::cout << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 	} else {
 		std::cout << "<" << ParserConstant::nodeTypeAsString(nodeInfo->getNodeType());
-		if (nodeInfo->getTypification() != ParserConstant::noType) {
-			std::cout << " typification=\"" << ParserConstant::typificationAsString(nodeInfo->getTypification()) << "\"";
+		if (nodeInfo->getToken()->getTypification() != ParserConstant::noType) {
+			std::cout << " typification=\"" << ParserConstant::typificationAsString(nodeInfo->getToken()->getTypification()) << "\"";
 		}
 		std::cout << ">";
 	}

@@ -39,17 +39,19 @@ Token *ParseTree::getSymTableEntryForIdentifier(uint16_t type, char *lexem) {
 ParserConstant::Typification ParseTree::getType(Node *myNode) {
 	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
 		// lookup in SymTable
-		Token *t = getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken()->getTokenTypeInt(),
-													myNode->getNodeInfo()->getToken()->getLexem());
-		return t->getTypification();
+//		Token *t = getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken()->getTokenTypeInt(),
+//													myNode->getNodeInfo()->getToken()->getLexem());
+//		return t->getTypification();
+		return myNode->getNodeInfo()->getToken()->getTypification();
 	} else {
 		// lookup in NodeInfo
-		return myNode->getNodeInfo()->getTypification();
+		return myNode->getNodeInfo()->getToken()->getTypification();
 	}
 }
 
 void ParseTree::setType(Node *myNode, ParserConstant::Typification myType)
 {
+//	cout << myNode->getNodeInfo()->get
 	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
 		// set in SymTable
 		//getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken()->getLexem())->setTypification(myType);
@@ -57,11 +59,15 @@ void ParseTree::setType(Node *myNode, ParserConstant::Typification myType)
 													myNode->getNodeInfo()->getToken()->getLexem());
 		t->setTypification(myType);
 
-		myNode->getNodeInfo()->setTypification(myType);
+		myNode->getNodeInfo()->getToken()->setTypification(myType);
+//		myNode->getNodeInfo()->setTypification(myType);
 
 	} else {
 		// set in NodeInfo
-		myNode->getNodeInfo()->setTypification(myType);
+//		cout << "[MyType] " << myType << endl;
+		myNode->getNodeInfo()->setToken(new Token(0, 0, Token::TT_DUMMY, ""));
+		myNode->getNodeInfo()->getToken()->setTypification(myType);
+//		cout << "[GetType] " << getType(myNode) << endl;
 	}
 }
 
@@ -101,28 +107,27 @@ void ParseTree::typeCheck(Node *myNode)
 			break;
 
 		case ParserConstant::NODE_DECL:
-			// TYPE ARRAY identifier
-			typeCheck(myNode->getChild(0));
+			// int ARRAY identifier
 			typeCheck(myNode->getChild(1));
-			if (getType(myNode->getChild(2)) != ParserConstant::noType|| getType(myNode->getChild(1)) == ParserConstant::errorType) {
-				std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem() << "' is already defined";
+			if (getType(myNode->getChild(2)) != ParserConstant::intType || getType(myNode->getChild(1)) == ParserConstant::errorType) {
+				std::cerr << "--Typification Error: identifier '" << myNode->getChild(2)->getNodeInfo()->getToken()->getLexem() << "' is already defined";
 				std::cerr << " at line " << myNode->getChild(2)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(2)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 				setType(myNode, ParserConstant::errorType);
 			} else {
 				setType(myNode, ParserConstant::noType);
-				if (getType(myNode->getChild(0)) == ParserConstant::intType) {
+				if (getType(myNode->getChild(0)) == ParserConstant::noType) {
 					if (getType(myNode->getChild(1)) == ParserConstant::arrayType) {
 						setType(myNode->getChild(2), ParserConstant::intArrayType);
 					} else {
 						setType(myNode->getChild(2), ParserConstant::intType);
 					}
 				}
-				//TODO
 			}
 			break;
 
 		case ParserConstant::NODE_ARRAY:
 			if (myNode->getChildrenCount() > 0) {
+
 				// [ integer ]
 				if (myNode->getChild(1)->getNodeInfo()->getToken()->getIntegerValue() > 0) {
 					setType(myNode, ParserConstant::arrayType);
@@ -217,8 +222,9 @@ void ParseTree::typeCheck(Node *myNode)
 						typeCheck(myNode->getChild(2));
 						typeCheck(myNode->getChild(4));
 						typeCheck(myNode->getChild(6));
-						if (getType(myNode->getChild(2)) == ParserConstant::intType) {
-							std::cerr << "Typification Error: integer required as expression for 'if' statement";
+						cout << getType(myNode->getChild(2)) << endl;
+						if (getType(myNode->getChild(2)) != ParserConstant::intType) {
+							std::cerr << "--Typification Error: integer required as expression for 'if' statement";
 							std::cerr << " at line " << myNode->getChild(0)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 							setType(myNode, ParserConstant::errorType);
 						} else {
@@ -339,7 +345,7 @@ void ParseTree::typeCheck(Node *myNode)
 				// OP EXP
 				typeCheck(myNode->getChild(0));
 				typeCheck(myNode->getChild(1));
-				setType(myNode, myNode->getChild(1)->getNodeInfo()->getTypification());
+				setType(myNode, myNode->getChild(1)->getNodeInfo()->getToken()->getTypification());
 			} else {
 				// €
 				setType(myNode, ParserConstant::noType);

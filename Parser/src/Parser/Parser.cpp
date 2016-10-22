@@ -41,10 +41,10 @@ uint16_t Parser::processFile()
 	int i = 0;
 	while ((t = scanner->getNextToken())) {
 		myCommand[tokenCount++] = t;
-		cout << i++ << " " << "a: " << t->getLexem() <<
-				"\tb: " << t->getTokenType() <<
-				"\tc: " << t->getTokenTypeInt() <<
-				endl;
+//		cout << i++ << " " << "a: " << t->getLexem() <<
+//				"\tb: " << t->getTokenType() <<
+//				"\tc: " << t->getTokenTypeInt() <<
+//				endl;
 	}
 
 	std::cout << "syntax checking ..." << std::endl;
@@ -61,10 +61,10 @@ uint16_t Parser::processFile()
 	parseTree->typeCheck();
 
 	std::cout << " " << std::endl;
-	parseTree->printXML();
+//	parseTree->printXML();
 
 	std::cout << " " << std::endl;
-	parseTree->makeCode();
+//	parseTree->makeCode();
 	
 	return 0;
 }
@@ -125,7 +125,11 @@ uint16_t Parser::DECL(Node *node, Token *myCommand[], uint16_t startCount, uint1
 
 	// identifier
 	if ((myCommand[where]->getTokenTypeInt() != Token::TT_IDENTIFIER)) syntaxError(Token::TT_IDENTIFIER, myCommand[where]);
+	myCommand[where]->setTypification(ParserConstant::intType);
+//	cout << "[DECL] set Identifier: " << " col: " << myCommand[where]->getCol()  << " row: " << myCommand[where]->getRow()  << " lexem: " << myCommand[where]->getLexem() << " typification: " << myCommand[where]->getTypification() << endl;
 	myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
+
+
 	where++;
 		
 	return where;
@@ -143,6 +147,7 @@ uint16_t Parser::ARRAY(Node *node, Token *myCommand[], uint16_t startCount, uint
 			
 			// integer
 			if ((myCommand[where]->getTokenTypeInt() != Token::TT_INTEGER)) syntaxError(Token::TT_INT, myCommand[where]);
+			myCommand[where]->setTypification(ParserConstant::intType);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 
 			where++;
@@ -205,6 +210,8 @@ uint16_t Parser::STATEMENT(Node * node, Token *myCommand[], uint16_t startCount,
 			
 		// identifier
 		case Token::TT_IDENTIFIER:
+			myCommand[where]->setTypification(ParserConstant::intType);
+//			cout << "[STATEMENT] set Identifier: " << " col: " << myCommand[where]->getCol()  << " row: " << myCommand[where]->getRow()  << " lexem: " << myCommand[where]->getLexem() << "t ypification: " << myCommand[where]->getTypification() << endl;
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 			where++;
 
@@ -253,6 +260,8 @@ uint16_t Parser::STATEMENT(Node * node, Token *myCommand[], uint16_t startCount,
 			
 			// identifier
 			if ((myCommand[where]->getTokenTypeInt() != Token::TT_IDENTIFIER)) syntaxError(Token::TT_IDENTIFIER, myCommand[where]);
+			myCommand[where]->setTypification(ParserConstant::intType);
+//			cout << "[READ] set Identifier: " << " col: " << myCommand[where]->getCol()  << " row: " << myCommand[where]->getRow()  << " lexem: " << myCommand[where]->getLexem() << " typification: " << myCommand[where]->getTypification() << endl;
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 			where++;
 
@@ -384,6 +393,8 @@ uint16_t Parser::EXP2(Node * node, Token *myCommand[], uint16_t startCount, uint
 		// identifier
 		case Token::TT_IDENTIFIER:
 			// identifier
+			myCommand[where]->setTypification(ParserConstant::intType);
+//			cout << "[EXP2 TT_IDENTIFIER] set Identifier: " << " col: " << myCommand[where]->getCol()  << " row: " << myCommand[where]->getRow()  << " lexem: " << myCommand[where]->getLexem() << " typification: " << myCommand[where]->getTypification() << endl;
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 			where++;
 			
@@ -396,6 +407,8 @@ uint16_t Parser::EXP2(Node * node, Token *myCommand[], uint16_t startCount, uint
 		// TODO PRÜFEN!!!! WENN NICHT FUNKTIONIERT, DANN TT_INT
 		case Token::TT_INTEGER:
 			// integer
+			myCommand[where]->setTypification(ParserConstant::intType);
+//			cout << "[EXP2 TT_INTEGER] set Identifier: " << " col: " << myCommand[where]->getCol()  << " row: " << myCommand[where]->getRow()  << " lexem: " << myCommand[where]->getLexem() << " typification: " << myCommand[where]->getTypification() << endl;
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 			where++;
 			
