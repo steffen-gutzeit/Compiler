@@ -61,10 +61,10 @@ uint16_t Parser::processFile()
 	parseTree->typeCheck();
 
 	std::cout << " " << std::endl;
-//	parseTree->printXML();
+	parseTree->printXML();
 
 	std::cout << " " << std::endl;
-//	parseTree->makeCode();
+	parseTree->makeCode();
 	
 	return 0;
 }

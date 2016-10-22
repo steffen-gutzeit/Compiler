@@ -222,7 +222,6 @@ void ParseTree::typeCheck(Node *myNode)
 						typeCheck(myNode->getChild(2));
 						typeCheck(myNode->getChild(4));
 						typeCheck(myNode->getChild(6));
-						cout << getType(myNode->getChild(2)) << endl;
 						if (getType(myNode->getChild(2)) != ParserConstant::intType) {
 							std::cerr << "--Typification Error: integer required as expression for 'if' statement";
 							std::cerr << " at line " << myNode->getChild(0)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
@@ -235,7 +234,7 @@ void ParseTree::typeCheck(Node *myNode)
 						// while ( EXP ) STATEMENT
 						typeCheck(myNode->getChild(2));
 						typeCheck(myNode->getChild(4));
-						if (getType(myNode->getChild(2)) == ParserConstant::intType) {
+						if (getType(myNode->getChild(2)) == ParserConstant::noType) {
 							std::cerr << "Typification Error: integer required as expression for 'while' statement";
 							std::cerr << " at line " << myNode->getChild(0)->getNodeInfo()->getToken()->getRow() << ", column " << myNode->getChild(0)->getNodeInfo()->getToken()->getCol() << "." << std::endl;
 							setType(myNode, ParserConstant::errorType);
