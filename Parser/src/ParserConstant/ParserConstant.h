@@ -55,7 +55,7 @@ public:
 	enum NodeType {
 		NODE_ROOT		=	0,
 
-		NODE_UNKNOWN	=	1,
+
 		NODE_ERROR		=	2,
 		NODE_EMPTY		=	3,
 
@@ -72,9 +72,7 @@ public:
 		NODE_OP			=	14,
 
 		NODE_IDENTIFIER	=	15,
-		NODE_KEYWORD	=	16,
-
-		NODE_TYPE		= 	17
+		NODE_KEYWORD	=	16
 	};
 
 	enum Typification {
@@ -93,7 +91,9 @@ public:
 		opGreater		=	10,
 		opEqual			=	11,
 		opUnEqual		=	12,
-		opAnd			=	13
+		opAnd			=	13,
+
+		unknownType		= 14
 	};
 	
 	ParserConstant();

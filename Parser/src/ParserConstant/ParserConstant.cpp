@@ -33,7 +33,6 @@ std::string ParserConstant::nodeTypeAsString(NodeType myNodeType)
 		case NODE_INDEX: myResult = "INDEX"; break;
 		case NODE_OP_EXP: myResult = "OP_EXP"; break;
 		case NODE_OP: myResult = "OP"; break;
-		case NODE_UNKNOWN: myResult = "UNKNOWN"; break;
 		case NODE_KEYWORD: myResult = "Keyword"; break;
 		case NODE_IDENTIFIER: myResult = "Identifier"; break;
 		default: myResult = "unknown"; break;
