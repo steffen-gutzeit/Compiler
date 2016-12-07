@@ -6,6 +6,7 @@
  */
 
 #include <stdint.h>
+#include <iostream>
 #include "../../Token/src/Token.h"
 #include "../../HashMap/src/HashMap.h"
 #include "../../LinkedList/src/LinkedList.h"
@@ -17,13 +18,15 @@ class Symtable {
 public:
 	Symtable();
 	virtual ~Symtable();
+
 	void initSymbols();
-	char *insert(char* lexem, int typ);
-	bool lookUp(char* lexem);
+	char *insertToken(Token* token);
+	void printHashMap();
+	Token *lookup(char* lexem);
 
 private:
-	void initHashMap();
 	HashMap *hashTable;
+	Token *token;
 };
 
 #endif /* SYMTABLE_H_ */

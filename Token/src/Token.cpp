@@ -8,12 +8,33 @@
 #include "Token.h"
 #include <stdint.h>
 #include <iostream>
+#include <cstring>
+#include <stdlib.h>
 
 Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, char *lexem) {
 	this->tokenID = 0;
 	this->row = row;
 	this->column = column;
-	this->lexem = lexem;
+
+	//Lexem kopieren!
+	//Lexem Länge bestimmen
+	int length = 0;
+	while(lexem[length] != '\0'){
+		length++;
+	}
+
+	//Speicher für die Kopie allokieren
+	this->lexem = (char *) malloc(length * sizeof(char));
+
+	//cout << "Versuche Kopieren der Länge: " << length << "und Lexem: " << lexem << endl;
+
+	//Lexem kopieren
+	strncpy(this->lexem, lexem, length);
+	//Endterminal setzen
+	this->lexem[length] = '\0';
+
+	//cout << "Kopiert: " << this->lexem << endl;
+
 	this->integerValue = 0;
 	this->typification = ParserConstant::noType;
 
@@ -28,7 +49,9 @@ Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, long integerValu
 	this->tokenID = 0;
 	this->row = row;
 	this->column = column;
-	this->lexem = {"NotRelevant"};
+	//this->lexem = {"NotRelevant"};
+	char textLexem[] = "NotRelevant";
+	this->lexem = textLexem;
 	this->integerValue = integerValue;
 	this->typification = ParserConstant::noType;
 

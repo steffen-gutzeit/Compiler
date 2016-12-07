@@ -244,6 +244,7 @@ void Buffer::addCharsToOutBuffer(char* text){
 	//Um Ende der auszugebenden Datei zu signalisieren eine '\0' an erster Stelle übergeben
 	if(text[0] == '\0'){
 
+
 		//Fuelle restlichen Buffer bis 512 auf
 		for(int i=currentIndexOut; i<512;i++){
 			firstBufferOut[i] = '\0';

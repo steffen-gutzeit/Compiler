@@ -26,6 +26,9 @@ public:
 	//TODO entfernen!
 	Symtable *getSymTable();
 
+	void printSymbtable();
+	bool testSymbtable(char *lexem);
+
 
 private:
 	Automat *automat;

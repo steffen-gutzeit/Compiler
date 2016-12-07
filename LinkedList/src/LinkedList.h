@@ -9,21 +9,27 @@
 #define LINKEDLIST_H_
 
 #include <stdint.h>
+#include <iostream>
+
+#include "../../Token/src/Token.h"
 
 class LinkedList {
 public:
 	typedef struct node {
 		uint16_t index;
-		char lexem[512];
+		//char lexem[512];
+		Token* token;
 	    struct node * next;
 	} list;
 
 	LinkedList();
 	virtual ~LinkedList();
 
-	void printList(list *head);
-	char *push(list *head, int val, char *lexem);
-	bool searchInList(list *currentList, char *lexem);
+	char* pushToken(list * head, Token* token);
+	void printList(list * head, uint16_t hash);
+	Token *lookupLexem(list *head, char *lexem);
+
+
 private:
 	bool sameStrings(char *value, char *compare);
 	uint16_t strlen(char *value);

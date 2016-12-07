@@ -2,7 +2,9 @@
 #define HashMap_H_
 
 #include <stdint.h>
+#include <iostream>
 #include "../../LinkedList/src/LinkedList.h"
+#include "../../Token/src/Token.h"
 
 class HashMap : public LinkedList {
 public:
@@ -10,8 +12,9 @@ public:
 	virtual ~HashMap();
 
 	uint16_t hashLexem(char *lexem);
-	char *addValue(uint8_t type, char *lexem);
-	bool inList(char *lexem);
+	char* addToken(Token* token);
+	void printHashMap();
+	Token *lookup(char* lexem);
 
 private:
 	struct hashTable {

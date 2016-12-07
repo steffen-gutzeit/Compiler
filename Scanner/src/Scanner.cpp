@@ -42,7 +42,7 @@ Scanner::~Scanner() {
 	delete automat;
 	delete symtable;
 	//delete token;
-}
+ }
 
 Symtable *Scanner::getSymTable(){
 	return symtable;
@@ -138,8 +138,10 @@ Token *Scanner::getNextToken() {
 			eot = true;
 
 			token = NULL;
+			//Doch nicht nötig, der letzte Buffer wird somit 2x geschrieben (6.12.16)
 			//Nötig, damit zum Schluss der nicht voll Buffer geschrieben wird
-			buffer->addCharsToOutBuffer("\0");
+			//buffer->addCharsToOutBuffer("\0");
+			//cout << "Ende" << endl;
 			//this->generateToken(this->tokenType);
 		} else {
 			//cout << "\t" << (this->currentState) << endl;
@@ -543,11 +545,16 @@ Token *Scanner::generateToken(uint16_t typ) {
 						 || typ == token->TT_WRITE  || typ == token->TT_READ || typ == token->TT_INT
 						 || typ == token->TT_ELSE){
 
-					//Key Value zurueck bekommen
-					char *key = symtable->insert(this->internBuffer, typ);
+					//Key Value zurueck bekommen, Nicht den internen Buffer übergeben, dieser wird gelöscht!!!!
+
+					//Lexem wird in der Tokenklasse kopiert (7.12.16)
+					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+					symtable->insertToken(this->token);
+
+
 					//printf("Scanner: %p \n", key);
 					//Token erstellen mit Verweis auf Symboltabelle
-					this->token = new Token(this->rowIndex, this->colIndex, typ, key);
+					//this->token = new Token(this->rowIndex, this->colIndex, typ, key);
 				}else{
 					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 				}
@@ -584,6 +591,7 @@ Token *Scanner::generateToken(uint16_t typ) {
 
 }
 
+//Wird die Funktion gebraucht ??? (7.12.16)
 void Scanner::generateTokenPrint(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
 
@@ -594,11 +602,22 @@ void Scanner::generateTokenPrint(uint16_t typ) {
 				if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
 
 					//Key Value zurueck bekommen
-					char *key = symtable->insert(this->internBuffer, typ);
+
+					cout << "Erstelle Token" << endl;
+
+					//ABAENDERN!!!!!
+					this->token = new Token(this->rowIndex, this->colIndex, typ, 'a');
+
+					cout << "Schreibe in Symboltabelle" << endl;
+
+					//symtable->insertToken(this->token);
+
+
 					//printf("Scanner: %p \n", key);
 					//Token erstellen mit Verweis auf Symboltabelle
 					//cout << "Token: " << key << endl;
-					this->token = new Token(this->rowIndex, this->colIndex, typ, key);
+
+					//this->token = new Token(this->rowIndex, this->colIndex, typ, key);
 				}else{
 					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
 				}
@@ -871,4 +890,29 @@ void Scanner::initBuffer() {
 		this->internBuffer[i] = '\0';
 		i++;
 	}
+}
+
+//Gebe Symboltabelle aus
+void Scanner::printSymbtable(){
+	symtable->printHashMap();
+}
+
+//Test die Suchfunktion in der Symboltabelle
+bool Scanner::testSymbtable(char *lexem){
+
+	bool found = false;
+	Token *token;
+
+	//Suche in der Symboltabelle
+	token = symtable->lookup(lexem);
+
+	if(token != NULL){
+			found = true;
+
+			cout << "Ausgabe Token: " << token->getLexem() << " \tTyp: " << token->getTokenType() << " \tRow: " << token->getRow() << " \tColumn: " << token->getCol() << endl;
+	}
+
+
+	return found;
+
 }

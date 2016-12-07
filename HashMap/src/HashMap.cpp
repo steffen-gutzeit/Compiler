@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <iostream>
+
 HashMap::HashMap() {
 	this->size = 512;
 	this->hashValue = 1;
@@ -13,37 +15,67 @@ HashMap::~HashMap() {
 
 }
 
+/*
+ * Ermittelt eines Hashwert aus dem übergebenen Lexem
+ */
 uint16_t HashMap::hashLexem(char *lexem) {
 	uint16_t i = 0;
 	this->hashValue = 1;
 
 	while ((lexem[i] != '\0') & (lexem[i] != '\n')) {
+		//Multiplizieren aktuellen Hash mit neuem ASCII Wert
 		this->hashValue *= lexem[i++];
+		//Modulo 512 Rechnung
 		this->hashValue %= this->size;
+		//Erhöhe Hash Wert um 1
 		this->hashValue ++;
 	}
 
 	return (this->hashValue %= this->size);
 }
-char *HashMap::addValue(uint8_t type, char *lexem) {
-	char *key;
 
-	//LinkedList::list *currentList = (LinkedList::list*) malloc(sizeof(LinkedList::list));
-	this->hashValue = hashLexem(lexem);
+/*
+ * Fügt ein Token in die Symboltabelle ein
+ */
+char *HashMap::addToken(Token* token){
 
-	//currentList = &(hashTable[this->hashValue].list);
-	key = this->push(&(hashTable[this->hashValue].list), type, lexem);
-	//printf("Hashmap: %p \n", key);
+	char* key;
+
+	//Hash Wert ermitteln
+	this->hashValue = hashLexem(token->getLexem());
+
+	//In die Linked List eintragen
+	key = this->pushToken(&(hashTable[this->hashValue].list), token);
+
 	return key;
 }
 
-bool HashMap::inList(char *lexem) {
-	bool inList = false;
-	LinkedList::list *currentList = (LinkedList::list*) malloc(sizeof(LinkedList::list));
-	this->hashValue = hashLexem(lexem);
+/*
+ * Prüft ob ein Lexem in der Symboltabelle vorhanden ist
+ */
+Token *HashMap::lookup(char* lexem){
 
-	currentList = &(hashTable[this->hashValue].list);
-	inList= this->searchInList(currentList, lexem);
+	uint16_t hashValue;
+	Token *token;
 
-	return inList;
+	//Hashe Lexem
+	hashValue = hashLexem(lexem);
+
+	//Durchlaufe Index und suche nach Lexem
+	token = this->lookupLexem(&(hashTable[hashValue].list), lexem);
+
+	//Falls gefunden gebe das Token zurück
+	return token;
+}
+
+/*
+ * Gibt die komplette Symboltabelle aus
+ */
+void HashMap::printHashMap(){
+
+	//Durchlaufe alle Möglichen Headindexe (Hashwerte)
+	for(uint16_t i=0; i < 512; i++){
+		this->printList(&(hashTable[i].list), i);
+	}
+
 }

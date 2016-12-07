@@ -13,6 +13,7 @@ e * Symtable.cpp
 Symtable::Symtable() {
 
 	this->hashTable = new HashMap();
+	this->token = NULL;
 	initSymbols();
 
 }
@@ -21,6 +22,9 @@ Symtable::~Symtable() {
 	delete this->hashTable;
 }
 
+/*
+ * Initialisiert die Symboltabelle und fügt die ersten Token hinzu
+ */
 void Symtable::initSymbols(){
 	char textWhile1[]	= "while";
 	char textIf1[] 		= "if";
@@ -31,41 +35,66 @@ void Symtable::initSymbols(){
 
 	char textWhile2[] 	= "WHILE";
 	char textIf2[] 		= "IF";
+	char textElse2[]	= "ELSE";
+
+	//Nicht sicher ob das notwendig ist (7.12.16)
 	char textWrite2[]	= "WRITE";
 	char textRead2[]	= "READ";
 	char textInt2[]		= "INT";
-	char textElse2[]	= "ELSE";
 
-	//Fülle Symboltabelle mit Schluesselwörter
-	insert(textWhile1, 4); 	//While: TT_WHILE = 4
-	insert(textWhile2, 4); 	//While: TT_WHILE = 4
 
-	insert(textIf1, 3);		//If:	 TT_IF = 3
-	insert(textIf2, 3);		//If:	 TT_IF = 3
+	//Estelle Token und füge diese in die Symboltabelle ein
+	this->insertToken(token = new Token(0, 0, token->TT_WHILE, textWhile1));
+	this->insertToken(token = new Token(0, 0, token->TT_WHILE, textWhile2));
 
-	insert(textWrite1, 3);	//Write: TT_WRITE= 28
-	insert(textWrite2, 3);	//Write: TT_WRITE= 28
+	this->insertToken(token = new Token(0, 0, token->TT_IF, textIf1));
+	this->insertToken(token = new Token(0, 0, token->TT_IF, textIf2));
 
-	insert(textRead1, 3);	//Read:	 TT_READ = 27
-	insert(textRead2, 3);	//Read:	 TT_READ = 27
+	this->insertToken(token = new Token(0, 0, token->TT_ELSE, textElse1));
+	this->insertToken(token = new Token(0, 0, token->TT_ELSE, textElse2));
 
-	insert(textInt1, 3);	//Int:	 TT_INT = 30
-	insert(textInt2, 3);	//Int:	 TT_INT = 30
+	this->insertToken(token = new Token(0, 0, token->TT_INT, textInt1));
+	this->insertToken(token = new Token(0, 0, token->TT_READ, textRead1));
+	this->insertToken(token = new Token(0, 0, token->TT_WRITE, textWrite1));
 
-	insert(textElse1, 3);	//Else:	 TT_ELSE = 29
-	insert(textElse2, 3);	//Else:	 TT_ELSE = 29
+	//Nicht sicher ob das notwendig ist (7.12.16)
+	this->insertToken(token = new Token(0, 0, token->TT_INT, textInt2));
+	this->insertToken(token = new Token(0, 0, token->TT_READ, textRead2));
+	this->insertToken(token = new Token(0, 0, token->TT_WRITE, textWrite2));
+
 }
 
-char *Symtable::insert(char* lexem, int typ) {
+/*
+ * Suche nach übergebenem Lexem und gebe das Token zurück
+ */
+Token *Symtable::lookup(char* lexem){
+
+	Token *token;
+
+	//Hashe Lexem
+	token = this->hashTable->lookup(lexem);
+
+	//Falls gefunden gebe das Token zurück
+	return token;
+}
+
+/*
+ * Füge Token in die Symboltabelle ein
+ */
+char *Symtable::insertToken(Token* token) {
 	char *key;
-	//Uebergebe Lexem an HashTable und bekomme KeyValue zurueck. Dieses wird im Token gespeichert.
-	key = this->hashTable->addValue(typ, lexem);
-	//printf("Symbol: %p \n", key);
+
+	//Übergebe Token an die Hash Map
+	key = this->hashTable->addToken(token);
+
 	return key;
+
 }
 
-
-bool Symtable::lookUp(char* lexem) {
-	return this->hashTable->inList(lexem);
+/*
+ * Gebe alle Einträge der Symboltabelle aus
+ */
+void Symtable::printHashMap(){
+	this->hashTable->printHashMap();
 }
 
