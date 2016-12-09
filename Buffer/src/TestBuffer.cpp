@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 	//Initialisierung
 	Buffer *buffer;
 
-	char pathIn[] = "test.dat";
+	char pathIn[] = "parser1.txt";
 	char pathOut[] = "out.txt";
 
 	char currentSign = '0';

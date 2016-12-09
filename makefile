@@ -24,7 +24,7 @@ SHAREDLIB = sharedlib
 
 
 
-all:	scanner automat buffer symtable 
+all:	automat buffer symtable scanner
 	@echo "Compiler fertig gebaut."
 
 scanner: 
