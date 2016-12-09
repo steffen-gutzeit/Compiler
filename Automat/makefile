@@ -1,51 +1,50 @@
+# Definition der Variablen
+
+SRCDIR = src
+OBJDIR = debug
+
+BINDIR = debug
+
+LIBDIR = lib
+
+SHAREDLIB = ../sharedlib
+
+# loeschen aller files im verzeichnis $(OBJDIR) und$(LIBDIR) und neu bauen
+
+cleanAutomat:
+	@echo "Clean Automat"
+	rm -rf $(OBJDIR)/*
+	rm -rf $(LIBDIR)/*
+	$(MAKE) makeTestAutomat
+
 #
 #		Targets zum Bauen des Tests
 #
 
-# Linken der Object-files, abhaengig von AutomatTarget und TestAutomatTarget
-# flag:
-# -g --> debug Informationen erzeugen
-# -o --> name des output-files
+# Linken der Object-files
 
-makeTestAutomat: AutomatTarget TestAutomatTarget  
-	g++ -g debug/Automat.o debug/TestAutomat.o -o debug/AutomatTest
+makeTestAutomat: AutomatLib TestAutomatTarget
+	@echo "Linken der Automat Files"
+	g++ -L$(SHAREDLIB) -Wall -o $(BINDIR)/AutomatTest $(OBJDIR)/TestAutomat.o -lAutomat
+
+
+#TestBuffer.o ist abhaengig von TestBuffer.cpp und Buffer.h
+TestAutomatTarget :  $(SRCDIR)/TestAutomat.cpp $(SRCDIR)/Automat.h
+	@echo "Kompiliere TestAutomat"
+	g++ -g  -c -Wall  -o $(OBJDIR)/TestAutomat.o  $(SRCDIR)/TestAutomat.cpp
 	
 
-# compilieren des Files Automat.cpp zu Automat.o, 
-# das Objekt-File ist abhängig von src/Automat.cpp und src/Automat.h
-# flag:
-# -c --> compilieren
-# -Wall --> alle meldungen erzeugen
-
-AutomatTarget :  src/Automat.cpp src/Automat.h 
-	g++ -g  -c -Wall src/Automat.cpp -o debug/Automat.o  
-
-
-# TestAutomat.o ist abhängig von src/TestAutomat.cpp und src/Automat.h
-TestAutomatTarget :  src/TestAutomat.cpp src/Automat.h
-	g++ -g  -c -Wall src/TestAutomat.cpp  -o debug/TestAutomat.o  
-
-
-
-# loeschen aller files im verzeichnis obj und lib und neu bauen
-
-cleanAutomat:
-	rm -rf obj/*
-	rm -rf lib/*
-	$(MAKE) makeTestAutomat
-	
-	
-#
-# erstellen der shared library
+#	
+# Erstellen der shared library
 #
 
 AutomatLib: AutomatLibTarget
-		g++ -shared lib/Automat.o  -o ../sharedlib/libAutomat.so 
+	@echo "Erstelle Shared Library libAutomat"
+	g++ -shared  -o $(SHAREDLIB)/libAutomat.so $(LIBDIR)/Automat.o 
 
 	
-# compilieren des Files Automat.cpp zu Automat.o mit dem Flag -fPIC (Position Independant Code)
-AutomatLibTarget :  src/Automat.cpp src/Automat.h
-	g++ -g  -c -fPIC  src/Automat.cpp -o lib/Automat.o   
+AutomatLibTarget :  $(SRCDIR)/Automat.cpp $(SRCDIR)/Automat.h
+	@echo "Kompiliere Automat"
+	g++ -g  -c -fPIC  -o $(LIBDIR)/Automat.o  $(SRCDIR)/Automat.cpp 
 
-
-
+	
