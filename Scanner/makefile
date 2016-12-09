@@ -1,4 +1,4 @@
-
+# Definition der Variablen
 
 SRCDIR = src
 OBJDIR = debug
@@ -7,80 +7,57 @@ BINDIR = debug
 
 LIBDIR = lib
 
-
 SHAREDLIB = ../sharedlib
 
-## hier alle Object Files eintragen
-## darauf achten, dass letzte Zeile ohne "\" eingetragen wird
 
-OBJS = $(OBJDIR)/Scanner.o \
-	$(OBJDIR)/TestScanner.o
+# Komponenten der Symboltabelle
 
-#$(OBJDIR)/xx1.o \
-#$(OBJDIR)/xxn.o
+AUTOMATDIR = ../Automat
 
-OBJSFORSCANNERLIB =  \
-	$(LIBDIR)/Scanner.o
-	
+BUFFERDIR = ../Buffer
 
+SYMBOLTABLEDIR = ../Symboltable
 
-# Variante mit wenig Makefile-Kenntnissen
- 
-# linken der Object-files under shared libraries
-#makeTestScanner: $(OBJDIR)/Scanner.o $(OBJDIR)/TestScanner.o
-#	g++ -g $(OBJDIR)/Scanner.o $(OBJDIR)/TestScanner.o -L../sharedlib  -lAutomat  -lBuffer -lSymboltable -o $(BINDIR)/ScannerTest
-#	
-#	
-#	
-## compilieren der source-files
-#$(OBJDIR)/Scanner.o :  $(SRCDIR)/Scanner.cpp 
-#	@echo "g++ $*.cpp"
-#	g++ -g  -c -Wall  -o $(OBJDIR)/Scanner.o  $(SRCDIR)/Scanner.cpp
-#
-#$(OBJDIR)/TestScanner.o :  $(SRCDIR)/TestScanner.cpp 
-#	@echo "g++ $*.cpp"
-#	g++ -g  -c -Wall  -o $(OBJDIR)/TestScanner.o  $(SRCDIR)/TestScanner.cpp
-#
-
-
-
-#Variante  mit guten Kenntnissen
-makeTestScanner: $(OBJS)
-	g++ -g $^ -L../sharedlib  -lAutomat  -lBuffer -lSymboltable -o $(BINDIR)/ScannerTest
-	
-	
-	
-# $^ liste der abhaengigkeiten
-
-
-$(OBJDIR)/%.o :  $(SRCDIR)/%.cpp 
-	@echo "g++ $*.cpp"
-	g++ -g  -c -Wall  -o $@  $<
-
-# 
-# $@ name des object files
-# $< erste abhaengigkeit
-
-
-# loeschen aller files im verzeichnis $(OBJDIR) und $(LIBDIR) und neu bauen
+# loeschen aller files im verzeichnis $(OBJDIR) und$(LIBDIR) und neu bauen
 
 cleanScanner:
+	@echo "Clean Scanner"
 	rm -rf $(OBJDIR)/*
+	rm -rf $(LIBDIR)/*
 	$(MAKE) makeTestScanner
-	
-	
-	
-## erstellen der shared library
 
-# erst wichtig fuer den Parser Teil
 #
-#ScannerLib:$(OBJSFORSCANNERLIB)
-#		g++ -shared  -o $(SHAREDLIB)/libScanner.so $^ 
+#		Targets zum Bauen des Tests
 #
+
+# Linken der Object-files
+# Einfügen aller benötigten Shared Libraries (Reihenfolge ist wichtig!)
+
+makeTestScanner: ScannerLib TestScannerTarget
+	@echo "Linken der Scanner Files"
+	g++ -L$(SHAREDLIB) -Wall -o $(BINDIR)/ScannerTest $(OBJDIR)/TestScanner.o -lScanner -lSymtable -lAutomat -lBuffer 
+
+
+#TestScanner.o ist abhaengig von TestScanner.cpp und Scanner.h
+TestScannerTarget :  $(SRCDIR)/TestScanner.cpp $(SRCDIR)/Scanner.h
+	@echo "Kompiliere TestScanner"
+	g++ -g  -c -Wall  -o $(OBJDIR)/TestScanner.o  $(SRCDIR)/TestScanner.cpp
+	
+
 #	
-#$(LIBDIR)/%.o :  $(SRCDIR)/%.cpp 
-##	@mkdir -p `dirname $(OBJDIR)/$*.o`
-#	@echo "g++ $*.cpp"
-#	g++ -g  -c -fPIC  -o $@  $<
+# Erstellen der shared library
+#
+
+ScannerLib: ScannerLibTarget
+	@echo "Erstelle Shared Library libScanner"
+	g++ -shared  -o $(SHAREDLIB)/libScanner.so $(LIBDIR)/Scanner.o
+
+#
+# Kompilieren der einzelnen Komponenten
+#
+	
+ScannerLibTarget :  $(SRCDIR)/Scanner.cpp $(SRCDIR)/Scanner.h
+	@echo "Kompiliere Scanner"
+	g++ -g  -c -fPIC  -o $(LIBDIR)/Scanner.o  $(SRCDIR)/Scanner.cpp 
 
 	
