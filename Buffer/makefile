@@ -9,6 +9,13 @@ LIBDIR = lib
 
 SHAREDLIB = ../sharedlib
 
+# loeschen aller files im verzeichnis $(OBJDIR) und$(LIBDIR) und neu bauen
+
+cleanBuffer:
+	@echo "Clean Buffer"
+	rm -rf $(OBJDIR)/*
+	rm -rf $(LIBDIR)/*
+	$(MAKE) makeTestBuffer
 
 #
 #		Targets zum Bauen des Tests
@@ -16,40 +23,27 @@ SHAREDLIB = ../sharedlib
 
 # Linken der Object-files
 
-makeTestBuffer: BufferTarget 	TestBufferTarget
-	g++ -g $(OBJDIR)/Buffer.o 	$(OBJDIR)/TestBuffer.o  -o $(BINDIR)/BufferTest
-	
-
-# compilieren der Source-files
-# Buffer.o ist abhaengig von Buffer.cpp und Buffer.h
-BufferTarget :  $(SRCDIR)/Buffer.cpp $(SRCDIR)/Buffer.h 
-	g++ -g  -c -Wall  -o $(OBJDIR)/Buffer.o  $(SRCDIR)/Buffer.cpp
+makeTestBuffer: BufferLib TestBufferTarget
+	@echo "Linken der Buffer Files"
+	g++ -L$(SHAREDLIB) -Wall -o $(BINDIR)/BufferTest $(OBJDIR)/TestBuffer.o -lBuffer
 
 #TestBuffer.o ist abhaengig von TestBuffer.cpp und Buffer.h
 TestBufferTarget :  $(SRCDIR)/TestBuffer.cpp $(SRCDIR)/Buffer.h
-	@echo "g++ $*.cpp"
+	@echo "Kompiliere TestBuffer"
 	g++ -g  -c -Wall  -o $(OBJDIR)/TestBuffer.o  $(SRCDIR)/TestBuffer.cpp
-
-
-
-
-# loeschen aller files im verzeichnis $(OBJDIR) und$(LIBDIR) und neu bauen
-
-cleanBuffer:
-	rm -rf $(OBJDIR)/*
-	rm -rf $(LIBDIR)/*
-	$(MAKE) makeTestBuffer
 	
 
 #	
-# erstellen der shared library
+# Erstellen der Shared library libBuffer
 #
 
 BufferLib: BufferLibTarget
-		g++ -shared  -o $(SHAREDLIB)/libBuffer.so $(LIBDIR)/Buffer.o 
+	@echo "Erstelle Shared Library libBuffer"
+	g++ -shared  -o $(SHAREDLIB)/libBuffer.so $(LIBDIR)/Buffer.o 
 
 	
 BufferLibTarget :  $(SRCDIR)/Buffer.cpp $(SRCDIR)/Buffer.h
+	@echo "Kompiliere Buffer"
 	g++ -g  -c -fPIC  -o $(LIBDIR)/Buffer.o  $(SRCDIR)/Buffer.cpp 
 
 	
