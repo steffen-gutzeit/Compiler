@@ -31,14 +31,14 @@ uint16_t Parser::processFile()
 	Token *t;
 	uint16_t tokenCount = 0;
 	uint16_t tokenParsed;
-	
-	for (uint16_t i = 0; i < MAX_POSSIBLE_TOKENS; i++) {
-		char* test = NULL;
-		myCommand[i] = new Token( 0, 0, Token::TT_ERROR, test);
+
+	for (int i = 0; i < MAX_POSSIBLE_TOKENS; i++) {
+		char test[] = " ";
+		myCommand[i] = new Token( 0, 0, token->TT_ERROR, test);
 	}
 
 	// Token stehen hier zur Verfügung, keine Nacharbeit mehr nötig
-	int i = 0;
+//	int i = 0;
 	while ((t = scanner->getNextToken())) {
 		myCommand[tokenCount++] = t;
 //		cout << i++ << " " << "a: " << t->getLexem() <<
@@ -60,10 +60,10 @@ uint16_t Parser::processFile()
 	
 	parseTree->typeCheck();
 
-	std::cout << " " << std::endl;
+	std::cout << "Print XML ..." << std::endl;
 	parseTree->printXML();
 
-	std::cout << " " << std::endl;
+	std::cout << "Make Code ..." << std::endl;
 	parseTree->makeCode();
 	
 	return 0;

@@ -129,7 +129,6 @@ void Scanner::setLexemData(int16_t lexemLength, uint16_t tokenType) {
 Token *Scanner::getNextToken() {
     //End of File Schaltvariable
     bool eot = false;
-
     //Hauptschleife solange das Ende der Datei nicht erreicht ist
 	while(eot == false){
 		if(this->currentChar == '\0'){
