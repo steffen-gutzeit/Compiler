@@ -109,7 +109,8 @@ Token *ParseTree::getSymTableEntryForIdentifier(Token *token)
 	} else {
 		std::cerr << "Internal Error: Identifier " << token->getLexem() << " not found in Symbol Table." << std::endl;
 	}
-	return myToken->getTypification();
+	//return myToken->getTypification();
+	return myToken;
 //
 //	HashMap *theItem = new Symtable(identifier, TOKEN_IDENTIFIER, 0, 0);
 //
@@ -133,7 +134,7 @@ ParserConstant::Typification ParseTree::getType(Node *myNode)
 {
 	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
 		// lookup in SymTable
-		return getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken());
+		return getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken())->getTypification();
 
 	} else {
 		// lookup in NodeInfo
@@ -678,11 +679,11 @@ void ParseTree::makeCode(Node *myNode) {
 //		makeCode(myNode->getChild(1));
 		if (getType(myNode->getChild(1)) == ParserConstant::noType) {
 			makeCode(myNode->getChild(0));
-		} else if (myNode->getChild(1) == ParserConstant::opGreater) {
+		} else if (getType(myNode->getChild(1)) == ParserConstant::opGreater) {
 			makeCode(myNode->getChild(1));
 			makeCode(myNode->getChild(0));
 			std::cout << "LES ";
-		} else if (myNode->getChild(1) == ParserConstant::opUnEqual) {
+		} else if (getType(myNode->getChild(1)) == ParserConstant::opUnEqual) {
 			makeCode(myNode->getChild(0));
 			makeCode(myNode->getChild(1));
 			std::cout << "NOT ";
