@@ -103,6 +103,13 @@ Scanner *ParseTree::getScanner() {
 
 Token *ParseTree::getSymTableEntryForIdentifier(Token *token)
 {
+	Token token = scanner->getSymTable()->lookup(token->getLexem());
+
+	return token->getTypification();
+
+
+
+
 	HashMap *theItem = new Symtable(identifier, TOKEN_IDENTIFIER, 0, 0);
 
 	// search for identifier in hashtable
@@ -216,6 +223,7 @@ void ParseTree::typeCheck(Node *myNode) {
 				setType(myNode, ParserConstant::errorType);
 			}
 		} else {
+
 			// €
 			setType(myNode, ParserConstant::noType);
 		}
@@ -499,7 +507,7 @@ void ParseTree::typeCheck(Node *myNode) {
 			setType(myNode, ParserConstant::opLess);
 			break;
 		case Token::TT_MORE:
-			setType(myNode, ParserConstant::opGreater)
+			setType(myNode, ParserConstant::opGreater);
 			break;
 		case Token::TT_COLON_EQUAL:
 			setType(myNode, ParserConstant::opEqual);
@@ -673,11 +681,11 @@ void ParseTree::makeCode(Node *myNode) {
 		} else if (myNode->getChild(1) == ParserConstant::opGreater) {
 			makeCode(myNode->getChild(1));
 			makeCode(myNode->getChild(0));
-			std::cout << “LES”;
+			std::cout << "LES ";
 		} else if (myNode->getChild(1) == ParserConstant::opUnEqual) {
 			makeCode(myNode->getChild(0));
 			makeCode(myNode->getChild(1));
-			std::cout << “NOT”;
+			std::cout << "NOT ";
 		} else {
 			makeCode(myNode->getChild(0));
 			makeCode(myNode->getChild(1));
