@@ -103,28 +103,29 @@ Scanner *ParseTree::getScanner() {
 
 Token *ParseTree::getSymTableEntryForIdentifier(Token *token)
 {
-	Token token = scanner->getSymTable()->lookup(token->getLexem());
-
-	return token->getTypification();
-
-
-
-
-	HashMap *theItem = new Symtable(identifier, TOKEN_IDENTIFIER, 0, 0);
-
-	// search for identifier in hashtable
-	SymTableKey myKey = scanner->mySymTable->getKey(theItem);
-
-	SymTableEntry *currentObject = scanner->mySymTable->lookup(myKey);
-	while (currentObject != NULL)
-	{
-		if (currentObject->getLexem().compare(identifier) == 0)
-		{
-			return currentObject;
-		}
+	Token myToken;
+	if (token != NULL) {
+		Token myToken = scanner->getSymTable()->lookup(token->getLexem());
+	} else {
+		std::cerr << "Internal Error: Identifier " << token->getLexem() << " not found in Symbol Table." << std::endl;
 	}
-	std::cerr << "Internal Error: Identifier " << token->getLexem() << " not found in Symbol Table." << std::endl;
-	return currentObject;
+	return myToken.getTypification();
+//
+//	HashMap *theItem = new Symtable(identifier, TOKEN_IDENTIFIER, 0, 0);
+//
+//	// search for identifier in hashtable
+//	SymTableKey myKey = scanner->mySymTable->getKey(theItem);
+//
+//	SymTableEntry *currentObject = scanner->mySymTable->lookup(myKey);
+//	while (currentObject != NULL)
+//	{
+//		if (currentObject->getLexem().compare(identifier) == 0)
+//		{
+//			return currentObject;
+//		}
+//	}
+//	std::cerr << "Internal Error: Identifier " << token->getLexem() << " not found in Symbol Table." << std::endl;
+//	return currentObject;
 }
 
 
