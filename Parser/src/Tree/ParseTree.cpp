@@ -103,13 +103,13 @@ Scanner *ParseTree::getScanner() {
 
 Token *ParseTree::getSymTableEntryForIdentifier(Token *token)
 {
-	Token myToken;
+	Token *myToken = NULL;
 	if (token != NULL) {
-		Token myToken = scanner->getSymTable()->lookup(token->getLexem());
+		myToken = scanner->getSymTable()->lookup(token->getLexem());
 	} else {
 		std::cerr << "Internal Error: Identifier " << token->getLexem() << " not found in Symbol Table." << std::endl;
 	}
-	return myToken.getTypification();
+	return myToken->getTypification();
 //
 //	HashMap *theItem = new Symtable(identifier, TOKEN_IDENTIFIER, 0, 0);
 //
