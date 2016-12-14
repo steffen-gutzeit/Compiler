@@ -25,7 +25,7 @@ public:
 	void setType(Node *myNode, ParserConstant::Typification myType);
 	ParserConstant::Typification getType(Node *myNode);
 
-	Token *getSymTableEntryForIdentifier(uint16_t type, char* lexem);
+	Token *getSymTableEntryForIdentifier(Token* token);
 	
 	void makeCode(Node *myNode = NULL);
 

@@ -88,7 +88,8 @@ uint16_t Parser::DECLS(Node *node, Token *myCommand[], uint16_t startCount, uint
 	
 	switch (myCommand[where]->getTokenTypeInt()) {
 			
-		// int, float
+		// int
+		// TODO prüfen, ob Token::TT_INT richtig ist.
 		case Token::TT_INT:
 			// DECL
 			where = DECL(myNode, myCommand, where, tokenCount);
@@ -146,7 +147,7 @@ uint16_t Parser::ARRAY(Node *node, Token *myCommand[], uint16_t startCount, uint
 			where++;
 			
 			// integer
-			if ((myCommand[where]->getTokenTypeInt() != Token::TT_INTEGER)) syntaxError(Token::TT_INT, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_INTEGER)) syntaxError(Token::TT_INTEGER, myCommand[where]);
 //			myCommand[where]->setTypification(ParserConstant::intType);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_IDENTIFIER, myCommand[where])));
 
@@ -269,7 +270,7 @@ uint16_t Parser::STATEMENT(Node * node, Token *myCommand[], uint16_t startCount,
 			where = INDEX(myNode, myCommand, where, tokenCount);
 			
 			// )
-			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_UPON)) syntaxError(Token::TT_BRACKET_UPON, myCommand[where]);
+			if ((myCommand[where]->getTokenTypeInt() != Token::TT_BRACKET_CLOSE)) syntaxError(Token::TT_BRACKET_CLOSE, myCommand[where]);
 			myNode->addChild(new Node(new NodeInfo(ParserConstant::NODE_KEYWORD, myCommand[where])));
 			where++;
 
@@ -437,7 +438,7 @@ uint16_t Parser::EXP2(Node * node, Token *myCommand[], uint16_t startCount, uint
 			break;
 			
 		default:
-			uint16_t tokens[] = {Token::TT_BRACKET_UPON, Token::TT_IDENTIFIER, Token::TT_INT, Token::TT_MINUS, Token::TT_EXCLAMATION_MARK};
+			uint16_t tokens[] = {Token::TT_BRACKET_UPON, Token::TT_IDENTIFIER, Token::TT_INTEGER, Token::TT_MINUS, Token::TT_EXCLAMATION_MARK};
 			syntaxError(tokens, 5, myCommand[where]);
 	}
 
