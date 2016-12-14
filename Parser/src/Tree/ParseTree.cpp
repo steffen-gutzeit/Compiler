@@ -147,7 +147,6 @@ void ParseTree::setType(Node *myNode, ParserConstant::Typification myType)
 		// set in SymTable
 		getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken())->setTypification(myType);
 		myNode->getNodeInfo()->setTypification(myType);
-
 	} else {
 		// set in NodeInfo
 		myNode->getNodeInfo()->setTypification(myType);

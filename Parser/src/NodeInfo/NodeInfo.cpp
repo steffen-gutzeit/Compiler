@@ -15,7 +15,7 @@ NodeInfo::NodeInfo(ParserConstant::NodeType nodeType,
 {
 	this->nodeType = nodeType;
 	this->token = token;
-//	this->typification = typification;
+	this->typification = typification;
 }
 	
 void NodeInfo::setNodeType(ParserConstant::NodeType nodeType) {
@@ -26,9 +26,9 @@ void NodeInfo::setToken(Token *token) {
 	this->token = token;
 }
 
-//void NodeInfo::setTypification(ParserConstant::Typification typification) {
-//	this->typification = typification;
-//}
+void NodeInfo::setTypification(ParserConstant::Typification typification) {
+	this->typification = typification;
+}
 
 ParserConstant::NodeType NodeInfo::getNodeType() {
 	return this->nodeType;

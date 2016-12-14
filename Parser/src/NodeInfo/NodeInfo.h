@@ -24,7 +24,7 @@ public:
 	
 	void setNodeType(ParserConstant::NodeType nodeType);
 	void setToken(Token *token);
-//	void setTypification(ParserConstant::Typification typification);
+	void setTypification(ParserConstant::Typification typification);
 	
 	ParserConstant::NodeType getNodeType();
 	Token *getToken();
@@ -35,5 +35,5 @@ public:
 private:
 	ParserConstant::NodeType nodeType;
 	Token *token;
-//	ParserConstant::Typification typification;
+	ParserConstant::Typification typification;
 };
