@@ -43,9 +43,9 @@ char *NodeInfo::getLexem(){
 	return this->token->getLexem();
 }
 
-//ParserConstant::Typification NodeInfo::getTypification() {
-//	return this->typification;
-//}
+ParserConstant::Typification NodeInfo::getTypification() {
+	return this->typification;
+}
 
 //uint16_t NodeInfo::getLexemAsInteger() {
 //	//TODO
