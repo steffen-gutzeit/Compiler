@@ -4,9 +4,9 @@
 
 int main (int argc, char* argv[]){
 
-	Automat* automat;
+	//Automat* automat;
 
-	automat = new Automat();
+	//automat = new Automat();
 
     //automat->testChar('=');
     //automat->testChar('+');

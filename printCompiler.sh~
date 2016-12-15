@@ -1,9 +1,21 @@
  #!/bin/bash
-  
+
+#Setze Pfad (Nur in der aktuellen Shell vorhanden!)
+export LD_LIBRARY_PATH="$(pwd)/sharedlib:$LD_LIBRARY_PATH"
+
+#Pruefe ob Pathvariable für Shared Library Verzeichnis gesetzt ist
+#echo $LD_LIBRARY_PATH
+
+#Baue das komplette Projekt
 make;
 
-./Compiler symbol1.txt out3.txt;
-
+#Debugausgabe mit Valgrind (Suchen von Memory Leaks)
 #valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes 
 
+#Kopiere kompilierte Datei ins Hauptverzeichnis
+#cp Scanner/debug/ScannerTest Compiler; 
+cp Parser/debug/ParserTest Compiler;
+
+#Fuehre den Compiler aus (Arg1 = Eingabedatei, Arg2 = Ausgabedatei)
+./Compiler prog1.txt out.txt;
 
