@@ -132,6 +132,7 @@ Token *ParseTree::getSymTableEntryForIdentifier(Token *token)
 
 ParserConstant::Typification ParseTree::getType(Node *myNode)
 {
+	cout << "Get Type" << endl;
 	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
 		// lookup in SymTable
 		return getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken())->getTypification();
@@ -144,6 +145,7 @@ ParserConstant::Typification ParseTree::getType(Node *myNode)
 
 void ParseTree::setType(Node *myNode, ParserConstant::Typification myType)
 {
+	cout << "Set Type" << endl;
 	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
 		// set in SymTable
 		getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken())->setTypification(myType);

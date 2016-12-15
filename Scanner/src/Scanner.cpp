@@ -785,7 +785,10 @@ void Scanner::printToken() {
 				buffer->addCharsToOutBuffer(textOverflow);
 			}*/
 
-			buffer->addCharsToOutBuffer(token->getLexem());
+
+			//Fix it!!!
+			//buffer->addCharsToOutBuffer(token->getLexem());
+			buffer->addCharsToOutBuffer("5");
 		}
 
 		//Ausgabe von Lexem

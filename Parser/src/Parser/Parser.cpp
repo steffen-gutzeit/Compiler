@@ -47,6 +47,12 @@ uint16_t Parser::processFile()
 //				endl;
 	}
 
+	printf("Ausgabe Symboltabelle.\n");
+
+		scanner->printSymbtable();
+
+	printf("Ende Ausgabe Symboltabelle.\n");
+
 	std::cout << "syntax checking ..." << std::endl;
 
 	tokenParsed = PROG(parseTree->getRootNode(), myCommand, 0, tokenCount);
@@ -61,7 +67,7 @@ uint16_t Parser::processFile()
 	parseTree->typeCheck();
 
 	std::cout << "Print XML ..." << std::endl;
-	parseTree->printXML();
+	//parseTree->printXML();
 
 	std::cout << "Make Code ..." << std::endl;
 	parseTree->makeCode();
