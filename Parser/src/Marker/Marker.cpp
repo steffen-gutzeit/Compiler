@@ -8,6 +8,7 @@
  */
 
 #include "Marker.h"
+#include <stdint.h>
 
 
 int Marker::markerCount = 0;
@@ -15,11 +16,12 @@ int Marker::markerCount = 0;
 
 Marker::Marker()
 {
-	Marker::markerCount++;
 	myMarker = markerCount;
+	Marker::markerCount++;
 }
 
-std::string Marker::getName()
+int Marker::getName()
 {
-	return "marker" + markerCount;
+	//return markerCount;
+	return myMarker;
 }

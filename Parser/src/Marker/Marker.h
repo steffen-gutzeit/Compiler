@@ -18,7 +18,7 @@ public:
 	Marker();
 	static int markerCount;
 	
-	std::string getName();
+	int getName();
 	
 private:
 	int myMarker;

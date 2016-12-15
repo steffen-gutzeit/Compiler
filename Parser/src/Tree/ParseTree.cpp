@@ -475,7 +475,6 @@ void ParseTree::typeCheck(Node *myNode) {
 				setType(myNode, ParserConstant::intType);
 			} else {
 				std::cerr << "no primitive type" << std::endl;
-				;
 				//std::cerr << "Typification Error: identifier '" << myNode->getChild(2)->getInfo()->getToken()->getLexem() << "' of type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "' is incompatible to type '" << parserConst::typificationAsString(getType(myNode->getChild(3))) << "'";
 				//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
 				//TODO
@@ -682,23 +681,27 @@ void ParseTree::makeCode(Node *myNode) {
 				makeCode(myNode->getChild(2));
 				m1 = new Marker();
 				m2 = new Marker();
-				std::cout << "JIN #" << m1->getName() << std::endl;
+				std::cout << "JIN #m" << m1->getName() << std::endl;
+				//std::cout << "JIN #m1" << std::endl;
 				makeCode(myNode->getChild(4));
-				std::cout << "JMP #" << m2->getName() << std::endl;
-				std::cout << "#" << m1->getName() << " NOP" << std::endl;
+				std::cout << "JMP #m" << m2->getName() << std::endl;
+				//std::cout << "JMP #m2" << std::endl;
+				std::cout << "#m" << m1->getName() << " NOP" << std::endl;
+				//std::cout << "#m1" << std::endl;
 				makeCode(myNode->getChild(6));
-				std::cout << "#" << m2->getName() << " NOP" << std::endl;
+				std::cout << "#m" << m2->getName() << " NOP" << std::endl;
+				//std::cout << "#m2" << std::endl;
 				break;
 			case Token::TT_WHILE:
 				// while ( EXP ) STATEMENT
 				m1 = new Marker();
 				m2 = new Marker();
-				std::cout << "#" << m1->getName() << " NOP" << std::endl;
+				std::cout << "#m" << m1->getName() << " NOP" << std::endl;
 				makeCode(myNode->getChild(2));
-				std::cout << "JIN #" << m2->getName() << std::endl;
+				std::cout << "JIN #m" << m2->getName() << std::endl;
 				makeCode(myNode->getChild(4));
-				std::cout << "JMP #" << m1->getName() << std::endl;
-				std::cout << "#" << m2->getName() << " NOP" << std::endl;
+				std::cout << "JMP #m" << m1->getName() << std::endl;
+				std::cout << "#m" << m2->getName() << " NOP" << std::endl;
 				break;
 			default:
 				break;

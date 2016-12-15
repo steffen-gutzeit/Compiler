@@ -17,5 +17,5 @@ make;
 cp Parser/debug/ParserTest Compiler;
 
 #Fuehre den Compiler aus (Arg1 = Eingabedatei, Arg2 = Ausgabedatei)
-./Compiler prog1.txt out.txt;
+./Compiler ParserTestsSS16/p2Test.fuchss out.txt;
 
