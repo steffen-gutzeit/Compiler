@@ -1,0 +1,162 @@
+/* Teil I   */
+/* 676 */
+
+/* Teil II  */
+/*        7 */
+/* 62748517 */
+
+/* Teil III */
+/* 62748517 */
+
+
+/* sqrt(n) */
+int a;
+int n;
+int w;
+
+int i;
+
+int x;
+
+int tmp;
+
+
+/* 676 */
+read(n);
+a := n;
+w := a;
+a := (w + (n/w))/2;
+WHILE(a < w){
+w := a;
+a := (w + (n/w))/2;
+};
+write(w);
+write(26);
+
+
+
+/* Teil II x := nth root of a */
+
+
+/* 7 */
+read(n);
+/* 62748517 */
+read(a);
+
+
+x := 1;
+tmp := 0;
+
+WHILE ( tmp  < x ) {
+
+ /* tmp := a / x^(n-1) */
+ tmp := a;
+ i := 1;
+ WHILE (i < n) {
+  tmp := tmp / x;
+  i := i +1;
+ };
+ 
+x := (((n - 1)*x) + tmp)/n;
+ 
+ 
+ i := 2;
+ tmp := a / x;
+ WHILE((i < n) & (x < tmp)){
+  i := i +1;
+  tmp := tmp / x;
+ }; 
+  
+};
+
+write (x);
+write (13);
+tmp := x;
+i := 1;
+WHILE (i < n){
+ tmp := tmp * x;
+ i := i +1;
+ };
+write (tmp);
+/* */
+
+/* Teil III Test, ob a eine Potenz ist. Es gibt n und x, sodass n > 1 und a := x^n */
+
+/*62748517*/
+read(a);
+
+n := 2;
+ 
+x := 1;
+tmp := 0;
+
+WHILE ( tmp  < x ) {
+
+ /* tmp := a / x^(n-1) */
+ tmp := a;
+ i := 1;
+ WHILE (i < n) {
+  tmp := tmp / x;
+  i := i +1;
+ };
+ 
+x := (((n - 1)*x) + tmp)/n;
+ 
+ 
+ i := 2;
+ tmp := a / x;
+ WHILE((i < n) & (x < tmp)){
+  i := i +1;
+  tmp := tmp / x;
+ }; 
+  
+};
+
+tmp := x;
+i := 1;
+WHILE (i < n){
+ tmp := tmp * x;
+ i := i +1;
+ };
+
+WHILE ((tmp <:> a) & n < x){
+
+  n := n+1;   
+  x := 1;
+  tmp := 0;
+
+  WHILE ( tmp  < x ) {
+
+   /* tmp := a / x^(n-1) */
+   tmp := a;
+   i := 1;
+   WHILE (i < n) {
+    tmp := tmp / x;
+    i := i +1;
+   };
+ 
+   x := (((n - 1)*x) + tmp)/n;
+ 
+ 
+   i := 2;
+   tmp := a / x;
+   WHILE((i < n) & (x < tmp)){
+    i := i +1;
+    tmp := tmp / x;
+   }; 
+  
+  };
+
+ tmp := x;
+ i := 1;
+ WHILE (i < n){
+  tmp := tmp * x;
+  i := i +1;
+ };
+
+} ;
+
+IF (tmp = a){
+  write (x);
+  write (n);
+  } else {write (-1);};
