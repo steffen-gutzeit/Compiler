@@ -21,7 +21,8 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
     buffer = new Buffer(inputFile, outputFile);
 	automat = new Automat();
 	symtable = new Symtable();
-	token = NULL;
+	//token = NULL;
+	token = new Token(0, 0, Token::TT_BLANK, " ");
 	eof = false;
 
 	this->currentState = 0;
@@ -470,7 +471,7 @@ Token *Scanner::getNextToken() {
 					this->scannerIndex = 0;
 					this->lexemLength++;
 
-					this->tokenType = Token::TT_DUMMY;
+					this->tokenType = Token::TT_BLANK;
 				}
 				break;
 
@@ -507,6 +508,7 @@ Token *Scanner::getNextToken() {
 		}
 	} // END WHILE
 
+	cout << token << endl;
 	return token;
 } // END METHODE
 

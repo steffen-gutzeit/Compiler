@@ -40,7 +40,10 @@ uint16_t Parser::processFile()
 	// Token stehen hier zur Verfügung, keine Nacharbeit mehr nötig
 //	int i = 0;
 	while ((t = scanner->getNextToken())) {
-		myCommand[tokenCount++] = t;
+		if((t->getTokenTypeInt() != Token::TT_BLANK) && (t->getTokenTypeInt() != Token::TT_DUMMY)){
+			myCommand[tokenCount++] = t;
+			cout << "Speichere Token" << endl;
+		}
 //		cout << i++ << " " << "a: " << t->getLexem() <<
 //				"\tb: " << t->getTokenType() <<
 //				"\tc: " << t->getTokenTypeInt() <<
