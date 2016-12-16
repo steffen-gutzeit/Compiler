@@ -22,7 +22,7 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 	automat = new Automat();
 	symtable = new Symtable();
 	//token = NULL;
-	token = new Token(0, 0, Token::TT_BLANK, " ");
+	token = new Token(0, 0, Token::TT_BLANK, (char *)" ");
 	eof = false;
 
 	this->currentState = 0;
@@ -138,9 +138,8 @@ Token *Scanner::getNextToken() {
 			eot = true;
 
 			token = NULL;
-			//Doch nicht nötig, der letzte Buffer wird somit 2x geschrieben (6.12.16)
 			//Nötig, damit zum Schluss der nicht voll Buffer geschrieben wird
-			//buffer->addCharsToOutBuffer("\0");
+			buffer->addCharsToOutBuffer("\0");
 			//cout << "Ende" << endl;
 			//this->generateToken(this->tokenType);
 		} else {
@@ -508,7 +507,7 @@ Token *Scanner::getNextToken() {
 		}
 	} // END WHILE
 
-	cout << token << endl;
+	//cout << token << endl;
 	return token;
 } // END METHODE
 
@@ -790,7 +789,7 @@ void Scanner::printToken() {
 
 			//Fix it!!!
 			//buffer->addCharsToOutBuffer(token->getLexem());
-			buffer->addCharsToOutBuffer("5");
+			buffer->addCharsToOutBuffer((char *)"5");
 		}
 
 		//Ausgabe von Lexem

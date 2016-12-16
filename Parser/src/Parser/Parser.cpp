@@ -1,10 +1,10 @@
 #include "Parser.h"
 
-Parser::Parser(Scanner *scanner)
+Parser::Parser(Scanner *scanner, char *tempin, char *out2)
 {
 	this->scanner = scanner;
 	this->token = scanner->getCurrentToken();
-	parseTree = new ParseTree(scanner);
+	parseTree = new ParseTree(scanner, tempin, out2);
 }
 
 
@@ -42,7 +42,7 @@ uint16_t Parser::processFile()
 	while ((t = scanner->getNextToken())) {
 		if((t->getTokenTypeInt() != Token::TT_BLANK) && (t->getTokenTypeInt() != Token::TT_DUMMY)){
 			myCommand[tokenCount++] = t;
-			cout << "Speichere Token" << endl;
+			//cout << "Speichere Token" << endl;
 		}
 //		cout << i++ << " " << "a: " << t->getLexem() <<
 //				"\tb: " << t->getTokenType() <<
@@ -50,11 +50,11 @@ uint16_t Parser::processFile()
 //				endl;
 	}
 
-	printf("Ausgabe Symboltabelle.\n");
+	//printf("Ausgabe Symboltabelle.\n");
 
-		scanner->printSymbtable();
+		//scanner->printSymbtable();
 
-	printf("Ende Ausgabe Symboltabelle.\n");
+	//printf("Ende Ausgabe Symboltabelle.\n");
 
 	std::cout << "syntax checking ..." << std::endl;
 
@@ -69,10 +69,10 @@ uint16_t Parser::processFile()
 	
 	parseTree->typeCheck();
 
-	std::cout << "Print XML ..." << std::endl;
+	//std::cout << "Print XML ..." << std::endl;
 	//parseTree->printXML();
 
-	std::cout << "Make Code ..." << std::endl;
+	//std::cout << "Make Code ..." << std::endl;
 	parseTree->makeCode();
 	
 	return 0;

@@ -1,8 +1,11 @@
 #include "ParseTree.h"
 
-ParseTree::ParseTree(Scanner *myScanner) {
+ParseTree::ParseTree(Scanner *myScanner, char *tempin, char *out2) {
 	rootNode = new Node(new NodeInfo(ParserConstant::NODE_ROOT));
 	this->scanner = myScanner;
+
+	//Erzeuge Buffer für die Ausgabedatei
+	buffer = new Buffer(tempin, out2);
 }
 
 Node *ParseTree::getRootNode() {
@@ -161,13 +164,13 @@ void ParseTree::setType(Node *myNode, ParserConstant::Typification myType)
 }
 
 void ParseTree::typeCheck(Node *myNode) {
-	std::cout << "Switch ..." << std::endl;
+	//std::cout << "Switch ..." << std::endl;
 	// start with root node
 	if (myNode == NULL)
 		myNode = rootNode;
 
 
-	std::cout << "type checking Type ..." << myNode->getNodeInfo()->getNodeType() << std::endl;
+	//std::cout << "type checking Type ..." << myNode->getNodeInfo()->getNodeType() << std::endl;
 
 	// typecheck the node itself
 	switch (myNode->getNodeInfo()->getNodeType()) {
@@ -183,7 +186,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_PROG:
-		std::cout << "type checking PROG ..." << std::endl;
+		//std::cout << "type checking PROG ..." << std::endl;
 		// DECLS STATEMENTS
 		typeCheck(myNode->getChild(0));
 		typeCheck(myNode->getChild(1));
@@ -191,7 +194,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_DECLS:
-		std::cout << "type checking DECLS ..." << std::endl;
+		//std::cout << "type checking DECLS ..." << std::endl;
 		if (myNode->getChild(0) != NULL) {
 			// DECL ; DECLS
 			typeCheck(myNode->getChild(0));
@@ -204,7 +207,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_DECL:
-		std::cout << "type checking DECL ..." << std::endl;
+		//std::cout << "type checking DECL ..." << std::endl;
 		// int ARRAY identifier
 		typeCheck(myNode->getChild(1));
 		if (getType(myNode->getChild(2)) != ParserConstant::noType) {
@@ -230,7 +233,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_ARRAY:
-		std::cout << "type checking ARRAY ..." << std::endl;
+		//std::cout << "type checking ARRAY ..." << std::endl;
 		if (myNode->getChildrenCount() > 0) {
 			// [ integer ]
 			if (myNode->getChild(1)->getNodeInfo()->getToken()->getIntegerValue() > 0) {
@@ -247,7 +250,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_STATEMENTS:
-		std::cout << "type checking STATEMENTS ..." << std::endl;
+		//std::cout << "type checking STATEMENTS ..." << std::endl;
 		if (myNode->getChildrenCount() > 0) {
 			// STATEMENT ; STATEMENTS
 			typeCheck(myNode->getChild(0));
@@ -260,7 +263,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_STATEMENT:
-		std::cout << "type checking STATEMENT ..." << std::endl;
+		//std::cout << "type checking STATEMENT ..." << std::endl;
 		if (myNode->getChild(0)->getNodeInfo()->getNodeType()
 				== ParserConstant::NODE_IDENTIFIER) {
 			// identifier INDEX := EXP
@@ -300,13 +303,13 @@ void ParseTree::typeCheck(Node *myNode) {
 			// NODE_KEYWORD
 			switch (myNode->getChild(0)->getNodeInfo()->getToken()->getTokenTypeInt()) {
 			case Token::TT_WRITE:
-				std::cout << "type checking WRITE ..." << std::endl;
+				//std::cout << "type checking WRITE ..." << std::endl;
 				// write ( EXP )
 				typeCheck(myNode->getChild(2));
 				setType(myNode, ParserConstant::noType);
 				break;
 			case Token::TT_READ:
-				std::cout << "type checking READ ..." << std::endl;
+				//std::cout << "type checking READ ..." << std::endl;
 				// read ( identifier INDEX )
 				typeCheck(myNode->getChild(3));
 				if (getType(myNode->getChild(2)) == ParserConstant::noType) {
@@ -346,13 +349,13 @@ void ParseTree::typeCheck(Node *myNode) {
 				}
 				break;
 			case Token::TT_BRACE_UPON:
-				std::cout << "type checking BRACE_UPON ..." << std::endl;
+				//std::cout << "type checking BRACE_UPON ..." << std::endl;
 				// { STATEMENTS }
 				typeCheck(myNode->getChild(1));
 				setType(myNode, ParserConstant::noType);
 				break;
 			case Token::TT_IF:
-				std::cout << "type checking IF ..." << std::endl;
+				//std::cout << "type checking IF ..." << std::endl;
 				// if ( EXP ) STATEMENT else STATEMENT
 				typeCheck(myNode->getChild(2));
 				typeCheck(myNode->getChild(4));
@@ -371,7 +374,7 @@ void ParseTree::typeCheck(Node *myNode) {
 				}
 				break;
 			case Token::TT_WHILE:
-				std::cout << "type checking WHILE ..." << std::endl;
+				//std::cout << "type checking WHILE ..." << std::endl;
 				// while ( EXP ) STATEMENT
 				typeCheck(myNode->getChild(2));
 				typeCheck(myNode->getChild(4));
@@ -397,7 +400,7 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_INDEX:
-		std::cout << "type checking INDEX ..." << std::endl;
+		//std::cout << "type checking INDEX ..." << std::endl;
 		if (myNode->getChildrenCount() > 0) {
 			// [ EXP ]
 			typeCheck(myNode->getChild(1));
@@ -419,15 +422,15 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_EXP:
-		std::cout << "type checking EXP ..." << std::endl;
+		//std::cout << "type checking EXP ..." << std::endl;
 		// EXP2 OP_EXP
 		typeCheck(myNode->getChild(0));
 		typeCheck(myNode->getChild(1));
-		cout << "EXP aufruf " << endl;
+		//cout << "EXP aufruf " << endl;
 		if (getType(myNode->getChild(1)) == ParserConstant::noType) {
-			cout << "Pruefe Epsilon" << endl;
+			//cout << "Pruefe Epsilon" << endl;
 			setType(myNode, getType(myNode->getChild(0)));
-			cout << "Get Type Epsilon" << endl;
+			//cout << "Get Type Epsilon" << endl;
 		} else if (getType(myNode->getChild(0))
 				!= getType(myNode->getChild(1))) {
 			// incompatible types
@@ -437,22 +440,22 @@ void ParseTree::typeCheck(Node *myNode) {
 			//std::cerr << " at line " << myNode->getChild(2)->getInfo()->getToken()->getLine() << ", column " << myNode->getChild(2)->getInfo()->getToken()->getColumn() << "." << std::endl;
 			setType(myNode, ParserConstant::errorType);
 		} else {
-			std::cout << "Set Type EXP" << std::endl;
+			//std::cout << "Set Type EXP" << std::endl;
 			setType(myNode, getType(myNode->getChild(0)));
 		}
 		break;
 
 	case ParserConstant::NODE_EXP2:
-		std::cout << "type checking EXP2 ..." << std::endl;
+		//std::cout << "type checking EXP2 ..." << std::endl;
 		switch (myNode->getChild(0)->getNodeInfo()->getToken()->getTokenTypeInt()) {
 		case Token::TT_BRACKET_UPON:
-			std::cout << "type checking BRACKET_UPON ..." << std::endl;
+			//std::cout << "type checking BRACKET_UPON ..." << std::endl;
 			// ( EXP )
 			typeCheck(myNode->getChild(1));
 			setType(myNode, getType(myNode->getChild(1)));
 			break;
 		case Token::TT_IDENTIFIER:
-			std::cout << "type checking IDENTIFIER ..." << std::endl;
+			//std::cout << "type checking IDENTIFIER ..." << std::endl;
 			// identifier INDEX
 			typeCheck(myNode->getChild(1));
 			if (getType(myNode->getChild(0)) == ParserConstant::noType) {
@@ -482,18 +485,18 @@ void ParseTree::typeCheck(Node *myNode) {
 			}
 			break;
 		case Token::TT_INTEGER:
-			std::cout << "type checking INTEGER ..." << std::endl;
+			//std::cout << "type checking INTEGER ..." << std::endl;
 			// integer
 			setType(myNode, ParserConstant::intType);
 			break;
 		case Token::TT_MINUS:
-			std::cout << "type checking MINUS ..." << std::endl;
+			//std::cout << "type checking MINUS ..." << std::endl;
 			// - EXP2
 			typeCheck(myNode->getChild(1));
 			setType(myNode, getType(myNode->getChild(1)));
 			break;
 		case Token::TT_EXCLAMATION_MARK:
-			std::cout << "type checking EXCLAMATION_MARK ..." << std::endl;
+			//std::cout << "type checking EXCLAMATION_MARK ..." << std::endl;
 			// ! EXP2
 			typeCheck(myNode->getChild(1));
 			if (getType(myNode->getChild(1)) != ParserConstant::intType) {
@@ -511,12 +514,12 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_OP_EXP:
-		std::cout << "type checking OP_EXP ..." << std::endl;
+		//std::cout << "type checking OP_EXP ..." << std::endl;
 		if (myNode->getChildrenCount() > 0) {
 			// OP EXP
 			typeCheck(myNode->getChild(0));
 			typeCheck(myNode->getChild(1));
-			cout << "Set Type OP_EXP  v" << myNode->getChild(1)->getNodeInfo()->getTypification() << endl;
+			//cout << "Set Type OP_EXP  v" << myNode->getChild(1)->getNodeInfo()->getTypification() << endl;
 			setType(myNode, myNode->getChild(1)->getNodeInfo()->getTypification());
 		} else {
 			// €
@@ -525,43 +528,43 @@ void ParseTree::typeCheck(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_OP:
-		std::cout << "type checking OP ..." << std::endl;
+		//std::cout << "type checking OP ..." << std::endl;
 		// OP
 		switch (myNode->getChild(0)->getNodeInfo()->getToken()->getTokenTypeInt()) {
 		case Token::TT_PLUS:
-			std::cout << "type checking PLUS ..." << std::endl;
+			//std::cout << "type checking PLUS ..." << std::endl;
 			setType(myNode, ParserConstant::opPlus);
 			break;
 		case Token::TT_MINUS:
-			std::cout << "type checking MINUS ..." << std::endl;
+			//std::cout << "type checking MINUS ..." << std::endl;
 			setType(myNode, ParserConstant::opMinus);
 			break;
 		case Token::TT_STAR:
-			std::cout << "type checking STAR ..." << std::endl;
+			//std::cout << "type checking STAR ..." << std::endl;
 			setType(myNode, ParserConstant::opMult);
 			break;
 		case Token::TT_COLON:
-			std::cout << "type checking COLON ..." << std::endl;
+			//std::cout << "type checking COLON ..." << std::endl;
 			setType(myNode, ParserConstant::opDiv);
 			break;
 		case Token::TT_LESS:
-			std::cout << "type checking LESS ..." << std::endl;
+			//std::cout << "type checking LESS ..." << std::endl;
 			setType(myNode, ParserConstant::opLess);
 			break;
 		case Token::TT_MORE:
-			std::cout << "type checking MORE ..." << std::endl;
+			//std::cout << "type checking MORE ..." << std::endl;
 			setType(myNode, ParserConstant::opGreater);
 			break;
 		case Token::TT_COLON_EQUAL:
-			std::cout << "type checking COLON_EQUAL ..." << std::endl;
+			//std::cout << "type checking COLON_EQUAL ..." << std::endl;
 			setType(myNode, ParserConstant::opEqual);
 			break;
 		case Token::TT_MORE_COLON_MORE:
-			std::cout << "type checking MORE ..." << std::endl;
+			//std::cout << "type checking MORE ..." << std::endl;
 			setType(myNode, ParserConstant::opUnEqual);
 			break;
 		case Token::TT_AND:
-			std::cout << "type checking AND ..." << std::endl;
+			//std::cout << "type checking AND ..." << std::endl;
 			setType(myNode, ParserConstant::opAnd);
 			break;
 		default:
@@ -579,6 +582,10 @@ void ParseTree::typeCheck(Node *myNode) {
 	}
 }
 
+
+/*
+ * Erzeugung des Maschinencode
+ */
 void ParseTree::makeCode(Node *myNode) {
 	Marker *m1;
 	Marker *m2;
@@ -601,7 +608,12 @@ void ParseTree::makeCode(Node *myNode) {
 		// DECLS STATEMENTS
 		makeCode(myNode->getChild(0));
 		makeCode(myNode->getChild(1));
+
 		std::cout << "STP" << std::endl;
+		writeCode((char *)"STP\n");
+
+		//Beende Ausgabedatei
+		writeCode((char *)"\0");
 		break;
 
 	case ParserConstant::NODE_DECLS:
@@ -619,6 +631,10 @@ void ParseTree::makeCode(Node *myNode) {
 		std::cout << "DS $"
 				<< myNode->getChild(2)->getNodeInfo()->getToken()->getLexem()
 				<< " ";
+		writeCode((char *)"DS $");
+		writeCode(myNode->getChild(2)->getNodeInfo()->getToken()->getLexem());
+		writeCode((char *)" ");
+
 		makeCode(myNode->getChild(1));
 		break;
 
@@ -628,9 +644,13 @@ void ParseTree::makeCode(Node *myNode) {
 			std::cout
 					<< myNode->getChild(1)->getNodeInfo()->getToken()->getIntegerValue()
 					<< std::endl;
+			writeCode(intToChar(myNode->getChild(1)->getNodeInfo()->getToken()->getIntegerValue()));
+			writeCode((char *)"\n");
+
 		} else {
 			// €
 			std::cout << "1" << std::endl;
+			writeCode((char *)"1\n");
 		}
 		break;
 
@@ -642,6 +662,7 @@ void ParseTree::makeCode(Node *myNode) {
 		} else {
 			// €
 			std::cout << "NOP" << std::endl;
+			writeCode((char *)"NOP\n");
 		}
 		break;
 
@@ -650,27 +671,48 @@ void ParseTree::makeCode(Node *myNode) {
 				== ParserConstant::NODE_IDENTIFIER) {
 			// identifier INDEX = EXP
 			makeCode(myNode->getChild(3));
+
 			std::cout << "LA $"
 					<< myNode->getChild(0)->getNodeInfo()->getToken()->getLexem()
 					<< std::endl;
+			writeCode((char *)"LA $");
+			writeCode(myNode->getChild(0)->getNodeInfo()->getToken()->getLexem());
+			writeCode((char *)"\n");
+
 			makeCode(myNode->getChild(1));
+
 			std::cout << "STR" << std::endl;
+			writeCode((char *)"STR\n");
+
 		} else {
 			// NODE_KEYWORD
 			switch (myNode->getChild(0)->getNodeInfo()->getToken()->getTokenTypeInt()) {
 			case Token::TT_WRITE:
 				// write ( EXP )
 				makeCode(myNode->getChild(2));
+
 				std::cout << "PRI" << std::endl;
+				writeCode((char *)"PRI\n");
+
 				break;
 			case Token::TT_READ:
 				// read ( identifier INDEX )
+
 				std::cout << "REA" << std::endl;
+				writeCode((char *)"REA\n");
+
 				std::cout << "LA $"
 						<< myNode->getChild(2)->getNodeInfo()->getToken()->getLexem()
 						<< endl;
+				writeCode((char *)"LA $");
+				writeCode(myNode->getChild(2)->getNodeInfo()->getToken()->getLexem());
+				writeCode((char *)"\n");
+
 				makeCode(myNode->getChild(3));
+
 				std::cout << "STR" << std::endl;
+				writeCode((char *)"STR\n");
+
 				break;
 			case Token::TT_BRACE_UPON:
 				// { STATEMENTS }
@@ -681,27 +723,61 @@ void ParseTree::makeCode(Node *myNode) {
 				makeCode(myNode->getChild(2));
 				m1 = new Marker();
 				m2 = new Marker();
+
 				std::cout << "JIN #m" << m1->getName() << std::endl;
-				//std::cout << "JIN #m1" << std::endl;
+				writeCode((char *)"JIN #m");
+				writeCode(intToChar(m1->getName()));
+				writeCode((char *)"\n");
+
 				makeCode(myNode->getChild(4));
+
 				std::cout << "JMP #m" << m2->getName() << std::endl;
-				//std::cout << "JMP #m2" << std::endl;
+				writeCode((char *)"JMP #m");
+				writeCode(intToChar(m2->getName()));
+				writeCode((char *)"\n");
+
 				std::cout << "#m" << m1->getName() << " NOP" << std::endl;
-				//std::cout << "#m1" << std::endl;
+				writeCode((char *)"#m");
+				writeCode(intToChar(m1->getName()));
+				writeCode((char *)" NOP\n");
+
 				makeCode(myNode->getChild(6));
+
 				std::cout << "#m" << m2->getName() << " NOP" << std::endl;
-				//std::cout << "#m2" << std::endl;
+				writeCode((char *)"#m");
+				writeCode(intToChar(m2->getName()));
+				writeCode((char *)" NOP\n");
+
 				break;
 			case Token::TT_WHILE:
 				// while ( EXP ) STATEMENT
 				m1 = new Marker();
 				m2 = new Marker();
+
 				std::cout << "#m" << m1->getName() << " NOP" << std::endl;
+				writeCode((char *)"#m");
+				writeCode(intToChar(m1->getName()));
+				writeCode((char *)" NOP\n");
+
 				makeCode(myNode->getChild(2));
+
 				std::cout << "JIN #m" << m2->getName() << std::endl;
+				writeCode((char *)"JIN #m");
+				writeCode(intToChar(m2->getName()));
+				writeCode((char *)"\n");
+
 				makeCode(myNode->getChild(4));
+
 				std::cout << "JMP #m" << m1->getName() << std::endl;
+				writeCode((char *)"JMP #m");
+				writeCode(intToChar(m1->getName()));
+				writeCode((char *)"\n");
+
 				std::cout << "#m" << m2->getName() << " NOP" << std::endl;
+				writeCode((char *)"#m");
+				writeCode(intToChar(m2->getName()));
+				writeCode((char *)" NOP\n");
+
 				break;
 			default:
 				break;
@@ -714,7 +790,10 @@ void ParseTree::makeCode(Node *myNode) {
 		if (myNode->getChildrenCount() > 0) {
 			// [ EXP ]
 			makeCode(myNode->getChild(1));
+
 			std::cout << "ADD" << std::endl;
+			writeCode((char *)"ADD\n");
+
 		} else {
 			// €
 		}
@@ -731,11 +810,17 @@ void ParseTree::makeCode(Node *myNode) {
 		} else if (getType(myNode->getChild(1)) == ParserConstant::opGreater) {
 			makeCode(myNode->getChild(1));
 			makeCode(myNode->getChild(0));
+
 			std::cout << "LES ";
+			writeCode((char *)"LES ");
+
 		} else if (getType(myNode->getChild(1)) == ParserConstant::opUnEqual) {
 			makeCode(myNode->getChild(0));
 			makeCode(myNode->getChild(1));
+
 			std::cout << "NOT ";
+			writeCode((char *)"NOT ");
+
 		} else {
 			makeCode(myNode->getChild(0));
 			makeCode(myNode->getChild(1));
@@ -750,28 +835,52 @@ void ParseTree::makeCode(Node *myNode) {
 			break;
 		case Token::TT_IDENTIFIER:
 			// identifier INDEX
+
 			std::cout << "LA $"
 					<< myNode->getChild(0)->getNodeInfo()->getToken()->getLexem()
 					<< std::endl;
+			writeCode((char *)"LA $");
+			writeCode(myNode->getChild(0)->getNodeInfo()->getToken()->getLexem());
+			writeCode((char *)"\n");
+
+
 			makeCode(myNode->getChild(1));
+
 			std::cout << "LV" << std::endl;
+			writeCode((char *)"LV\n");
+
 			break;
 		case Token::TT_INTEGER:
 			// integer
+
 			std::cout << "LC "
 					<< myNode->getChild(0)->getNodeInfo()->getToken()->getIntegerValue()
 					<< std::endl;
+			writeCode((char *)"LC ");
+			//cout << "Integer: " << myNode->getChild(0)->getNodeInfo()->getToken()->getIntegerValue() << endl;
+			writeCode(intToChar(myNode->getChild(0)->getNodeInfo()->getToken()->getIntegerValue()));
+			writeCode((char *)"\n");
+
 			break;
 		case Token::TT_MINUS:
 			// - EXP2
+
 			std::cout << "LC 0" << std::endl;
+			writeCode((char *)"LC 0\n");
+
 			makeCode(myNode->getChild(1));
+
 			std::cout << "SUB" << std::endl;
+			writeCode((char *)"SUB\n");
+
 			break;
 		case Token::TT_EXCLAMATION_MARK:
 			// ! EXP2
 			makeCode(myNode->getChild(1));
+
 			std::cout << "NOT" << std::endl;
+			writeCode((char *)"NOT\n");
+
 			break;
 		}
 
@@ -784,30 +893,48 @@ void ParseTree::makeCode(Node *myNode) {
 			switch (getType(myNode->getChild(0))) {
 			case ParserConstant::opPlus:
 				std::cout << "ADD" << std::endl;
+				writeCode((char *)"ADD\n");
+
 				break;
 			case ParserConstant::opMinus:
 				std::cout << "SUB" << std::endl;
+				writeCode((char *)"SUB\n");
+
 				break;
 			case ParserConstant::opMult:
 				std::cout << "MUL" << std::endl;
+				writeCode((char *)"MUL\n");
+
 				break;
 			case ParserConstant::opDiv:
 				std::cout << "DIV" << std::endl;
+				writeCode((char *)"DIV\n");
+
 				break;
 			case ParserConstant::opLess:
 				std::cout << "LES" << std::endl;
+				writeCode((char *)"LES\n");
+
 				break;
 			case ParserConstant::opEqual:
 				std::cout << "EQU" << std::endl;
+				writeCode((char *)"EQU\n");
+
 				break;
 			case ParserConstant::opAnd:
 				std::cout << "AND" << std::endl;
+				writeCode((char *)"AND\n");
+
 				break;
 			case ParserConstant::opUnEqual:
 				std::cout << "EQU" << std::endl;
+				writeCode((char *)"EQU\n");
+
 				break;
 			default:
 				std::cout << "EQU" << std::endl;
+				writeCode((char *)"EQU\n");
+
 				break;
 			}
 		} else {
@@ -826,5 +953,59 @@ void ParseTree::makeCode(Node *myNode) {
 	default:
 		break;
 	}
+
 }
+
+/*
+ * Schreibt die Maschinenbefehle in eine Ausgabedatei
+ */
+void ParseTree::writeCode(char *command){
+	//Übergebe zu schreibenden Maschinencode an Buffer
+	buffer->addCharsToOutBuffer(command);
+}
+
+/*
+ * Ermittelt die Stellenanzahl eines Integerwertes
+ */
+int ParseTree::sizeOfNumber(int digit){
+
+	int count = 0;
+
+	//Bestimme Stellenanzahl
+	while(digit != 0){
+		digit = digit / 10;
+		count++;
+	}
+
+	return count;
+}
+
+/*
+ * Wandelt einen Integerwert in ein Chararray um
+ */
+char *ParseTree::intToChar(int digit){
+	//cout << "Digit first: " << digit << endl;
+	int size = sizeOfNumber(digit);
+	result[size + 1];
+
+	//Fange ab falls 0 übergeben wurde, sollte 0 direkt übergeben werden terminiert der OutBuffer --> daher Leerzeichen
+	if(digit == 0){
+		//cout << "Digit: " << digit << endl;
+		char *temp = (char *)"0 ";
+		return  temp;
+
+	}else{
+	//Modulo Rechnung zur Umwandlung
+	for(int i = 0; i < size; i++){
+		result[(size - 1) - i] = digit % 10 + '0';
+		//cout << result[(size - 1) - i] << endl;
+		digit = digit / 10;
+	}
+
+	result[size] = '\0';
+	return result;
+	}
+
+}
+
 

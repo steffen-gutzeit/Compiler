@@ -10,7 +10,7 @@ class Parser
 {
 	
 public:
-	Parser(Scanner *scanner);
+	Parser(Scanner *scanner, char *tempin, char *out2);
 	uint16_t processFile();
 	Token *token;
 	

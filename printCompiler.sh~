@@ -7,7 +7,7 @@ export LD_LIBRARY_PATH="$(pwd)/sharedlib:$LD_LIBRARY_PATH"
 #echo $LD_LIBRARY_PATH
 
 #Baue das komplette Projekt
-make;
+make
 
 #Debugausgabe mit Valgrind (Suchen von Memory Leaks)
 #valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes 
@@ -16,6 +16,22 @@ make;
 #cp Scanner/debug/ScannerTest Compiler; 
 cp Parser/debug/ParserTest Compiler;
 
-#Fuehre den Compiler aus (Arg1 = Eingabedatei, Arg2 = Ausgabedatei)
-./Compiler ParserTestsSS16/p2Test.fuchss out.txt;
+#Fuehre den Compiler aus (Arg1 = Eingabedatei, Arg2 = Ausgabedatei, Arg3 = Codedatei)
+#./Compiler ParserTestsSS16/p2Test.fuchss out.txt;
+#./Compiler ParserTestsSS16/p1Test.fuchss out1.txt out1.code;
 
+./Compiler ParserTestsSS16/p2Test.fuchss out2.txt out2.code;
+
+#./Compiler ParserTestsSS16/p3Test.fuchss out3.txt out3.code;
+
+#./Compiler ParserTestsSS16/p4Test.fuchss out4.txt out4.code;
+
+#./Compiler ParserTestsSS16/p5Test.fuchss out5.txt out5.code;
+
+#./Compiler ParserTestsSS16/p6Test.fuchss out6.txt out6.code;
+
+#./Compiler ParserTestsSS16/p7aTest.fuchss out7a.txt out7a.code;
+
+#./Compiler ParserTestsSS16/p7bTest.fuchss out7b.txt out7b.code;
+
+#./Compiler ParserTestsSS16/p8Test.fuchss out8.txt out8.code;

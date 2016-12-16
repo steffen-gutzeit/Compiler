@@ -3,12 +3,13 @@
 #include "../Node/Node.h"
 #include "../../../Scanner/src/Scanner.h"
 #include "../../../Symtable/src/Symtable.h"
+#include "../../../Buffer/src/Buffer.h"
 #include "../Marker/Marker.h"
 #include "../ParserConstant/ParserConstant.h"
 
 class ParseTree {
 public:
-	ParseTree(Scanner *scanner);
+	ParseTree(Scanner *scanner, char *tempin, char *out2);
 	
 	Node *getRootNode();
 	void printXML();
@@ -29,8 +30,16 @@ public:
 	
 	void makeCode(Node *myNode = NULL);
 
+	void writeCode(char *command);
+
 	
 private:
 	Node *rootNode;
 	Scanner *scanner;
+	Buffer *buffer;
+
+	int sizeOfNumber(int digit);
+	char *intToChar(int digit);
+
+	char result[];
 };
