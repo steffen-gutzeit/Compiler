@@ -27,6 +27,18 @@ public:
 private:
 	HashMap *hashTable;
 	Token *token;
+	Token *token1;
+	Token *token2;
+	Token *token3;
+	Token *token4;
+	Token *token5;
+	Token *token6;
+	Token *token7;
+	Token *token8;
+	Token *token9;
+	Token *token10;
+	Token *token11;
+	Token *token12;
 };
 
 #endif /* SYMTABLE_H_ */

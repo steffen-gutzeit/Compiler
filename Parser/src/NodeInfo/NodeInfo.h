@@ -1,11 +1,3 @@
-/*
- *  NodeInfo.h
- *  sysprog
- *
- *  Created by Peter Schneider on 21.02.10.
- *  Copyright 2010 Schneider Medien Services. All rights reserved.
- *
- */
 #pragma once
 
 #include "../../../Token/src/Token.h"
@@ -29,7 +21,6 @@ public:
 	ParserConstant::NodeType getNodeType();
 	Token *getToken();
 	ParserConstant::Typification getTypification();
-	uint16_t getLexemAsInteger();
 	char* getLexem();
 
 private:

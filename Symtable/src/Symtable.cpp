@@ -18,7 +18,23 @@ Symtable::Symtable() {
 
 }
 
+/*
+ * Destruktor
+ */
 Symtable::~Symtable() {
+
+	delete this->token1;
+	delete this->token2;
+	delete this->token3;
+	delete this->token4;
+	delete this->token5;
+	delete this->token6;
+	delete this->token7;
+	delete this->token8;
+	delete this->token9;
+	delete this->token10;
+	delete this->token11;
+	delete this->token12;
 	delete this->hashTable;
 }
 
@@ -26,41 +42,41 @@ Symtable::~Symtable() {
  * Initialisiert die Symboltabelle und fügt die ersten Token hinzu
  */
 void Symtable::initSymbols(){
-	char textWhile1[]	= "while";
-	char textIf1[] 		= "if";
-	char textWrite1[]	= "write";
-	char textRead1[]	= "read";
-	char textInt1[]		= "int";
-	char textElse1[]	= "else";
+	char textWhile1[]	= "while\0";
+	char textIf1[] 		= "if\0";
+	char textWrite1[]	= "write\0";
+	char textRead1[]	= "read\0";
+	char textInt1[]		= "int\0";
+	char textElse1[]	= "else\0";
 
-	char textWhile2[] 	= "WHILE";
-	char textIf2[] 		= "IF";
-	char textElse2[]	= "ELSE";
+	char textWhile2[] 	= "WHILE\0";
+	char textIf2[] 		= "IF\0";
+	char textElse2[]	= "ELSE\0";
 
-	//Nicht sicher ob das notwendig ist (7.12.16)
-	char textWrite2[]	= "WRITE";
-	char textRead2[]	= "READ";
-	char textInt2[]		= "INT";
+	char textWrite2[]	= "WRITE\0";
+	char textRead2[]	= "READ\0";
+	char textInt2[]		= "INT\0";
 
 
 	//Estelle Token und füge diese in die Symboltabelle ein
-	this->insertToken(token = new Token(0, 0, token->TT_WHILE, textWhile1));
-	this->insertToken(token = new Token(0, 0, token->TT_WHILE, textWhile2));
 
-	this->insertToken(token = new Token(0, 0, token->TT_IF, textIf1));
-	this->insertToken(token = new Token(0, 0, token->TT_IF, textIf2));
+	this->insertToken(token1 = new Token(0, 0, token->TT_WHILE, textWhile1));
+	this->insertToken(token2 = new Token(0, 0, token->TT_WHILE, textWhile2));
 
-	this->insertToken(token = new Token(0, 0, token->TT_ELSE, textElse1));
-	this->insertToken(token = new Token(0, 0, token->TT_ELSE, textElse2));
+	this->insertToken(token3 = new Token(0, 0, token->TT_IF, textIf1));
+	this->insertToken(token4 = new Token(0, 0, token->TT_IF, textIf2));
 
-	this->insertToken(token = new Token(0, 0, token->TT_INT, textInt1));
-	this->insertToken(token = new Token(0, 0, token->TT_READ, textRead1));
-	this->insertToken(token = new Token(0, 0, token->TT_WRITE, textWrite1));
+	this->insertToken(token5 = new Token(0, 0, token->TT_ELSE, textElse1));
+	this->insertToken(token6 = new Token(0, 0, token->TT_ELSE, textElse2));
 
-	//Nicht sicher ob das notwendig ist (7.12.16)
-	this->insertToken(token = new Token(0, 0, token->TT_INT, textInt2));
-	this->insertToken(token = new Token(0, 0, token->TT_READ, textRead2));
-	this->insertToken(token = new Token(0, 0, token->TT_WRITE, textWrite2));
+	this->insertToken(token7 = new Token(0, 0, token->TT_INT, textInt1));
+	this->insertToken(token8 = new Token(0, 0, token->TT_READ, textRead1));
+	this->insertToken(token9 = new Token(0, 0, token->TT_WRITE, textWrite1));
+
+	this->insertToken(token10 = new Token(0, 0, token->TT_INT, textInt2));
+	this->insertToken(token11 = new Token(0, 0, token->TT_READ, textRead2));
+	this->insertToken(token12 = new Token(0, 0, token->TT_WRITE, textWrite2));
+
 
 }
 

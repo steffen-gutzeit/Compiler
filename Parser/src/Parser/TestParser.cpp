@@ -1,10 +1,3 @@
-/*
- * TestParser.cpp
- *
- *  Created on: 08.10.2016
- *      Author: compiler
- */
-
 #include <iostream>
 #include "../../../Scanner/src/Scanner.h"
 #include "Parser.h"
@@ -50,6 +43,14 @@ int main(int argc, char* argv[], char* envp[])
 		p = new Parser(s, argv[1], (char *)"out.code");
 	}
 
-	return p->processFile();
+
+	//Rufe Hauptmethode des Parsers auf
+	uint16_t value = p->processFile();
+
+
+	delete p;
+	delete s;
+
+	return value;
 
 }

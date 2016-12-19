@@ -73,6 +73,9 @@ Buffer::~Buffer() {
 
 	// Schliese descriptor und OutBuffer
 	closeFileOut();
+
+	//Notwendig um beim Parser Aufruf die Input Datei zu schliessen
+	closeFile();
 }
 
 void Buffer::initDescriptors(){
@@ -151,7 +154,7 @@ char Buffer::getChar() {
                retValue = '\0';
 
                //Schliese Datei
-               closeFile();
+               //closeFile();
 
            }else{
                //Normale Rueckgabe
@@ -177,7 +180,7 @@ char Buffer::getChar() {
                //EOF ist erreicht
                retValue = '\0';
                //Schliese Datei
-               this->closeFile();
+               //this->closeFile();
 
            }else{
                //Normale Rueckgabe
@@ -223,10 +226,19 @@ void Buffer::loadSecondBuffer(){
 //Schliest die Input Datei
 void Buffer::closeFile(){
 	//gebe Buffer frei
-	free((void**)firstBuffer);
-	free((void**)secondBuffer);
 
-    close(file_descriptor);
+	if(firstBuffer){
+		free((void**)firstBuffer);
+	}
+
+	if(secondBuffer){
+		free((void**)secondBuffer);
+	}
+
+	if(file_descriptor){
+		close(file_descriptor);
+	}
+
 
     //Valgrind error messages, nur zum debuggen auskommentieren!
     //fclose( stdin );

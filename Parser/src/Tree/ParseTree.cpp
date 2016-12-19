@@ -1,109 +1,60 @@
 #include "ParseTree.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+
+/*
+ * Konstruktor
+ */
 ParseTree::ParseTree(Scanner *myScanner, char *tempin, char *out2) {
 	rootNode = new Node(new NodeInfo(ParserConstant::NODE_ROOT));
 	this->scanner = myScanner;
 
 	//Erzeuge Buffer für die Ausgabedatei
 	buffer = new Buffer(tempin, out2);
+	result = NULL;
 }
 
+/*
+ * Destruktor
+ */
+ParseTree::~ParseTree(){
+	delete buffer;
+	destroyTree(rootNode);
+}
+
+/*
+ * Gibt den Speicher des Baums wieder frei
+ */
+void ParseTree::destroyTree(Node*node){
+    if(node){
+    	uint16_t childrenCount = node->getChildrenCount();
+
+    	for(int i=0; i<childrenCount; i++){
+    		destroyTree(node->getChild(i));
+    	}
+
+        delete node;
+    }
+}
+
+/*
+ * Gibt den Wurzelknoten zurück
+ */
 Node *ParseTree::getRootNode() {
 	return rootNode;
 }
 
-void ParseTree::printXML() {
-	rootNode->print();
-	std::cout << std::endl;
-}
-
+/*
+ * Gibt den Scanner zurück
+ */
 Scanner *ParseTree::getScanner() {
 	return scanner;
 }
 
-//Token *ParseTree::getSymTableEntryForIdentifier(uint16_t type, char *lexem) {
-////
-////	Symtable *symtable = new Symtable();
-////	char *key = symtable->insert(lexem, type);
-////
-////	if (!(scanner->getSymTable()->lookUp(lexem))) {
-////		std::cerr << "Internal Error: Identifier " << lexem << " not found in Symbol Table." << std::endl;
-////	}
-////	Token *t = new Token(0, 0, type, lexem);
-////	return t;
-//	HashMap *item = new SymTableEntry(identifier, TOKEN_IDENTIFIER, 0, 0);
-//
-//	// search for identifier in hashtable
-//	Symtable myKey = scanner->getSymTable()->getTypfication()
-//	mySymTable->getKey(theItem);
-//
-//	SymTableEntry *currentObject = scanner->mySymTable->lookup(myKey);
-//	while (currentObject != NULL) {
-//		if (currentObject->getLexem().compare(identifier) == 0) {
-//			return currentObject;
-//		}
-//	}
-//	std::cerr << "Internal Error: Identifier " << identifier
-//			<< " not found in Symbol Table." << std::endl;
-//	return currentObject;
-//}
-//
-//ParserConstant::Typification ParseTree::getType(Node *myNode) {
-////	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
-////		// lookup in SymTable
-//////		Token *t = getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken()->getTokenTypeInt(),
-//////													myNode->getNodeInfo()->getToken()->getLexem());
-//////		return t->getTypification();
-////		return myNode->getNodeInfo()->getToken()->getTypification();
-////	} else {
-////		// lookup in NodeInfo
-////		return myNode->getNodeInfo()->getToken()->getTypification();
-////	}
-//	if (myNode->getNodeInfo()->getNodeInfoType() == NODE_IDENTIFIER) {
-//		// lookup in SymTable
-//		return getSymTableEntryForIdentifier(
-//				myNode->getNodeInfo()->getToken()->getLexem())->getTypification();
-//
-//	} else {
-//		// lookup in NodeInfo
-//		return myNode->getNodeInfo()->getTypification();
-//	}
-//}
-
-
-
-//void ParseTree::setType(Node *myNode, ParserConstant::Typification myType) {
-//////	cout << myNode->getNodeInfo()->get
-////	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
-////		// set in SymTable
-////		//getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken()->getLexem())->setTypification(myType);
-////		Token *t = getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken()->getTokenTypeInt(),
-////													myNode->getNodeInfo()->getToken()->getLexem());
-////		t->setTypification(myType);
-////
-////		myNode->getNodeInfo()->getToken()->setTypification(myType);
-//////		myNode->getNodeInfo()->setTypification(myType);
-////
-////	} else {
-////		// set in NodeInfo
-//////		cout << "[MyType] " << myType << endl;
-////		myNode->getNodeInfo()->setToken(new Token(0, 0, Token::TT_DUMMY, ""));
-////		myNode->getNodeInfo()->getToken()->setTypification(myType);
-//////		cout << "[GetType] " << getType(myNode) << endl;
-////	}
-//	if (myNode->getNodeInfo()->getNodeInfoType() == NODE_IDENTIFIER) {
-//		// set in SymTable
-//		getSymTableEntryForIdentifier(
-//				myNode->getNodeInfo()->getToken()->getLexem())->setTypification(
-//				myType);
-//		myNode->getNodeInfo()->setTypification(myType);
-//
-//	} else {
-//		// set in NodeInfo
-//		myNode->getNodeInfo()->setTypification(myType);
-//	}
-//}
-
+/*
+ * Sucht in der Symboltabelle nach einem Identifier
+ */
 Token *ParseTree::getSymTableEntryForIdentifier(Token *token)
 {
 	Token *myToken = NULL;
@@ -112,27 +63,13 @@ Token *ParseTree::getSymTableEntryForIdentifier(Token *token)
 	} else {
 		std::cerr << "Internal Error: Identifier " << token->getLexem() << " not found in Symbol Table." << std::endl;
 	}
-	//return myToken->getTypification();
+
 	return myToken;
-//
-//	HashMap *theItem = new Symtable(identifier, TOKEN_IDENTIFIER, 0, 0);
-//
-//	// search for identifier in hashtable
-//	SymTableKey myKey = scanner->mySymTable->getKey(theItem);
-//
-//	SymTableEntry *currentObject = scanner->mySymTable->lookup(myKey);
-//	while (currentObject != NULL)
-//	{
-//		if (currentObject->getLexem().compare(identifier) == 0)
-//		{
-//			return currentObject;
-//		}
-//	}
-//	std::cerr << "Internal Error: Identifier " << token->getLexem() << " not found in Symbol Table." << std::endl;
-//	return currentObject;
 }
 
-
+/*
+ * Gibt den Typ eines Knoten zurück
+ */
 ParserConstant::Typification ParseTree::getType(Node *myNode)
 {
 	//cout << "Get Type" << endl;
@@ -148,31 +85,31 @@ ParserConstant::Typification ParseTree::getType(Node *myNode)
 	}
 }
 
+/*
+ * Setzt den Typ in einem Knoten oder der Symboltabelle
+ */
 void ParseTree::setType(Node *myNode, ParserConstant::Typification myType)
 {
 	//cout << "Set Type" << endl;
 	if (myNode->getNodeInfo()->getNodeType() == ParserConstant::NODE_IDENTIFIER) {
-		//cout << "Setting Type Sym " << myNode->getNodeInfo()->getNodeType() << endl;
 		// set in SymTable
 		getSymTableEntryForIdentifier(myNode->getNodeInfo()->getToken())->setTypification(myType);
 		myNode->getNodeInfo()->setTypification(myType);
 	} else {
-		//cout << "Setting Type Node " << myNode->getNodeInfo()->getNodeType() << endl;
 		// set in NodeInfo
 		myNode->getNodeInfo()->setTypification(myType);
 	}
 }
 
+/*
+ * Hauptmethode für die Typprüfung
+ */
 void ParseTree::typeCheck(Node *myNode) {
-	//std::cout << "Switch ..." << std::endl;
-	// start with root node
+	// Starte mit dem Wurzelknoten
 	if (myNode == NULL)
 		myNode = rootNode;
 
-
-	//std::cout << "type checking Type ..." << myNode->getNodeInfo()->getNodeType() << std::endl;
-
-	// typecheck the node itself
+	// Typprüfung auf den Knoten
 	switch (myNode->getNodeInfo()->getNodeType()) {
 
 
@@ -590,11 +527,13 @@ void ParseTree::makeCode(Node *myNode) {
 	Marker *m1;
 	Marker *m2;
 
-	// start with root node
+	int size = 0;
+
+	// Starte mit dem Wurzelknoten
 	if (myNode == NULL)
 		myNode = rootNode;
 
-	// typecheck the node itself
+	// Typcheck auf den Knoten
 	switch (myNode->getNodeInfo()->getNodeType()) {
 
 	case ParserConstant::NODE_ROOT:
@@ -613,7 +552,7 @@ void ParseTree::makeCode(Node *myNode) {
 		writeCode((char *)"STP\n");
 
 		//Beende Ausgabedatei
-		writeCode((char *)"\0");
+		//writeCode((char *)"\0");
 		break;
 
 	case ParserConstant::NODE_DECLS:
@@ -645,6 +584,7 @@ void ParseTree::makeCode(Node *myNode) {
 					<< myNode->getChild(1)->getNodeInfo()->getToken()->getIntegerValue()
 					<< std::endl;
 			writeCode(intToChar(myNode->getChild(1)->getNodeInfo()->getToken()->getIntegerValue()));
+			free (result);
 			writeCode((char *)"\n");
 
 		} else {
@@ -727,6 +667,7 @@ void ParseTree::makeCode(Node *myNode) {
 				std::cout << "JIN #m" << m1->getName() << std::endl;
 				writeCode((char *)"JIN #m");
 				writeCode(intToChar(m1->getName()));
+				free (result);
 				writeCode((char *)"\n");
 
 				makeCode(myNode->getChild(4));
@@ -734,11 +675,13 @@ void ParseTree::makeCode(Node *myNode) {
 				std::cout << "JMP #m" << m2->getName() << std::endl;
 				writeCode((char *)"JMP #m");
 				writeCode(intToChar(m2->getName()));
+				free (result);
 				writeCode((char *)"\n");
 
 				std::cout << "#m" << m1->getName() << " NOP" << std::endl;
 				writeCode((char *)"#m");
 				writeCode(intToChar(m1->getName()));
+				free (result);
 				writeCode((char *)" NOP\n");
 
 				makeCode(myNode->getChild(6));
@@ -746,7 +689,12 @@ void ParseTree::makeCode(Node *myNode) {
 				std::cout << "#m" << m2->getName() << " NOP" << std::endl;
 				writeCode((char *)"#m");
 				writeCode(intToChar(m2->getName()));
+				free (result);
 				writeCode((char *)" NOP\n");
+
+				//Test wegen Memory Leak
+				delete m1;
+				delete m2;
 
 				break;
 			case Token::TT_WHILE:
@@ -757,6 +705,7 @@ void ParseTree::makeCode(Node *myNode) {
 				std::cout << "#m" << m1->getName() << " NOP" << std::endl;
 				writeCode((char *)"#m");
 				writeCode(intToChar(m1->getName()));
+				free (result);
 				writeCode((char *)" NOP\n");
 
 				makeCode(myNode->getChild(2));
@@ -764,6 +713,7 @@ void ParseTree::makeCode(Node *myNode) {
 				std::cout << "JIN #m" << m2->getName() << std::endl;
 				writeCode((char *)"JIN #m");
 				writeCode(intToChar(m2->getName()));
+				free (result);
 				writeCode((char *)"\n");
 
 				makeCode(myNode->getChild(4));
@@ -771,12 +721,18 @@ void ParseTree::makeCode(Node *myNode) {
 				std::cout << "JMP #m" << m1->getName() << std::endl;
 				writeCode((char *)"JMP #m");
 				writeCode(intToChar(m1->getName()));
+				free (result);
 				writeCode((char *)"\n");
 
 				std::cout << "#m" << m2->getName() << " NOP" << std::endl;
 				writeCode((char *)"#m");
 				writeCode(intToChar(m2->getName()));
+				free (result);
 				writeCode((char *)" NOP\n");
+
+				//Test wegen Memory Leak
+				delete m1;
+				delete m2;
 
 				break;
 			default:
@@ -801,10 +757,6 @@ void ParseTree::makeCode(Node *myNode) {
 
 	case ParserConstant::NODE_EXP:
 		// EXP2 OP_EXP
-//		makeCode(myNode->getChild(0));
-//		if (getType(myNode->getChild(1)) == ParserConstant::noType)
-//			break;
-//		makeCode(myNode->getChild(1));
 		if (getType(myNode->getChild(1)) == ParserConstant::noType) {
 			makeCode(myNode->getChild(0));
 		} else if (getType(myNode->getChild(1)) == ParserConstant::opGreater) {
@@ -859,6 +811,7 @@ void ParseTree::makeCode(Node *myNode) {
 			writeCode((char *)"LC ");
 			//cout << "Integer: " << myNode->getChild(0)->getNodeInfo()->getToken()->getIntegerValue() << endl;
 			writeCode(intToChar(myNode->getChild(0)->getNodeInfo()->getToken()->getIntegerValue()));
+			free (result);
 			writeCode((char *)"\n");
 
 			break;
@@ -943,7 +896,7 @@ void ParseTree::makeCode(Node *myNode) {
 		break;
 
 	case ParserConstant::NODE_OP:
-		// should never be reached
+		// sollte nie erreicht werden
 		break;
 
 	case ParserConstant::NODE_ERROR:
@@ -986,7 +939,8 @@ int ParseTree::sizeOfNumber(int digit){
 char *ParseTree::intToChar(int digit){
 	//cout << "Digit first: " << digit << endl;
 	int size = sizeOfNumber(digit);
-	result[size + 1];
+
+	result = (char *) malloc((size + 1) * sizeof(char));
 
 	//Fange ab falls 0 übergeben wurde, sollte 0 direkt übergeben werden terminiert der OutBuffer --> daher Leerzeichen
 	if(digit == 0){
@@ -997,6 +951,7 @@ char *ParseTree::intToChar(int digit){
 	}else{
 	//Modulo Rechnung zur Umwandlung
 	for(int i = 0; i < size; i++){
+		//Hier
 		result[(size - 1) - i] = digit % 10 + '0';
 		//cout << result[(size - 1) - i] << endl;
 		digit = digit / 10;
@@ -1007,5 +962,4 @@ char *ParseTree::intToChar(int digit){
 	}
 
 }
-
 

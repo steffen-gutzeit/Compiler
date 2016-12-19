@@ -22,7 +22,7 @@ Scanner::Scanner(char *inputFile, char *outputFile) {
 	automat = new Automat();
 	symtable = new Symtable();
 	//token = NULL;
-	token = new Token(0, 0, Token::TT_BLANK, (char *)" ");
+	token = new Token(0, 0, token->TT_BLANK, (char *)"test\0");
 	eof = false;
 
 	this->currentState = 0;
@@ -42,7 +42,7 @@ Scanner::~Scanner() {
 	delete buffer;
 	delete automat;
 	delete symtable;
-	//delete token;
+	delete token;
  }
 
 Symtable *Scanner::getSymTable(){
@@ -139,7 +139,7 @@ Token *Scanner::getNextToken() {
 
 			token = NULL;
 			//Nötig, damit zum Schluss der nicht voll Buffer geschrieben wird
-			buffer->addCharsToOutBuffer("\0");
+			//buffer->addCharsToOutBuffer("\0");
 			//cout << "Ende" << endl;
 			//this->generateToken(this->tokenType);
 		} else {
@@ -556,7 +556,11 @@ Token *Scanner::generateToken(uint16_t typ) {
 					//Token erstellen mit Verweis auf Symboltabelle
 					//this->token = new Token(this->rowIndex, this->colIndex, typ, key);
 				}else{
-					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+					//this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+					//cout << "generate Token ausfuehrung: " << this->token->getTokenType() << " Lexem: "<< this->internBuffer << endl;
+					if(this->internBuffer[0] != '\n' && this->internBuffer[0] != '\t' && this->internBuffer[0] != ' '){
+						this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+					}
 				}
 
 			}
@@ -592,6 +596,7 @@ Token *Scanner::generateToken(uint16_t typ) {
 }
 
 //Wird die Funktion gebraucht ??? (7.12.16)
+//Ja, aber nur zum Abfangen der Blanks ...
 void Scanner::generateTokenPrint(uint16_t typ) {
 	if (this->internBuffer[0] != '\0') {
 
@@ -599,14 +604,18 @@ void Scanner::generateTokenPrint(uint16_t typ) {
 				checkInteger(typ);
 			}else{
 				//Pruefen ob es in die Symboltabelle eingetragen werden muss
-				if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
+				//if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF){
+				if(typ == token->TT_IDENTIFIER || typ == token->TT_WHILE || typ == token->TT_IF
+										 || typ == token->TT_WRITE  || typ == token->TT_READ || typ == token->TT_INT
+										 || typ == token->TT_ELSE){
 
 					//Key Value zurueck bekommen
 
 					cout << "Erstelle Token" << endl;
 
 					//ABAENDERN!!!!!
-					this->token = new Token(this->rowIndex, this->colIndex, typ, 'a');
+					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+					symtable->insertToken(this->token);
 
 					cout << "Schreibe in Symboltabelle" << endl;
 
@@ -619,7 +628,10 @@ void Scanner::generateTokenPrint(uint16_t typ) {
 
 					//this->token = new Token(this->rowIndex, this->colIndex, typ, key);
 				}else{
-					this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+					if(this->internBuffer[0] != '\n' && this->internBuffer[0] != '\t' && this->internBuffer[0] != ' '){
+						this->token = new Token(this->rowIndex, this->colIndex, typ, this->internBuffer);
+					}
+					//cout << "generate Token Print ausfuehrung: " << this->token->getTokenType() << endl;
 				}
 
 			}
@@ -640,6 +652,7 @@ void Scanner::generateTokenPrint(uint16_t typ) {
 			delete(this->token);
 		}*/
 	}
+	//delete this->token;
 	this->clearInternBuffer();
 	//writeOutput();
 
@@ -789,7 +802,13 @@ void Scanner::printToken() {
 
 			//Fix it!!!
 			//buffer->addCharsToOutBuffer(token->getLexem());
-			buffer->addCharsToOutBuffer((char *)"5");
+			if(token->getIntegerValue() == 0){
+				buffer->addCharsToOutBuffer((char*)"0 ");
+			}else {
+				size = this->sizeOfNumber(token->getIntegerValue());
+				buffer->addCharsToOutBuffer(this->intToChar(token->getIntegerValue(), size, resultLine));
+			}
+
 		}
 
 		//Ausgabe von Lexem

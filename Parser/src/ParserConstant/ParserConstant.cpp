@@ -1,12 +1,3 @@
-/*
- *  parserConst.cpp
- *  sysprog
- *
- *  Created by Peter Schneider on 21.02.10.
- *  Copyright 2010 Schneider Medien Services. All rights reserved.
- *
- */
-
 #include "ParserConstant.h"
 
 #include <iostream>
@@ -19,7 +10,6 @@ std::string ParserConstant::nodeTypeAsString(NodeType myNodeType)
 	std::string myResult;
 	switch(myNodeType)
 	{
-	//TODO
 		case NODE_ROOT: myResult = "Root"; break;
 		case NODE_ERROR: myResult = "Node Error"; break;
 		case NODE_PROG: myResult = "PROG"; break;

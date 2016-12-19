@@ -9,6 +9,7 @@ class Node
 	
 public:
 	Node(NodeInfo *nodeInfo);
+	virtual ~Node();
 
 	NodeInfo *getNodeInfo();
 	void setNodeInfo(NodeInfo *nodeInfo);
@@ -16,10 +17,6 @@ public:
 	uint16_t getChildrenCount();
 	Node *addChild(Node* myChild);
 	Node *getChild(int which);
-	
-	void print();
-	
-	bool isLeave();
 	
 private:
 	NodeInfo *nodeInfo;

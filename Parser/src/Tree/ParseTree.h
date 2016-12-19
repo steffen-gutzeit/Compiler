@@ -10,19 +10,16 @@
 class ParseTree {
 public:
 	ParseTree(Scanner *scanner, char *tempin, char *out2);
+	virtual ~ParseTree();
 	
 	Node *getRootNode();
-	void printXML();
 	
-	Scanner *getScanner(); // needed if you want to use the scanner, p.ex. for viewing the symtable
-
+	Scanner *getScanner();
 	
 	void typeCheck(Node *myNode = NULL);
 	
-	// helper functions that match getting and setting of typification for identifiers to the symtable
 
 	void printIdentifierNotFound(char *lexem);
-//	std::string identifier);
 	void setType(Node *myNode, ParserConstant::Typification myType);
 	ParserConstant::Typification getType(Node *myNode);
 
@@ -40,6 +37,9 @@ private:
 
 	int sizeOfNumber(int digit);
 	char *intToChar(int digit);
+	char *intToChar2(uint32_t digit, int size, char result[]);
 
-	char result[];
+	void destroyTree(Node *node);
+
+	char *result;
 };

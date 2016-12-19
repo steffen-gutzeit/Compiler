@@ -16,13 +16,17 @@ Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, char *lexem) {
 	this->row = row;
 	this->column = column;
 
+	//if(tokenType != this->TT_BLANK && tokenType != this->TT_DUMMY && tokenType != this->TT_ERROR && lexem != NULL){
 	//Lexem kopieren!
 	//Lexem Länge bestimmen
 	int length = 0;
 	while(lexem[length] != '\0'){
 		length++;
 	}
+	//Wichtig um Platz für \0 Terminal zu schaffen
+	length++;
 
+	//cout << "Laenge " << length << " Lexem: " << lexem << endl;
 	//Speicher für die Kopie allokieren
 	this->lexem = (char *) malloc(length * sizeof(char));
 
@@ -31,10 +35,10 @@ Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, char *lexem) {
 	//Lexem kopieren
 	strncpy(this->lexem, lexem, length);
 	//Endterminal setzen
-	this->lexem[length] = '\0';
+	//this->lexem[length] = '\0';
 
 	//cout << "Kopiert: " << this->lexem << endl;
-
+	//}
 	this->integerValue = 0;
 	this->typification = ParserConstant::noType;
 
@@ -60,7 +64,13 @@ Token::Token(uint16_t row, uint32_t column, uint32_t tokenType, long integerValu
 
 
 Token::~Token() {
-	// TODO Auto-generated destructor stub
+
+	//Unterscheiden ob es Zahl oder Char ist
+	if(this->tokenType != TT_INTEGER){
+		free (this->lexem);
+	}
+
+
 }
 
 long Token::getIntegerValue() {

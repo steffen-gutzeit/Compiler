@@ -23,7 +23,6 @@ LinkedList::~LinkedList() {
 bool LinkedList::sameStrings(char *value, char *compare) {
 	uint16_t i = 0;
 
-	//printf("Teste: %s mit %s \n", value, compare);
 
 	if (this->strlen(value) > this->strlen(compare)) {
 		while (value[i] != '\0') {
@@ -49,6 +48,7 @@ bool LinkedList::sameStrings(char *value, char *compare) {
  */
 uint16_t LinkedList::strlen(char *value) {
 	uint16_t stringIndex = 0;
+
 	while (value[stringIndex] != '\0') {
 		stringIndex++;
 	}
@@ -81,7 +81,6 @@ char *LinkedList::pushToken(list * head, Token* token) {
 			createFlag = false;
 			key = &current->next->token->getLexem()[0];
 			//cout << token->getLexem() << " existiert schon" << endl;
-			//printf("Liste1: %p \n", &current->lexem[0]);
 		}
 
 
@@ -155,4 +154,30 @@ void LinkedList::printList(list * head, uint16_t hash) {
     	//Gehe zum nächsten Listeneintrag
         current = current->next;
     }
+}
+
+void LinkedList::initializeList(list * head, uint16_t hash){
+	list *current = head;
+
+	//Speicherplatz allokieren
+	//current->next = (LinkedList::list*) malloc(sizeof(LinkedList::list));
+
+	current->next = NULL;
+}
+
+/*
+ * Traversiert die Linked List und löscht die Einträge
+ */
+void LinkedList::deleteList(list * head, uint16_t hash){
+	list *current;
+	list *headNew = head->next;
+
+	while ((current = headNew) != NULL) {
+		headNew = headNew->next;
+	    free (current);
+	}
+
+
+	 //cout << "Free Eintrag " << current->index << " Hash " << hash << endl;
+
 }

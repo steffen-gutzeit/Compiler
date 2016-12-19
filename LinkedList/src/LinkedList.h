@@ -29,6 +29,9 @@ public:
 	void printList(list * head, uint16_t hash);
 	Token *lookupLexem(list *head, char *lexem);
 
+	void deleteList(list * head, uint16_t hash);
+	void initializeList(list * head, uint16_t hash);
+
 
 private:
 	bool sameStrings(char *value, char *compare);

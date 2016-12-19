@@ -9,10 +9,19 @@
 HashMap::HashMap() {
 	this->size = 512;
 	this->hashValue = 1;
+
+	//Durchlaufe alle Möglichen Headindexe (Hashwerte)
+	for(uint16_t i=0; i < 512; i++){
+		this->initializeList(&(hashTable[i].list), i);
+	}
 }
 
 HashMap::~HashMap() {
 
+	//Durchlaufe alle Möglichen Headindexe (Hashwerte)
+		for(uint16_t i=0; i < 512; i++){
+			this->deleteList(&(hashTable[i].list), i);
+		}
 }
 
 /*

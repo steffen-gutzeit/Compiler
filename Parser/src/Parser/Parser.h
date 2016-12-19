@@ -11,6 +11,7 @@ class Parser
 	
 public:
 	Parser(Scanner *scanner, char *tempin, char *out2);
+	virtual ~Parser();
 	uint16_t processFile();
 	Token *token;
 	
@@ -20,18 +21,18 @@ private:
 	void syntaxError(uint16_t expected[], int expectedCount, Token *t);
 
 	// implement grammar
-	uint16_t PROG(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t DECLS(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t DECL(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t ARRAY(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t TYPE(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t STATEMENTS(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t STATEMENT(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t EXP(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t EXP2(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t INDEX(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t OP_EXP(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
-	uint16_t OP(Node *node, Token *myCommand[], uint16_t startCount, uint16_t tokenCount);
+	int PROG(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int DECLS(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int DECL(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int ARRAY(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int TYPE(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int STATEMENTS(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int STATEMENT(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int EXP(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int EXP2(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int INDEX(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int OP_EXP(Node *node, Token *myCommand[], int startCount, int tokenCount);
+	int OP(Node *node, Token *myCommand[], int startCount, int tokenCount);
 	
 	// other things
 	Scanner *scanner;
